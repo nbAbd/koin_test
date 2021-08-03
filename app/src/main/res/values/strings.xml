@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ELD</string>
+    <string name="loading">Загрузка</string>
+    <string name="login_name">Login name</string>
+    <string name="login_hint">Login name here</string>
+    <string name="password">Login name</string>
+    <string name="password_hint">Password here</string>
+    <string name="login">Login</string>
+    <string name="or">or</string>
+    <string name="register">Register</string>
+</resources>
