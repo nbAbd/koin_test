@@ -27,5 +27,9 @@
     <string name="mc_number_hint">MC Number here</string>
     <string name="driver_licence_number">Driver licence number</string>
     <string name="driver_licence_hint">Driver licence here</string>
+    <string name="select_country">Select country</string>
+    <string name="country">Country</string>
+    <string name="state">State</string>
+    <string name="select_state">Select state</string>
 
 </resources>

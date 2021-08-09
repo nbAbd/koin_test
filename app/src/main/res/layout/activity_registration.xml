@@ -126,6 +126,11 @@
                 layout="@layout/reg_personal"
                 android:visibility="gone" />
 
+            <include
+                android:id="@+id/reg3"
+                layout="@layout/reg_location"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

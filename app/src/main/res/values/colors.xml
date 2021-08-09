@@ -12,4 +12,5 @@
     <color name="grey2">#9BAEC8</color>
     <color name="separator">#282C37</color>
     <color name="separator_alpha">#1A282C37</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#FFFFFFFF</color>
 </resources>
