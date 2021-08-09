@@ -3,9 +3,29 @@
     <string name="loading">Загрузка</string>
     <string name="login_name">Login name</string>
     <string name="login_hint">Login name here</string>
-    <string name="password">Login name</string>
+    <string name="password">Password</string>
     <string name="password_hint">Password here</string>
     <string name="login">Login</string>
     <string name="or">or</string>
     <string name="register">Register</string>
+    <string name="registration">Registration</string>
+    <string name="personal">Personal</string>
+    <string name="company">Company</string>
+    <string name="location">Location</string>
+    <string name="next">Next</string>
+    <string name="first_name">First name</string>
+    <string name="first_name_hint">First name here</string>
+    <string name="last_name">Last name</string>
+    <string name="last_name_hint">Last name here</string>
+    <string name="email">Email</string>
+    <string name="email_hint">Email here</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="organization_name">Organization name</string>
+    <string name="usdot_number">USDOT Number</string>
+    <string name="usdot_number_hint">USDOT Number here</string>
+    <string name="mc_number">MC Number</string>
+    <string name="mc_number_hint">MC Number here</string>
+    <string name="driver_licence_number">Driver licence number</string>
+    <string name="driver_licence_hint">Driver licence here</string>
+
 </resources>

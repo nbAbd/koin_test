@@ -32,19 +32,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import chat.ChatOuterClass
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.facebook.FacebookSdk.getApplicationContext
 import com.facebook.drawee.view.SimpleDraweeView
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.peaksoft.e_commerce.R
-import com.peaksoft.e_commerce.model.*
-import com.squareup.picasso.Picasso
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import com.pieaksoft.event.consumer.android.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -132,29 +122,29 @@ fun Fragment.hideKeyboard() {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun ImageView.setImage(url: String?) {
-    Picasso.get()
-        .load(url?.let { Uri.parse(it) })
-        .placeholder(R.drawable.placeholder)
-        .into(this)
-}
+//fun ImageView.setImage(url: String?) {
+//    Picasso.get()
+//        .load(url?.let { Uri.parse(it) })
+//        .placeholder(R.drawable.placeholder)
+//        .into(this)
+//}
 
-fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
-    hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
-    setImageURI(url)
-}
+//fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
+//    hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
+//    setImageURI(url)
+//}
 
-fun ImageView.setImage(listContent: List<Image>?) {
-    when {
-        listContent.isNullOrEmpty() -> {
-            Picasso.get()
-                .load(R.drawable.placeholder)
-                .placeholder(R.drawable.placeholder)
-                .into(this)
-        }
-        else -> setImage(listContent.first().thumbnailUrl)
-    }
-}
+//fun ImageView.setImage(listContent: List<Image>?) {
+//    when {
+//        listContent.isNullOrEmpty() -> {
+//            Picasso.get()
+//                .load(R.drawable.placeholder)
+//                .placeholder(R.drawable.placeholder)
+//                .into(this)
+//        }
+//        else -> setImage(listContent.first().thumbnailUrl)
+//    }
+//}
 
 fun Button.isVisibleButton(data: Any?) {
     if (data != null) {
@@ -164,140 +154,30 @@ fun Button.isVisibleButton(data: Any?) {
     }
 }
 
-fun bitmapDescriptorFromVector(
-    context: Context,
-    @DrawableRes vectorDrawableResourceId: Int
-): BitmapDescriptor? {
-    val background = ContextCompat.getDrawable(context, vectorDrawableResourceId)
-    background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
-    val vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId)
-
-    val bitmap = Bitmap.createBitmap(
-        background.intrinsicWidth,
-        background.intrinsicHeight,
-        Bitmap.Config.ARGB_8888
-    )
-    val canvas = Canvas(bitmap)
-    background.draw(canvas)
-    vectorDrawable?.draw(canvas)
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
-
-}
+//fun bitmapDescriptorFromVector(
+//    context: Context,
+//    @DrawableRes vectorDrawableResourceId: Int
+//): BitmapDescriptor? {
+//    val background = ContextCompat.getDrawable(context, vectorDrawableResourceId)
+//    background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
+//    val vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId)
+//
+//    val bitmap = Bitmap.createBitmap(
+//        background.intrinsicWidth,
+//        background.intrinsicHeight,
+//        Bitmap.Config.ARGB_8888
+//    )
+//    val canvas = Canvas(bitmap)
+//    background.draw(canvas)
+//    vectorDrawable?.draw(canvas)
+//    return BitmapDescriptorFactory.fromBitmap(bitmap)
+//
+//}
 
 fun ViewGroup.createView(@LayoutRes resId: Int) =
     LayoutInflater.from(context).inflate(resId, this, false)!!
 
-fun userItem2(it: ChatOuterClass.Correspondent): User {
-    return User(
-        it.id,
-        it.contentUrl,
-        ChatMessageModel(
-            it.lastMessage.id,
-            it.lastMessage.fromUid,
-            it.lastMessage.toUid,
-            it.lastMessage.mediaId,
-            it.lastMessage.textMessage,
-            it.lastMessage.chatListId,
-            it.lastMessage.isRead,
-            it.lastMessage.createdTime,
-            it.profile.id,
-            it.profile.userId,
-            it.profile.userName,
-            it.profile.profileImage
-        ),
-        it.lastActivityDate,
-        it.profile.id,
-        it.profile.userId,
-        it.profile.userName,
-        it.profile.profileImage,
-        it.unreadMessageCount
-    )
-}
 
-fun chatMessages(item: ChatOuterClass.ChatDetailResponse): MutableList<ChatMessageModel> {
-    val list = mutableListOf<ChatMessageModel>()
-    item.messageList.forEach {
-        list.add(
-            ChatMessageModel(
-                it.id,
-                it.fromUid,
-                it.toUid,
-                it.mediaId,
-                it.textMessage,
-                it.chatListId,
-                it.isRead,
-                it.createdTime,
-                item.profile.id,
-                item.profile.userId,
-                item.profile.userName,
-                item.profile.profileImage
-            )
-        )
-    }
-    return list
-}
-
-fun chatMessage(item: ChatOuterClass.UserResponse): ChatMessageModel {
-    return ChatMessageModel(
-        item.lastMessage.id,
-        item.lastMessage.fromUid,
-        item.lastMessage.toUid,
-        item.lastMessage.mediaId,
-        item.lastMessage.textMessage,
-        item.lastMessage.chatListId,
-        item.lastMessage.isRead,
-        item.lastMessage.createdTime,
-        item.correspondent.profile.id,
-        item.correspondent.profile.userId,
-        item.correspondent.profile.userName,
-        item.correspondent.profile.profileImage
-    )
-}
-
-fun chatMessageIsRead(item: ChatMessageModel): ChatMessageModel {
-    return ChatMessageModel(
-        item.id,
-        item.fromUid,
-        item.toUid,
-        item.mediaId,
-        item.textMessage,
-        item.chatListId,
-        true,
-        item.createdTime,
-        item.profileId,
-        item.userId,
-        item.userName,
-        item.profileImage
-    )
-}
-
-
-fun userItem(item: ChatOuterClass.UserResponse): User {
-    return User(
-        item.correspondent.id,
-        item.correspondent.contentUrl,
-        ChatMessageModel(
-            item.correspondent.lastMessage.id,
-            item.correspondent.lastMessage.fromUid,
-            item.correspondent.lastMessage.toUid,
-            item.correspondent.lastMessage.mediaId,
-            item.correspondent.lastMessage.textMessage,
-            item.correspondent.lastMessage.chatListId,
-            item.correspondent.lastMessage.isRead,
-            item.correspondent.lastMessage.createdTime,
-            item.correspondent.profile.id,
-            item.correspondent.profile.userId,
-            item.correspondent.profile.userName,
-            item.correspondent.profile.profileImage
-        ),
-        item.correspondent.lastActivityDate,
-        item.correspondent.profile.id,
-        item.correspondent.profile.userId,
-        item.correspondent.profile.userName,
-        item.correspondent.profile.profileImage,
-        item.correspondent.unreadMessageCount
-    )
-}
 
 @SuppressLint("SimpleDateFormat")
 val formatter = SimpleDateFormat("HH:mm")
@@ -322,84 +202,22 @@ fun dateToLong(date: String): Long {
 
 fun toFormatDate(long: Long): String = formatterDateAndTime.format(Date(long * 1000))
 
-fun TextView.priceText(price: Int?) {
-    text = when (price) {
-        0 -> "一 c"
-        else -> String.format("%d c", price)
-    }
-}
 
-fun ImageView.isFavorite(favorite: Boolean) {
-    when (favorite) {
-        true -> setImageResource(R.drawable.ic_favorites)
-        false -> setImageResource(R.drawable.ic_baseline_favorite)
-    }
-}
+//fun ImageView.circleImage(url: String?) {
+//    Glide.with(context)
+//        .load(url ?: "")
+//        .transform(CenterCrop(), RoundedCorners(50))
+//        .placeholder(R.drawable.placeholder)
+//        .into(this)
+//}
 
-fun ImageView.isFavoriteMenuIcon(favorite: Boolean, context: Context) {
-    when (favorite) {
-        true -> setTint(ContextCompat.getColor(context, R.color.red_color))
-        false -> setTint(ContextCompat.getColor(context, R.color.white))
-    }
-}
-
-fun ImageView.isBlurFavorite(favorite: Boolean) {
-    backgroundTintList = when (favorite) {
-        true -> {
-            ContextCompat.getColorStateList(
-                getApplicationContext(),
-                R.color.favorite_selected_color
-            )
-        }
-        false -> {
-            ContextCompat.getColorStateList(getApplicationContext(), R.color.black_transparent)
-        }
-    }
-}
-
-fun ImageView.isWhiteFavorite(favorite: Boolean) {
-    backgroundTintList = when (favorite) {
-        true -> {
-            setImageResource(R.drawable.ic_baseline_favorite2)
-            ContextCompat.getColorStateList(
-                getApplicationContext(),
-                R.color.favorite_selected_color
-            )
-        }
-        false -> {
-            setImageResource(R.drawable.ic_baseline_favorite_2_grey)
-            ContextCompat.getColorStateList(getApplicationContext(), R.color.white)
-        }
-    }
-}
-
-fun ImageView.isVideo(listContent: List<Image>?) {
-    isVisible = when {
-        listContent.isNullOrEmpty() -> false
-        listContent.first().isVideo -> true
-        else -> false
-    }
-}
-
-fun ImageView.isVideo(item: Boolean) {
-    isVisible = item
-}
-
-fun ImageView.circleImage(url: String?) {
-    Glide.with(context)
-        .load(url ?: "")
-        .transform(CenterCrop(), RoundedCorners(50))
-        .placeholder(R.drawable.placeholder)
-        .into(this)
-}
-
-fun ImageView.withCorner(url: String?, radius: Int) {
-    Glide.with(context)
-        .load(url ?: "")
-        .transform(CenterCrop(), RoundedCorners(radius))
-        .placeholder(R.drawable.placeholder)
-        .into(this)
-}
+//fun ImageView.withCorner(url: String?, radius: Int) {
+//    Glide.with(context)
+//        .load(url ?: "")
+//        .transform(CenterCrop(), RoundedCorners(radius))
+//        .placeholder(R.drawable.placeholder)
+//        .into(this)
+//}
 
 fun ImageView.setTint(@ColorInt color: Int?) {
     if (color == null) {
@@ -408,13 +226,6 @@ fun ImageView.setTint(@ColorInt color: Int?) {
     }
     ImageViewCompat.setImageTintMode(this, PorterDuff.Mode.SRC_ATOP)
     ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(color))
-}
-fun TextView.categoryName(shopCategory: Int?) {
-    when {
-        listCategory.isEmpty() -> text = "----"
-        listCategory.isNotEmpty() -> text =
-            listCategory.find { it.id == shopCategory }?.categoryName
-    }
 }
 
 /**
@@ -505,14 +316,14 @@ fun TextView.setMultipleSpanTextLink(
     movementMethod = LinkMovementMethod.getInstance()
 }
 
-fun String.phoneNumberFormat(region: String = "KG", util: PhoneNumberUtil): String {
-    return util.format(util.parse(this, region), PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
-}
-
-fun String.isPhoneNumberValid(region: String = "KG", util: PhoneNumberUtil): Boolean {
-    val phoneNumberFormatter = util.parse(this, region)
-    return util.isValidNumber(phoneNumberFormatter)
-}
+//fun String.phoneNumberFormat(region: String = "KG", util: PhoneNumberUtil): String {
+//    return util.format(util.parse(this, region), PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+//}
+//
+//fun String.isPhoneNumberValid(region: String = "KG", util: PhoneNumberUtil): Boolean {
+//    val phoneNumberFormatter = util.parse(this, region)
+//    return util.isValidNumber(phoneNumberFormatter)
+//}
 
 fun TextView.setMultipleBoldText(
     string: String,
@@ -567,34 +378,6 @@ fun String.toColorInt(default: String = "#1976D2"): Int {
     }
 }
 
-fun OrderResponseModel.getOrderStatus(): OrderStatus {
-    return when (status) {
-        0 -> {
-            OrderStatus.Pending
-        }
-        1 -> {
-            OrderStatus.Unassigned
-        }
-        2 -> {
-            OrderStatus.Assigned
-        }
-        3 -> {
-            OrderStatus.Started
-        }
-        4 -> {
-            OrderStatus.Completed
-        }
-        5 -> {
-            OrderStatus.New
-        }
-        6 -> {
-            OrderStatus.Canceled
-        }
-        else -> {
-            OrderStatus.Pending
-        }
-    }
-}
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -613,9 +396,4 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 fun TextView.setDrawableStart(drawable: Int){
     this.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0)
 
-}
-
-fun TextView.isVerified(isVerified: Boolean = true, context: Context){
-    this.setDrawableStart(if(isVerified) R.drawable.ic_verified else 0)
-    this.compoundDrawablePadding = context.dp2px(5)
 }

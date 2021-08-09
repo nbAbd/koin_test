@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import com.peaksoft.e_commerce.utils.SHARED_PREFERENCES_NAME
+import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_NAME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
