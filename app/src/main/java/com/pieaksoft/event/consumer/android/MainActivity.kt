@@ -2,10 +2,11 @@ package com.pieaksoft.event.consumer.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.pieaksoft.event.consumer.android.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class MainActivity : BaseActivity(R.layout.activity_main) {
+    override fun setView() {
+
     }
+
 }

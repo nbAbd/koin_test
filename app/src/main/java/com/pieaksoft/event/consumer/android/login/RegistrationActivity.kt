@@ -8,7 +8,7 @@ import com.pieaksoft.event.consumer.android.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.newIntent
 import kotlinx.android.synthetic.main.reg_location.*
 
-class RegistrationActivity: BaseActivity(R.layout.reg_location)  {
+class RegistrationActivity: BaseActivity(R.layout.activity_registration)  {
     override fun setView() {
 
         val countries = resources.getStringArray(R.array.countries)

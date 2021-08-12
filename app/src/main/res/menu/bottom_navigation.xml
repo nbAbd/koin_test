@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_driver_comp"
+        android:title="main" />
+    <item
+        android:id="@+id/recommendationListFragment"
+        android:icon="@drawable/ic_sleep_comp"
+        android:title="sleep_comp"/>
+    <item
+        android:id="@+id/categoryListFragment"
+        android:title="" />
+    <item
+        android:id="@+id/basketFragment"
+        android:icon="@drawable/ic_wheel_comp"
+        android:title="wheel_comp"/>
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_truck_comp"
+        android:title="ic_truck_comp" />
+</menu>
