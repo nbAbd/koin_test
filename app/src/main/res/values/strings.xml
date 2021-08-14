@@ -31,6 +31,8 @@
     <string name="country">Country</string>
     <string name="state">State</string>
     <string name="select_state">Select state</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
 
     
     <string-array name="countries">

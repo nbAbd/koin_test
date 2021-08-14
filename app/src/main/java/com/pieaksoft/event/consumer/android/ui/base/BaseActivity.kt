@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.base
+package com.pieaksoft.event.consumer.android.ui.base
 
 import android.app.NotificationManager
 import android.app.ProgressDialog

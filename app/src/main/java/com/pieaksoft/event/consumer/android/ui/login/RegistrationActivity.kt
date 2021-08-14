@@ -1,10 +1,10 @@
-package com.pieaksoft.event.consumer.android.login
+package com.pieaksoft.event.consumer.android.ui.login
 
 import android.content.Context
 import android.content.Intent
 import android.widget.ArrayAdapter
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.base.BaseActivity
+import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.newIntent
 import kotlinx.android.synthetic.main.reg_location.*
 
