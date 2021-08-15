@@ -66,5 +66,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
     implementation 'com.facebook.fresco:fresco:2.0.0'
 
-
+    implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
 }

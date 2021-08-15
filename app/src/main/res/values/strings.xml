@@ -33,6 +33,9 @@
     <string name="select_state">Select state</string>
     <string name="off">Off</string>
     <string name="on">On</string>
+    <string name="break_in">Break in</string>
+    <string name="h_window">14h Window</string>
+    <string name="duty_cycle">Duty Cycle</string>
 
     
     <string-array name="countries">

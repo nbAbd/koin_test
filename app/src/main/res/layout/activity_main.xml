@@ -13,32 +13,20 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"/>
-
+        app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         style="@style/ThemeOverlay.App.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:labelVisibilityMode="unlabeled"
         android:background="@color/bottom_nav_bg"
-        app:itemTextColor="@drawable/bottom_nav_item_color"
         app:itemIconTint="@drawable/bottom_nav_item_color"
-        app:menu="@menu/bottom_navigation"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="asdasf"
-        android:layout_marginBottom="50dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="@id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toTopOf="@id/bottom_navigation"
-        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"/>
+        app:itemTextColor="@drawable/bottom_nav_item_color"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
