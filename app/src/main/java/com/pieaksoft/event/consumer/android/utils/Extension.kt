@@ -129,10 +129,10 @@ fun Fragment.hideKeyboard() {
 //        .into(this)
 //}
 
-//fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
-//    hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
-//    setImageURI(url)
-//}
+fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
+   // hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
+    setImageURI(url)
+}
 
 //fun ImageView.setImage(listContent: List<Image>?) {
 //    when {

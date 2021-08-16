@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_driver_item"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/driver_image"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="20dp"
+        app:placeholderImage="@drawable/ic_driver_comp_2"
+        app:layout_constraintStart_toStartOf="@+id/separator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/driver_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Myrza Seitov"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@+id/driver_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/driver_image"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="current driver"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="@drawable/driver_selector"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/driver_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driver_name" />
+
+    <com.pieaksoft.event.consumer.android.views.CustomSeparator
+        android:id="@+id/separator"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/driver_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey2"
+        android:text="@string/login2"
+        android:textSize="13sp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="@+id/separator"
+        app:layout_constraintTop_toBottomOf="@+id/separator"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/login_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/login2"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintStart_toStartOf="@+id/separator"
+        app:layout_constraintTop_toBottomOf="@+id/login_title"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/login_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="login_title, login_value"
+        app:layout_constraintTop_toTopOf="@+id/login_title"
+        app:layout_constraintStart_toEndOf="@+id/login_title"
+        app:layout_constraintBottom_toBottomOf="@+id/login_title"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/company_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey2"
+        android:text="@string/company2"
+        android:textSize="13sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/login_barrier"
+        app:layout_constraintTop_toTopOf="@+id/login_title"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/company_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/company2"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/company_title"
+        app:layout_constraintTop_toBottomOf="@+id/company_title"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/company_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="company_title, company_value"
+        app:layout_constraintTop_toTopOf="@+id/login_title"
+        app:layout_constraintStart_toEndOf="@+id/login_title"
+        app:layout_constraintBottom_toBottomOf="@+id/login_title"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey2"
+        android:text="@string/location2"
+        android:textSize="13sp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/company_barrier"
+        app:layout_constraintTop_toTopOf="@+id/login_title"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/location_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/location2"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/location_title"
+        app:layout_constraintTop_toBottomOf="@+id/location_title"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

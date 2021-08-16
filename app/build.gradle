@@ -67,4 +67,7 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.0.0'
 
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
+
+    //Text drawable
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }

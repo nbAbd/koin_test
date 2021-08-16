@@ -25,4 +25,9 @@
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorOnPrimary">@color/colorAccent</item>
     </style>
+
+    <style name="SeparatorStyle">
+        <item name="color">@color/separator</item>
+        <item name="alpha">1</item>
+    </style>
 </resources>

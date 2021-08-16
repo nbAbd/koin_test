@@ -36,6 +36,9 @@
     <string name="break_in">Break in</string>
     <string name="h_window">14h Window</string>
     <string name="duty_cycle">Duty Cycle</string>
+    <string name="login2">Login:</string>
+    <string name="company2">Company:</string>
+    <string name="location2">Location:</string>
 
     
     <string-array name="countries">

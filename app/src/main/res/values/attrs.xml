@@ -7,4 +7,14 @@
         <attr name="android:hint" format="string"/>
         <attr name="title_value" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="SeparatorView">
+        <attr name="color"/>
+        <attr name="alpha"/>
+    </declare-styleable>
+
+    <declare-styleable name="DriverCardView">
+        <attr name="image" format="string"/>
+        <attr name="name" format="string"/>
+    </declare-styleable>
 </resources>
