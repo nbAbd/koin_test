@@ -7,6 +7,6 @@ import kotlinx.android.synthetic.main.fragment_co_driver.*
 class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
     override fun setViews() {
 
-        driver2.setEmpty(true)
+     //   driver2.setEmpty(true)
     }
 }

@@ -40,6 +40,8 @@
     <string name="company2">Company:</string>
     <string name="location2">Location:</string>
     <string name="add_co_driver">Add Co-Driver</string>
+    <string name="cancel">Cancel</string>
+    <string name="team_driving">Team driving</string>
 
     
     <string-array name="countries">
