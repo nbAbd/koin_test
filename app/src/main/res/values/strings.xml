@@ -39,6 +39,7 @@
     <string name="login2">Login:</string>
     <string name="company2">Company:</string>
     <string name="location2">Location:</string>
+    <string name="add_co_driver">Add Co-Driver</string>
 
     
     <string-array name="countries">
