@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.NavController
@@ -34,7 +35,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val view = bottomMenuView.getChildAt(2)
         val itemView = view as BottomNavigationItemView
 
-        val viewCustom = LayoutInflater.from(this).inflate(R.layout.custom_on_off_button, bottomMenuView, false)
+        val viewCustom =
+            LayoutInflater.from(this).inflate(R.layout.custom_on_off_button, bottomMenuView, false)
         itemView.addView(viewCustom)
 
         val off = viewCustom.findViewById<AppCompatButton>(R.id.off_btn)
@@ -42,13 +44,29 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         off.setOnClickListener {
             Toast.makeText(this, "This is test", Toast.LENGTH_SHORT).show()
         }
-    }
 
-    companion object {
-        fun newInstance(context: Context): Intent {
-            return newIntent<MainActivity>(context).apply {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment -> {
+
+                }
+                R.id.coDriverFragment -> {
+
+                }
+
+                else -> {
+
+                }
 
             }
         }
     }
-}
+
+        companion object {
+            fun newInstance(context: Context): Intent {
+                return newIntent<MainActivity>(context).apply {
+
+                }
+            }
+        }
+    }

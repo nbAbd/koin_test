@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_wheel_comp"
         android:title="wheel_comp"/>
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/coDriverFragment"
         android:icon="@drawable/ic_truck_comp"
         android:title="ic_truck_comp" />
 </menu>
