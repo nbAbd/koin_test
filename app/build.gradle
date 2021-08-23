@@ -1,8 +1,6 @@
-plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-android-extensions'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30
@@ -30,6 +28,27 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    flavorDimensions "ELD"
+
+    productFlavors {
+        staging {
+            dimension 'ELD'
+            applicationIdSuffix ".staging"
+            buildConfigField 'String', 'Endpoint', '"http://165.22.31.74/"'
+            buildConfigField 'Integer', 'port', '7070'
+        }
+        prod {
+            dimension 'ELD'
+            buildConfigField 'String', 'Endpoint', '"https://api.shoppix.kg/"'
+            buildConfigField 'Integer', 'port', '80'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+        exclude 'META-INF/library_release.kotlin_module'
     }
 }
 
@@ -64,10 +83,21 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
-    implementation 'com.facebook.fresco:fresco:2.0.0'
+    implementation 'com.facebook.fresco:fresco:2.3.0'
 
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
 
     //Text drawable
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    def koin_version = "2.0.1"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
 }
