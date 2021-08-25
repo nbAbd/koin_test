@@ -1,11 +1,13 @@
 package com.pieaksoft.event.consumer.android
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.app.DialogCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -19,7 +21,7 @@ import com.pieaksoft.event.consumer.android.utils.newIntent
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private lateinit var navController: NavController
-
+    private var permissionDialog: Dialog? = null
 
     override fun setView() {
         val navHostFragment = supportFragmentManager.findFragmentById(
@@ -63,14 +65,20 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     override fun bindVM() {
+        permissionDialog = Dialog(this)
+
+    }
+
+
+    private fun showPermissionsDialog() {
 
     }
 
     companion object {
-            fun newInstance(context: Context): Intent {
-                return newIntent<MainActivity>(context).apply {
+        fun newInstance(context: Context): Intent {
+            return newIntent<MainActivity>(context).apply {
 
-                }
             }
         }
     }
+}
