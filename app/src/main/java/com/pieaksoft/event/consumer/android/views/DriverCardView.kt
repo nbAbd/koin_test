@@ -10,7 +10,6 @@ import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.setImageWithPlaceHolder
 import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.visible
-import kotlinx.android.synthetic.main.item_driver.view.*
 
 class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
     init {
@@ -27,7 +26,7 @@ class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(co
     }
 
     fun setEmpty(empty: Boolean){
-        driver_state.visible(!empty, false)
-        empty_state.visible(empty, false)
+     //   driver_state.visible(!empty, false)
+     //   empty_state.visible(empty, false)
     }
 }

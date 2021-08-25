@@ -42,6 +42,11 @@
     <string name="add_co_driver">Add Co-Driver</string>
     <string name="cancel">Cancel</string>
     <string name="team_driving">Team driving</string>
+    <string name="network_error">network error</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="json_error">Json parsing error</string>
+    <string name="server_error">Server error</string>
+    <string name="network_timeout_error">Timeout exception</string>
 
     
     <string-array name="countries">

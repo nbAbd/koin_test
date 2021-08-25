@@ -62,7 +62,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-        companion object {
+    override fun bindVM() {
+
+    }
+
+    companion object {
             fun newInstance(context: Context): Intent {
                 return newIntent<MainActivity>(context).apply {
 

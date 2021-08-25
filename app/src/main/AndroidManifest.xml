@@ -15,7 +15,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ELD">
+        android:theme="@style/Theme.ELD"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name="com.pieaksoft.event.consumer.android.ui.login.LoginActivity"

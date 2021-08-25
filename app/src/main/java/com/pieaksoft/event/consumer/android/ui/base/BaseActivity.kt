@@ -38,11 +38,13 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
     var viewGroup: ViewGroup? = null
 
     abstract fun setView()
+    abstract fun bindVM()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(idRes)
         setView()
+        bindVM()
         val nMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nMgr.cancelAll()
     }
