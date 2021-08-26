@@ -50,6 +50,8 @@
     <string name="need_permissions_title">Need permissions</string>
     <string name="need_permissions_desk">Permissions are necessary for the correct work of the application and the perfomance of all functions. Push are not required permissions</string>
     <string name="location_desk">Allow to access your location</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_desk">Get important notifications</string>
 
     
     <string-array name="countries">
