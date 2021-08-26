@@ -30,4 +30,9 @@
         <item name="color">@color/separator</item>
         <item name="alpha">1</item>
     </style>
+
+    <style name="ThemeDialog" parent="android:Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

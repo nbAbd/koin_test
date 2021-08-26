@@ -71,7 +71,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
 
     fun showPermissionsDialog() {
-        permissionDialog = Dialog(this)
+        permissionDialog = Dialog(this, R.style.ThemeDialog)
         permissionDialog?.setContentView(R.layout.dialog_permissions)
         permissionDialog?.show()
     }
