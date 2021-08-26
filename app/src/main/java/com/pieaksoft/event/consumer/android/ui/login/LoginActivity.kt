@@ -9,18 +9,24 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class LoginActivity : BaseActivity(R.layout.activity_login) {
     private val loginVM: LoginVM by viewModel()
+    private val profileVM: ProfileVM by viewModel()
     private val binding by viewBinding(ActivityLoginBinding::bind)
 
     private var loginValue: String? = null
     private var passwordValue: String? = null
 
     override fun setView() {
+        if(profileVM.isAuth()){
+            startActivity(MainActivity.newInstance(this@LoginActivity))
+        }
+
         with(binding) {
             loginName.addTextChangedListener {
                 if (it?.length == 0) {

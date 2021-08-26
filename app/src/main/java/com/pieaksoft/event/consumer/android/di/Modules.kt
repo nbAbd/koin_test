@@ -9,6 +9,9 @@ import com.pieaksoft.event.consumer.android.network.ServiceApi
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepo
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepoImpl
 import com.pieaksoft.event.consumer.android.ui.login.LoginVM
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepo
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepoImpl
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_NAME
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -62,12 +65,14 @@ val AppModule = module {
     }
 
     single<LoginRepo> { LoginRepoImpl(get()) }
+    single<ProfileRepo> { ProfileRepoImpl(get()) }
 //    single { FavoritesRepository(get()) }
 //    single { ChatRepository(get()) }
 //    single { EventsRepository(get()) }
 //    single { OrderRepository(get()) }
 //    single { BasketRepository(get()) }
     viewModel { LoginVM(get()) }
+    viewModel { ProfileVM(get()) }
 //    viewModel { RecommendedVM(get()) }
 //    viewModel { StoreVM(get()) }
 //    viewModel { ProfileVM(get()) }
