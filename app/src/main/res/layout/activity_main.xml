@@ -50,45 +50,130 @@
             android:id="@+id/log"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/log"
-            android:textSize="15sp"
-            android:textColor="@color/grey2"
             android:drawableStart="@drawable/ic_log"
             android:drawablePadding="8dp"
+            android:text="@string/log"
+            android:textColor="@color/grey2"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/menu"
+            app:layout_constraintEnd_toStartOf="@+id/dot_inspect"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@+id/menu"
-            app:layout_constraintEnd_toStartOf="@+id/dot_inspect"
-            app:layout_constraintTop_toTopOf="@+id/menu"
-            app:layout_constraintBottom_toBottomOf="@+id/menu"/>
+            app:layout_constraintTop_toTopOf="@+id/menu" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dot_inspect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dot_inspect"
-            android:textSize="15sp"
-            android:textColor="@color/grey2"
             android:drawableStart="@drawable/ic_document"
             android:drawablePadding="8dp"
-            app:layout_constraintStart_toEndOf="@+id/log"
-            app:layout_constraintTop_toTopOf="@+id/menu"
+            android:text="@string/dot_inspect"
+            android:textColor="@color/grey2"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/menu"
-            app:layout_constraintEnd_toStartOf="@+id/rules"/>
+            app:layout_constraintEnd_toStartOf="@+id/rules"
+            app:layout_constraintStart_toEndOf="@+id/log"
+            app:layout_constraintTop_toTopOf="@+id/menu" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/rules"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dot_inspect"
-            android:textSize="15sp"
-            android:textColor="@color/grey2"
             android:drawableStart="@drawable/ic_rules"
             android:drawablePadding="8dp"
+            android:text="@string/dot_inspect"
+            android:textColor="@color/grey2"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/menu"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/dot_inspect"
-            app:layout_constraintTop_toTopOf="@+id/menu"
-            app:layout_constraintBottom_toBottomOf="@+id/menu"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="@+id/menu" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/menu_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/menu"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:background="@drawable/menu_sub_bkg"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_title">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/canada_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_canada" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/canada_rules"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="100dp"
+                android:text="@string/canada_rules"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/canada_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/canada_image"
+                app:layout_constraintTop_toTopOf="@+id/canada_image" />
+
+
+            <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                android:id="@+id/separator"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/canada_rules"
+                app:layout_constraintTop_toBottomOf="@+id/canada_image" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/md_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_control" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/md"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="100dp"
+                android:text="@string/md"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/md_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/md_image"
+                app:layout_constraintTop_toTopOf="@+id/md_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

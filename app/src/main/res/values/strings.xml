@@ -54,6 +54,9 @@
     <string name="notifications_desk">Get important notifications</string>
     <string name="log">Log</string>
     <string name="dot_inspect">DOT Inspect</string>
+    <string name="menu">Menu</string>
+    <string name="canada_rules">Canada Rules</string>
+    <string name="md">MD</string>
 
     
     <string-array name="countries">
