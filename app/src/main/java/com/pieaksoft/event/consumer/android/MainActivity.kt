@@ -65,13 +65,15 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     override fun bindVM() {
-        permissionDialog = Dialog(this)
+        showPermissionsDialog()
 
     }
 
 
-    private fun showPermissionsDialog() {
-
+    fun showPermissionsDialog() {
+        permissionDialog = Dialog(this)
+        permissionDialog?.setContentView(R.layout.dialog_permissions)
+        permissionDialog?.show()
     }
 
     companion object {
