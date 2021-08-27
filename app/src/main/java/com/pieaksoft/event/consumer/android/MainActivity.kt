@@ -7,22 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.DialogCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
+import com.pieaksoft.event.consumer.android.databinding.ActivityMainBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
+import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.newIntent
+import com.pieaksoft.event.consumer.android.utils.show
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
-
     private lateinit var navController: NavController
     private var permissionDialog: Dialog? = null
-
+   // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment
@@ -62,6 +68,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
             }
         }
+
+
+       findViewById<AppCompatImageView>(R.id.menu).setOnClickListener{
+                if (findViewById<ConstraintLayout>(R.id.menu_opened).visibility == View.GONE) {
+                    findViewById<ConstraintLayout>(R.id.menu_opened).show()
+                    findViewById<AppCompatImageView>(R.id.menu).setImageResource(R.drawable.ic_close2)
+                } else {
+                    findViewById<ConstraintLayout>(R.id.menu_opened).hide()
+                    findViewById<AppCompatImageView>(R.id.menu).setImageResource(R.drawable.ic_menu)
+                }
+            }
+
     }
 
     override fun bindVM() {
@@ -70,7 +88,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
 
-    fun showPermissionsDialog() {
+    private fun showPermissionsDialog() {
         permissionDialog = Dialog(this, R.style.ThemeDialog)
         permissionDialog?.setContentView(R.layout.dialog_permissions)
         permissionDialog?.show()
