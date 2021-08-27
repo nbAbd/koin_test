@@ -1,4 +1,4 @@
-package com.peaksoft.e_commerce.base
+package com.pieaksoft.event.consumer.android.ui.base
 
 import android.content.Context
 import android.os.Bundle
@@ -23,6 +23,7 @@ abstract class BaseFragment(@LayoutRes val idLay: Int) : Fragment(), CoroutineSc
     }
 
     abstract fun setViews()
+    abstract fun bindVM()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,5 +36,6 @@ abstract class BaseFragment(@LayoutRes val idLay: Int) : Fragment(), CoroutineSc
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViews()
+        bindVM()
     }
 }

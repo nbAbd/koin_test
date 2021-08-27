@@ -3,46 +3,42 @@ package com.pieaksoft.event.consumer.android.ui.profile
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pieaksoft.event.consumer.android.model.Failure
+import com.pieaksoft.event.consumer.android.model.ProfileModel
+import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.ui.base.BaseVM
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
+import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import retrofit2.HttpException
 import java.io.File
 import java.net.HttpURLConnection
 
-class ProfileVM(repo: ProfileRepo) : BaseVM() {
+class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
 
-
+    private val _result = SingleLiveEvent<ProfileModel>()
+    val result: LiveData<ProfileModel> = _result
 
     fun isAuth(): Boolean {
         return sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "") != ""
     }
 
 
-
-
-
-//    fun getProfile() {
-//        launch {
-//            when (val response = homeRepository.getProfile()) {
-//                is Success -> {
-//                    _result.value = response.data
-//                    Log.e("ERROR", "${response.data.displayName}")
-//                }
-//                is Failure -> {
-//                    (response.error is HttpException).let {
-//                        if (it) {
-//                            if ((response.error as HttpException).code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-//                                _errorCode.value = 401
-//                            }
-//                        }
-//                    }
-//                    Log.e("Profile", "${response.error.message}")
-//                }
-//            }
-//        }
-//    }
+    fun getProfile() {
+        launch {
+            when (val response = repo.getProfile()) {
+                is Success -> {
+                    response.data.let {
+                        _result.value = it
+                    }
+                }
+                is Failure -> {
+                    _error.value = response.error
+                }
+            }
+        }
+    }
 //
 //    fun updateProfile(name: String?, phone: String?, file: File) {
 //        _progress.postValue(true)
