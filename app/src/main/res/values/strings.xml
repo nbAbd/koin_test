@@ -57,6 +57,7 @@
     <string name="menu">Menu</string>
     <string name="canada_rules">Canada Rules</string>
     <string name="md">MD</string>
+    <string name="dvir">DVIR</string>
 
     
     <string-array name="countries">

@@ -104,6 +104,7 @@
             app:layout_constraintTop_toBottomOf="@+id/menu" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sub_menu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -129,7 +130,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="100dp"
                 android:text="@string/canada_rules"
                 android:textColor="@color/white"
                 android:textSize="17sp"
@@ -165,7 +165,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="100dp"
                 android:text="@string/md"
                 android:textColor="@color/white"
                 android:textSize="17sp"
@@ -173,6 +172,177 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/md_image"
                 app:layout_constraintTop_toTopOf="@+id/md_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sub_menu2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:background="@drawable/menu_sub_bkg"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sub_menu">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dvir_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_dvir" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dvir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/dvir"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/dvir_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dvir_image"
+                app:layout_constraintTop_toTopOf="@+id/dvir_image" />
+
+
+            <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                android:id="@+id/separator2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/dvir"
+                app:layout_constraintTop_toBottomOf="@+id/dvir_image" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/truck_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_control" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/truck_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/md"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/truck_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/truck_image"
+                app:layout_constraintTop_toTopOf="@+id/truck_image" />
+
+            <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                android:id="@+id/separator3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/truck_settings"
+                app:layout_constraintTop_toBottomOf="@+id/truck_image" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/settings_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_settings" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/md"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/settings_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/settings_image"
+                app:layout_constraintTop_toTopOf="@+id/settings_image" />
+
+            <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                android:id="@+id/separator4"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/settings"
+                app:layout_constraintTop_toBottomOf="@+id/settings_image" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/faq_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_faq" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/faq"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/md"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/faq_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/faq_image"
+                app:layout_constraintTop_toTopOf="@+id/faq_image" />
+
+            <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                android:id="@+id/separator5"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/faq"
+                app:layout_constraintTop_toBottomOf="@+id/faq_image" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logout_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_logout" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/logout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/md"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/logout_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/logout_image"
+                app:layout_constraintTop_toTopOf="@+id/logout_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
