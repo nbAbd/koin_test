@@ -2,19 +2,14 @@ package com.pieaksoft.event.consumer.android.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
-import android.view.LayoutInflater
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.databinding.ItemDriverBinding
 import com.pieaksoft.event.consumer.android.model.ProfileModel
-import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.setImageWithPlaceHolder
-import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.visible
 
 class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {

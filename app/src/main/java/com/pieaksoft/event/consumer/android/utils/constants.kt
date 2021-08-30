@@ -4,4 +4,6 @@ import org.koin.dsl.KoinAppDeclaration
 
 const val SHARED_PREFERENCES_NAME = "SHOPPIX_SHARED_PREFERENCES"
 const val SHARED_PREFERENCES_CURRENT_USER_ID = "CURRENT_USER_ID"
+const val SHARED_PREFERENCES_MAIN_USER_ID = "MAIN_USER_ID"
+const val SHARED_PREFERENCES_ADDITIONAL_USER_ID = "ADDITIONAL_USER_ID"
 var koinAppDeclaration: KoinAppDeclaration? = null
