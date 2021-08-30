@@ -83,7 +83,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     override fun bindVM() {
-        showPermissionsDialog()
+      //  showPermissionsDialog()
 
     }
 

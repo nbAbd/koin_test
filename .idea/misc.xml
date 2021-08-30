@@ -9,11 +9,13 @@
         <entry key="app/src/main/res/drawable/co_driver_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/driver_selector.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.13240740740740742" />
+        <entry key="app/src/main/res/drawable/ic_close2.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/menu_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/menu_sub_bkg.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.1" />

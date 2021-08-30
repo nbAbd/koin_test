@@ -2,16 +2,25 @@ package com.pieaksoft.event.consumer.android.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
+import com.pieaksoft.event.consumer.android.databinding.ItemDriverBinding
+import com.pieaksoft.event.consumer.android.model.ProfileModel
 import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.setImageWithPlaceHolder
 import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.visible
 
 class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
+  //  private val binding = ItemDriverBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding by viewBinding(ItemDriverBinding::bind)
+
     init {
         inflate(context, R.layout.item_driver, this)
 
@@ -19,14 +28,22 @@ class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(co
         val textView: AppCompatTextView = findViewById(R.id.driver_name)
 
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.DriverCardView)
-        imageView.setImageWithPlaceHolder(attributes.getString(R.styleable.DriverCardView_image), attributes.getString(R.styleable.DriverCardView_name)?:"")
+        binding.driverImage.setImageWithPlaceHolder(attributes.getString(R.styleable.DriverCardView_image), attributes.getString(R.styleable.DriverCardView_name)?:"")
         textView.text = attributes.getString(R.styleable.DriverCardView_name)
         attributes.recycle()
 
     }
 
+    fun setDriverInfo(driver: ProfileModel){
+        with(binding){
+            driverName.text = String.format("%s %s", driver.firstName, driver.lastName)
+        }
+    }
     fun setEmpty(empty: Boolean){
-     //   driver_state.visible(!empty, false)
-     //   empty_state.visible(empty, false)
+        with(binding){
+            driverState.visible(!empty, false)
+            emptyState.visible(empty, false)
+        }
+
     }
 }

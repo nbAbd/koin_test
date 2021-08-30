@@ -4,9 +4,9 @@ import java.io.Serializable
 
 data class ProfileModel(
     val id: String?,
-    val displayName: String?,
-    val userName: String?,
+    val firstName: String?,
+    val lastName: String?,
     val email: String?,
-    val phoneNumber: String?,
+    val username: String?,
     val profileImage: String?
 ): Serializable

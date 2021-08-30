@@ -1,8 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.ProfileModel
 import com.pieaksoft.event.consumer.android.model.Success
@@ -10,15 +8,13 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseVM
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import retrofit2.HttpException
-import java.io.File
-import java.net.HttpURLConnection
 
 class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
 
-    private val _result = SingleLiveEvent<ProfileModel>()
-    val result: LiveData<ProfileModel> = _result
+    private val _driver1 = SingleLiveEvent<ProfileModel>()
+    val driver1: LiveData<ProfileModel> = _driver1
+    private val _driver2 = SingleLiveEvent<ProfileModel>()
+    val driver2: LiveData<ProfileModel> = _driver2
 
     fun isAuth(): Boolean {
         return sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "") != ""
@@ -30,7 +26,7 @@ class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
             when (val response = repo.getProfile()) {
                 is Success -> {
                     response.data.let {
-                        _result.value = it
+                        _driver1.value = it
                     }
                 }
                 is Failure -> {

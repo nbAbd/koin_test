@@ -37,6 +37,7 @@
             android:id="@+id/driver1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:name="Test"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/driver2"
             app:layout_constraintStart_toStartOf="parent"
