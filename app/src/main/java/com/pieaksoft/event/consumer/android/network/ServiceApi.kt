@@ -13,6 +13,6 @@ interface ServiceApi {
                       @Body body: Map<String, String>): AuthModel
 
     @GET("/api/me")
-    suspend fun getProfile(): ProfileModel
+    suspend fun getProfile(@Header("Authorization") token: String): ProfileModel
 
 }

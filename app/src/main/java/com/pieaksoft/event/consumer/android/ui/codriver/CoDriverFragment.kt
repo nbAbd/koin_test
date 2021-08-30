@@ -28,6 +28,7 @@ class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
 
     override fun setViews() {
         profileVM.getProfile()
+        profileVM.getProfile(true)
 
         with(binding) {
             driver2.setEmpty(true)
@@ -66,13 +67,17 @@ class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
                 loginContainer.hide()
             }
         }
-
     }
 
     override fun bindVM() {
         profileVM.driver1.observe(this, {
             launch {
                 binding.driver1.setDriverInfo(it)
+            }
+        })
+        profileVM.driver2.observe(this, {
+            launch {
+                binding.driver2.setDriverInfo(it)
             }
         })
 

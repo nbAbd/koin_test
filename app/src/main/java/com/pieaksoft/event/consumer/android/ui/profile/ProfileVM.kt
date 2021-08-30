@@ -1,11 +1,14 @@
 package com.pieaksoft.event.consumer.android.ui.profile
 
+import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.ProfileModel
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.ui.base.BaseVM
+import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_ADDITIONAL_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
+import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_MAIN_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
@@ -21,12 +24,21 @@ class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
     }
 
 
-    fun getProfile() {
+    fun getProfile(isAdditional: Boolean = false) {
         launch {
-            when (val response = repo.getProfile()) {
+            val token = if (isAdditional) sp.getString(
+                SHARED_PREFERENCES_ADDITIONAL_USER_ID,
+                ""
+            ) else sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, "")
+            when (val response = repo.getProfile(token ?: "")) {
                 is Success -> {
                     response.data.let {
-                        _driver1.value = it
+                        if (isAdditional) {
+                            _driver2.value = it
+                        } else {
+                            _driver1.value = it
+                        }
+
                     }
                 }
                 is Failure -> {
