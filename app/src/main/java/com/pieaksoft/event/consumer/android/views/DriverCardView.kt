@@ -18,7 +18,6 @@ import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.visible
 
 class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
-  //  private val binding = ItemDriverBinding.inflate(LayoutInflater.from(context), this, true)
     private val binding by viewBinding(ItemDriverBinding::bind)
 
     init {
@@ -36,7 +35,11 @@ class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(co
 
     fun setDriverInfo(driver: ProfileModel){
         with(binding){
-            driverName.text = String.format("%s %s", driver.firstName, driver.lastName)
+            driverName.text = String.format("%s %s", driver.user?.firstName, driver.user?.lastName)
+            loginValue.text = driver.user?.email
+            loginValue.text = driver.user?.email
+            companyValue.text = driver.company?.name
+            locationValue.text = driver.company?.state
         }
     }
     fun setEmpty(empty: Boolean){

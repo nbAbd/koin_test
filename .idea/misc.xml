@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/item_driver.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.1" />
       </map>
     </option>
