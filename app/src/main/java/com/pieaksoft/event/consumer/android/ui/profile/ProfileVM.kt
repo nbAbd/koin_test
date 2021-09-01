@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.profile
 
 import android.text.BoringLayout
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.ProfileModel
@@ -29,7 +30,8 @@ class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
                 ""
-            ) else sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, "")
+            ) else sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, sp.getString(
+                SHARED_PREFERENCES_CURRENT_USER_ID, ""))
             when (val response = repo.getProfile(token ?: "")) {
                 is Success -> {
                     response.data.let {

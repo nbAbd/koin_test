@@ -1,24 +1,19 @@
 package com.pieaksoft.event.consumer.android.ui.codriver
 
-import android.util.Log
 import androidx.core.widget.addTextChangedListener
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.pieaksoft.event.consumer.android.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.login.LoginVM
-import com.pieaksoft.event.consumer.android.ui.login.RegistrationActivity
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
-import com.pieaksoft.event.consumer.android.utils.hide
-import com.pieaksoft.event.consumer.android.utils.show
-import com.pieaksoft.event.consumer.android.utils.toast
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
+class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
     private val binding by viewBinding(FragmentCoDriverBinding::bind)
     private val profileVM: ProfileVM by viewModel()
     private val loginVM: LoginVM by viewModel()
@@ -28,7 +23,9 @@ class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
 
     override fun setViews() {
         profileVM.getProfile()
-        profileVM.getProfile(true)
+        if (isCooDriverExist()) {
+            profileVM.getProfile(true)
+        }
 
         with(binding) {
             driver2.setEmpty(true)
@@ -59,7 +56,7 @@ class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
 
 
             loginBtn.setOnClickListener {
-                loginVM.login(loginValue?:"", passwordValue?:"", true)
+                loginVM.login(loginValue ?: "", passwordValue ?: "", true)
             }
 
             cancelBtn.setOnClickListener {
@@ -97,5 +94,9 @@ class CoDriverFragment: BaseFragment(R.layout.fragment_co_driver) {
 
     private fun isEnableButton(): Boolean {
         return loginValue != null && passwordValue != null
+    }
+
+    private fun isCooDriverExist(): Boolean {
+        return sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
     }
 }
