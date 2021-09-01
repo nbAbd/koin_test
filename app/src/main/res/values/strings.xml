@@ -51,6 +51,8 @@
     <string name="need_permissions_desk">Permissions are necessary for the correct work of the application and the perfomance of all functions. Push are not required permissions</string>
     <string name="location_desk">Allow to access your location</string>
     <string name="notifications">Notifications</string>
+    <string name="allow">ALLOW</string>
+    <string name="allowed">ALLOWED</string>
     <string name="notifications_desk">Get important notifications</string>
     <string name="log">Log</string>
     <string name="dot_inspect">DOT Inspect</string>
