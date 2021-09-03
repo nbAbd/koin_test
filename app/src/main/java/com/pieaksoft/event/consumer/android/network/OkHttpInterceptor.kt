@@ -16,13 +16,15 @@ class OkHttpInterceptor : Interceptor, KoinComponent {
             val request = request().newBuilder()
 
             sharedPreferences.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "")?.let {
-                request.header("Authorization", "Bearer $it")
-                Log.wtf("Token", it)
-
+                if(it.isNotEmpty()){
+                    request.header("Authorization", "Bearer $it")
+                    Log.wtf("Token", it)
+                }
             }
 
             val response = proceed(request.build())
-
+            Log.e("request", "Request: ${request.build()}")
+            Log.e("request", "Request response: ${response}")
             response
         }
     }

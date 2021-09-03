@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.network
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -24,10 +25,9 @@ object ErrorHandler {
                             error.response()?.errorBody()?.string(),
                             Message::class.java
                         )
-                        var errorStr = ""
-                        for (err in message.errors!!) {
-                            errorStr += """${err.detail}""".trimIndent()
-                        }
+
+                        var errorStr = message.message ?: ""
+
                         errorText = errorStr
                         if (errorText.isEmpty()) errorText =
                             context.getString(R.string.server_error) // в ситуации когда message.getErrors() приходит, но приходит пустым

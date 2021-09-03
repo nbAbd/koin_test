@@ -4,9 +4,5 @@ import java.io.Serializable
 
 
 class Message : Serializable {
-    val errors: List<Error>? = null
-
-    inner class Error {
-        var detail: String? = null
-    }
+    var message: String? = null
 }
