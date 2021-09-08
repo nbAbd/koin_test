@@ -19,6 +19,7 @@
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
