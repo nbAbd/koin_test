@@ -67,8 +67,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val scanCallback by lazy {
         object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                  val  device = result?.getDevice()
-                  Log.e("test_log","test device = "+ device?.name)
+                val device = result?.getDevice()
+                Log.e("test_log", "test device = " + device?.name)
                 super.onScanResult(callbackType, result)
             }
 
@@ -78,7 +78,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
             override fun onScanFailed(errorCode: Int) {
-                Log.e("test_log","test error code = "+ errorCode)
+                Log.e("test_log", "test error code = " + errorCode)
                 super.onScanFailed(errorCode)
             }
         }
@@ -89,7 +89,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
-        Log.e("test_log","test = "+getBluetoothManager().adapter)
+        Log.e("test_log", "test = " + getBluetoothManager().adapter)
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
         registerReceiver(bluetoothReceiver, filter)
 
@@ -154,6 +154,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             !ExcuseMe.doWeHavePermissionFor(this, Manifest.permission.ACCESS_FINE_LOCATION)
         ) {
             showPermissionsDialog()
+        }
+
+        findViewById<AppCompatTextView>(R.id.log).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.log_view).show()
+        }
+
+        findViewById<AppCompatImageView>(R.id.close_log).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.log_view).hide()
         }
     }
 
@@ -220,7 +228,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         permissionDialog?.show()
     }
 
-    private fun startScanBluetooth(){
+    private fun startScanBluetooth() {
         if (bluetoothLeScanner != null) {
             bluetoothLeScanner.startScan(null, scanSettings, scanCallback);
             Log.d("test_log", "scan started");
@@ -234,7 +242,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private var bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-           startScanBluetooth()
+            startScanBluetooth()
             if (intent.action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 val state = intent.getIntExtra(
                     BluetoothAdapter.EXTRA_STATE,

@@ -116,4 +116,6 @@ dependencies {
 
     // ble
     implementation 'com.github.weliem:blessed-android:2.0.6'
+
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 }
