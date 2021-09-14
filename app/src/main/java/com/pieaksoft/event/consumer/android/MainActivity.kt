@@ -45,6 +45,8 @@ import com.pieaksoft.event.consumer.android.utils.*
 import androidx.core.app.ActivityCompat.startActivityForResult
 import android.R.attr.action
 import android.content.IntentFilter
+import android.bluetooth.BluetoothManager
+import java.util.*
 
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -74,14 +76,20 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 Log.e("test_log", "test results = " + results.toString())
                 super.onBatchScanResults(results)
             }
+
+            override fun onScanFailed(errorCode: Int) {
+                Log.e("test_log","test error code = "+ errorCode)
+                super.onScanFailed(errorCode)
+            }
         }
     }
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
+        Log.e("test_log","test = "+getBluetoothManager().adapter)
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
         registerReceiver(bluetoothReceiver, filter)
 
@@ -242,6 +250,13 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 }
             }
         }
+    }
+
+    private fun getBluetoothManager(): BluetoothManager {
+        return Objects.requireNonNull(
+            getSystemService(BLUETOOTH_SERVICE) as BluetoothManager,
+            "cannot get BluetoothManager"
+        )
     }
 
     override fun onDestroy() {
