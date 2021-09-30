@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable/border_button_grey.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/border_driver_item.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/border_driver_status_current.xml" value="0.15092592592592594" />
+        <entry key="app/src/main/res/drawable/border_time.xml" value="0.13518518518518519" />
         <entry key="app/src/main/res/drawable/bottom_nav_item_color.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/drawable/co_driver_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/driver_selector.xml" value="0.11574074074074074" />
@@ -21,10 +22,12 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.125" />
         <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
+        <entry key="app/src/main/res/layout/default_view_item.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
         <entry key="app/src/main/res/layout/log_view.xml" value="0.15579710144927536" />
+        <entry key="app/src/main/res/layout/text_view.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.1" />
       </map>
     </option>

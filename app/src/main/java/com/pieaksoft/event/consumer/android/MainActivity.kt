@@ -44,9 +44,21 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import androidx.core.app.ActivityCompat.startActivityForResult
 import android.R.attr.action
+import android.R.attr.headerBackground
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
+import android.graphics.Point
+import com.anychart.AnyChart
+import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.enums.AvailabilityPeriod
 import java.util.*
+import com.anychart.enums.TimeTrackingMode
+import com.anychart.scales.calendar.Availability
+import com.inqbarna.tablefixheaders.TableFixHeaders
+import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.views.MyGanttAdapter
+import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -86,6 +98,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
+        initChartView()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
@@ -259,6 +272,58 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
     }
+
+    private fun initChartView() {
+        val fullList: MutableList<MyGantItem> = ArrayList()
+        val row1 = MyGantItem(false, "Requaremnt", Point(0, 3))
+        val row2 = MyGantItem(false, "Design", Point(5, 10))
+        val row3 = MyGantItem("Coding", true)
+        val row4 = MyGantItem("Testing", true)
+        val row5 = MyGantItem(false, "Maintance", Point(6, 7))
+
+        fullList.add(row1)
+        fullList.add(row2)
+        fullList.add(row3)
+        fullList.add(row4)
+        fullList.add(row5)
+
+        val adapter = MyGanttAdapter(this, fullList)
+        val body = getBody(fullList)
+        adapter.setFirstHeader("task name")
+        adapter.setFirstBody(body)
+        adapter.header = header
+        adapter.body = body
+        adapter.setSection(body)
+        findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
+
+    }
+
+    private val header: MutableList<String>
+        private get() {
+            val header: MutableList<String> = ArrayList()
+            for (i in 0 until Common.HEADER_COUNT) header.add(StringBuilder().append(i).toString())
+            return header
+        }
+
+    private fun getBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
+        val rows: MutableList<List<String>> = ArrayList()
+
+        for (ganttItem in fullList) {
+            val cols: MutableList<String> = ArrayList()
+            if (!ganttItem.isEmpty) {
+                for (col in 0 until Common.COLUMN_COUNT)
+                    if (col >= ganttItem.point.x && col < ganttItem.point.y)
+                        if (ganttItem.isError) cols.add("error") else cols.add("done")
+                    else cols.add("Empty")
+                rows.add(cols)
+            } else {
+                for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")
+                rows.add(cols)
+            }
+        }
+        return rows
+    }
+
 
     private fun getBluetoothManager(): BluetoothManager {
         return Objects.requireNonNull(

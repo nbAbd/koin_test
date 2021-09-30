@@ -19,6 +19,8 @@
 
     <dimen name="textViewSizeBody4">17sp</dimen>
     <dimen name="textViewSizeBody5">15sp</dimen>
+    <dimen name="_150dp">150dp</dimen>
+    <dimen name="_40dp">40dp</dimen>
 
 
 </resources>
