@@ -1,8 +1,6 @@
 package com.pieaksoft.event.consumer.android
 
 import android.Manifest
-import android.R.attr
-import android.app.Activity
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.BluetoothLeScanner
@@ -12,9 +10,6 @@ import android.bluetooth.le.ScanSettings
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,40 +19,26 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.app.DialogCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.araujo.jordan.excuseme.ExcuseMe
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
-import com.pieaksoft.event.consumer.android.databinding.ActivityMainBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.*
-import androidx.core.app.ActivityCompat.startActivityForResult
-import android.R.attr.action
-import android.R.attr.headerBackground
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
 import android.graphics.Point
-import com.anychart.AnyChart
-import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.enums.AvailabilityPeriod
 import java.util.*
-import com.anychart.enums.TimeTrackingMode
-import com.anychart.scales.calendar.Availability
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.model.MyGantItem
-import com.pieaksoft.event.consumer.android.views.MyGanttAdapter
+import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
 import kotlin.collections.ArrayList
 
 
@@ -275,21 +256,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun initChartView() {
         val fullList: MutableList<MyGantItem> = ArrayList()
-        val row1 = MyGantItem(false, "Requaremnt", Point(0, 3))
-        val row2 = MyGantItem(false, "Design", Point(5, 10))
-        val row3 = MyGantItem("Coding", true)
-        val row4 = MyGantItem("Testing", true)
-        val row5 = MyGantItem(false, "Maintance", Point(6, 7))
+        val row1 = MyGantItem(false, "Off", Point(0, 3))
+        val row2 = MyGantItem(false, "SB", Point(5, 10))
+        val row3 = MyGantItem("D", true)
+        val row4 = MyGantItem("On", true)
 
         fullList.add(row1)
         fullList.add(row2)
         fullList.add(row3)
         fullList.add(row4)
-        fullList.add(row5)
 
         val adapter = MyGanttAdapter(this, fullList)
         val body = getBody(fullList)
-        adapter.setFirstHeader("task name")
+      //  adapter.setFirstHeader("task name")
         adapter.setFirstBody(body)
         adapter.header = header
         adapter.body = body
@@ -313,8 +292,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             if (!ganttItem.isEmpty) {
                 for (col in 0 until Common.COLUMN_COUNT)
                     if (col >= ganttItem.point.x && col < ganttItem.point.y)
-                        if (ganttItem.isError) cols.add("error") else cols.add("done")
-                    else cols.add("Empty")
+                        if (ganttItem.isError) cols.add("error") else cols.add(ganttItem.title)
+                    else cols.add("empty")
                 rows.add(cols)
             } else {
                 for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")

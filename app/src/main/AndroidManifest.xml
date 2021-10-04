@@ -33,15 +33,21 @@
             android:name="com.pieaksoft.event.consumer.android.ui.login.LoginActivity"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="landscape">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+
+        <activity android:name=".MainActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity"
-            android:screenOrientation="landscape"></activity>
         <activity android:name="com.pieaksoft.event.consumer.android.ui.login.RegistrationActivity"></activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.views
+package com.pieaksoft.event.consumer.android.views.gant
 
 import android.content.Context
 import android.util.Log
@@ -33,11 +33,14 @@ class DefaultCellViewGroup : FrameLayout,
     }
 
     override fun bindHeader(headerName: String?, col: Int) {
-        text_view.text = headerName
+        if(headerName == "0" || headerName == "24"){
+            text_view.text = "M"
+        } else {
+            text_view.text = headerName
+        }
     }
 
     override fun bindFirstBody(bodyList: List<String>?, row: Int) {
-        Log.e("test_log","error = "+ rowList+" row = "+row)
         text_view.text = rowList!![row].title
     }
 

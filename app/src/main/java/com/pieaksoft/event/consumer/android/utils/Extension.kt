@@ -130,7 +130,7 @@ fun Fragment.hideKeyboard() {
 //}
 
 fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
-   // hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
+    // hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
     setImageURI(url)
 }
 
@@ -176,7 +176,6 @@ fun Button.isVisibleButton(data: Any?) {
 
 fun ViewGroup.createView(@LayoutRes resId: Int) =
     LayoutInflater.from(context).inflate(resId, this, false)!!
-
 
 
 @SuppressLint("SimpleDateFormat")
@@ -393,7 +392,27 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     })
 }
 
-fun TextView.setDrawableStart(drawable: Int){
+fun TextView.setDrawableStart(drawable: Int) {
     this.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0)
 
+}
+
+fun String.getGantColor(): String {
+    return when {
+        this == "Off" -> {
+            "#D7112A"
+        }
+        this == "SB" -> {
+            "#0045CF"
+        }
+        this == "D" -> {
+            "#27AE60"
+        }
+        this == "On" -> {
+            "#E5AF0A"
+        }
+        else -> {
+            "#9BAEC8"
+        }
+    }
 }

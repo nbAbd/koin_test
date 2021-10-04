@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.views
+package com.pieaksoft.event.consumer.android.views.gant
 
 import android.content.Context
 import com.pieaksoft.event.consumer.android.R

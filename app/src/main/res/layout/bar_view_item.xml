@@ -2,11 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/border_time">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/card_item"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    <View
+        android:id="@+id/line_body"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/dotted"
+        android:layerType="software"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
