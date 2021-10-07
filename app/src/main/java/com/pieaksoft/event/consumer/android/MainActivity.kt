@@ -257,9 +257,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun initChartView() {
         val fullList: MutableList<MyGantItem> = ArrayList()
         val row1 = MyGantItem(false, "Off", Point(0, 3))
-        val row2 = MyGantItem(false, "SB", Point(5, 10))
-        val row3 = MyGantItem("D", true)
-        val row4 = MyGantItem("On", true)
+        val row2 = MyGantItem(false, "SB", Point(4, 6))
+        val row3 = MyGantItem(false,"D", Point(4, 6))
+        val row4 = MyGantItem(false,"On", Point(7, 10))
 
         fullList.add(row1)
         fullList.add(row2)
@@ -268,7 +268,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         val adapter = MyGanttAdapter(this, fullList)
         val body = getBody(fullList)
-      //  adapter.setFirstHeader("task name")
+
         adapter.setFirstBody(body)
         adapter.header = header
         adapter.body = body

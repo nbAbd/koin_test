@@ -14,6 +14,7 @@
         <entry key="app/src/main/res/drawable/dotted.xml" value="0.11" />
         <entry key="app/src/main/res/drawable/driver_selector.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/gant_line.xml" value="0.1287037037037037" />
+        <entry key="app/src/main/res/drawable/ic_back_left.xml" value="0.1287037037037037" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/ic_close2.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/menu_bkg.xml" value="0.13240740740740742" />
@@ -21,16 +22,19 @@
         <entry key="app/src/main/res/drawable/permissions_text_bkg.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/default_view_item.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
-        <entry key="app/src/main/res/layout/log_view.xml" value="0.15579710144927536" />
-        <entry key="app/src/main/res/layout/text_view.xml" value="0.14402173913043478" />
+        <entry key="app/src/main/res/layout/log_view.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/reg_company.xml" value="0.11854103343465046" />
+        <entry key="app/src/main/res/layout/reg_personal.xml" value="0.11854103343465046" />
+        <entry key="app/src/main/res/layout/text_view.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.1" />
       </map>
     </option>
