@@ -60,6 +60,7 @@
     <string name="canada_rules">Canada Rules</string>
     <string name="md">MD</string>
     <string name="dvir">DVIR</string>
+    <string name="insert_event">Insert event</string>
 
     
     <string-array name="countries">
