@@ -37,7 +37,9 @@ import android.bluetooth.BluetoothManager
 import android.graphics.Point
 import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
+import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
 import kotlin.collections.ArrayList
 
@@ -47,6 +49,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private var permissionDialog: Dialog? = null
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
+    private var insertEvent: String = ""
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -258,8 +261,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val fullList: MutableList<MyGantItem> = ArrayList()
         val row1 = MyGantItem(false, "Off", Point(0, 3))
         val row2 = MyGantItem(false, "SB", Point(4, 6))
-        val row3 = MyGantItem(false,"D", Point(4, 6))
-        val row4 = MyGantItem(false,"On", Point(7, 10))
+        val row3 = MyGantItem(false, "D", Point(4, 6))
+        val row4 = MyGantItem(false, "On", Point(7, 10))
 
         fullList.add(row1)
         fullList.add(row2)
@@ -274,7 +277,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         adapter.body = body
         adapter.setSection(body)
         findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
-
+        findViewById<AppCompatButton>(R.id.insert_btn).setOnClickListener {
+            Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
+                override fun onEventClick(event: EventInsertType) {
+                    insertEvent = event.type
+                    Log.e("test_log", "test event = " + insertEvent)
+                }
+            })
+        }
     }
 
     private val header: MutableList<String>

@@ -61,6 +61,8 @@
     <string name="md">MD</string>
     <string name="dvir">DVIR</string>
     <string name="insert_event">Insert event</string>
+    <string name="driving">Driving</string>
+    <string name="sleeper_berth">Sleeper berth</string>
 
     
     <string-array name="countries">
