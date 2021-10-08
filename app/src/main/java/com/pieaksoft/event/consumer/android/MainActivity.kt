@@ -41,6 +41,7 @@ import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
+import nl.joery.timerangepicker.TimeRangePicker
 import kotlin.collections.ArrayList
 
 
@@ -281,6 +282,20 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
                 override fun onEventClick(event: EventInsertType) {
                     insertEvent = event.type
+                    Dialogs.showEventTimeRangeDialog(this@MainActivity, object : TimeRangePicker.OnTimeChangeListener{
+                        override fun onDurationChange(duration: TimeRangePicker.TimeDuration) {
+
+                        }
+
+                        override fun onEndTimeChange(endTime: TimeRangePicker.Time) {
+
+                        }
+
+                        override fun onStartTimeChange(startTime: TimeRangePicker.Time) {
+
+                        }
+
+                    })
                     Log.e("test_log", "test event = " + insertEvent)
                 }
             })

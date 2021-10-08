@@ -119,4 +119,7 @@ dependencies {
 
     implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
     implementation 'com.github.miguelbcr:TableFixHeaders-Wrapper:0.2.0'
+
+
+    implementation 'nl.joery.timerangepicker:timerangepicker:1.0.0'
 }

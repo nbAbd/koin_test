@@ -63,6 +63,10 @@
     <string name="insert_event">Insert event</string>
     <string name="driving">Driving</string>
     <string name="sleeper_berth">Sleeper berth</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="duration">Duration:\n %s:%sh</string>
+    <string name="apply">Apply</string>
 
     
     <string-array name="countries">
