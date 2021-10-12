@@ -289,26 +289,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
                 override fun onEventClick(event: EventInsertType) {
                     insertEvent = event.type
-                    Dialogs.showEventTimeRangeDialog(this@MainActivity, object : TimeRangePicker.OnTimeChangeListener{
-                        override fun onDurationChange(duration: TimeRangePicker.TimeDuration) {
+                    Dialogs.showDateTimeSelector(
+                        this@MainActivity,
+                        object : Dialogs.DateSelectListener {
+                            override fun onDateSelect(date: Date) {
 
-                        }
-
-                        override fun onEndTimeChange(endTime: TimeRangePicker.Time) {
-
-                        }
-
-                        override fun onStartTimeChange(startTime: TimeRangePicker.Time) {
-
-                        }
-
-                    })
-
+                            }
+                        })
                 }
             })
         }
-
-
     }
 
     private val header: MutableList<String>

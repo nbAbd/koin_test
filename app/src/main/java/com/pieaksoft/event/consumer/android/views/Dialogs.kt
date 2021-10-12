@@ -2,15 +2,20 @@ package com.pieaksoft.event.consumer.android.views
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.Window
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
+import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.EventInsertType
+import com.pieaksoft.event.consumer.android.utils.addDays
 import nl.joery.timerangepicker.TimeRangePicker
+import java.util.*
 
 object Dialogs {
 
@@ -22,15 +27,19 @@ object Dialogs {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.findViewById<AppCompatButton>(R.id.event_off_btn).setOnClickListener {
             listener.onEventClick(EventInsertType.Off)
+            dialog.dismiss()
         }
         dialog.findViewById<AppCompatButton>(R.id.event_sleep_btn).setOnClickListener {
             listener.onEventClick(EventInsertType.Sleep)
+            dialog.dismiss()
         }
         dialog.findViewById<AppCompatButton>(R.id.event_driving_btn).setOnClickListener {
             listener.onEventClick(EventInsertType.Driving)
+            dialog.dismiss()
         }
         dialog.findViewById<AppCompatButton>(R.id.event_on_btn).setOnClickListener {
             listener.onEventClick(EventInsertType.On)
+            dialog.dismiss()
         }
         dialog.findViewById<AppCompatButton>(R.id.event_cancel_btn).setOnClickListener {
             dialog.dismiss()
@@ -88,5 +97,25 @@ object Dialogs {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+
+    fun  showDateTimeSelector(context: Context, listener: DateSelectListener){
+        SingleDateAndTimePickerDialog.Builder(context)
+            .minDateRange(Date().addDays(-7))
+            .maxDateRange(Date())
+            .curved()
+            .backgroundColor(ContextCompat.getColor(context, R.color.grey))
+            .mainColor(ContextCompat.getColor(context, R.color.white))
+            .titleTextColor(ContextCompat.getColor(context, R.color.grey))
+            .title(context.getString(R.string.choose_date_time))
+            .listener {date ->
+                listener.onDateSelect(date)
+            }
+            .display()
+    }
+
+    interface DateSelectListener {
+        fun onDateSelect(date: Date)
     }
 }
