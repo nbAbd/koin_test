@@ -104,10 +104,11 @@ object Dialogs {
         SingleDateAndTimePickerDialog.Builder(context)
             .minDateRange(Date().addDays(-7))
             .maxDateRange(Date())
+            .bottomSheet()
             .curved()
             .backgroundColor(ContextCompat.getColor(context, R.color.grey))
             .mainColor(ContextCompat.getColor(context, R.color.white))
-            .titleTextColor(ContextCompat.getColor(context, R.color.grey))
+            .titleTextColor(ContextCompat.getColor(context, R.color.white))
             .title(context.getString(R.string.choose_date_time))
             .listener {date ->
                 listener.onDateSelect(date)

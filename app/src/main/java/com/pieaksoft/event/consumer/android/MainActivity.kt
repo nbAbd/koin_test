@@ -54,6 +54,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private var insertEvent: String = ""
+    private var insertEventDate: Date? = null
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -293,6 +294,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         this@MainActivity,
                         object : Dialogs.DateSelectListener {
                             override fun onDateSelect(date: Date) {
+                                insertEventDate = date
 
                             }
                         })
