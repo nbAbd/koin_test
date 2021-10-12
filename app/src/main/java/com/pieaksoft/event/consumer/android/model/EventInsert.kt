@@ -1,6 +1,10 @@
 package com.pieaksoft.event.consumer.android.model
 
 enum class EventInsertType(val type: String) {
+    statusChange("DUTY_STATUS_CHANGE"),
+}
+
+enum class EventInsertCode(val code: String) {
     Off("DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY"),
     Sleep("DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH"),
     Driving("DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING"),

@@ -1,6 +1,18 @@
 package com.pieaksoft.event.consumer.android.utils
 
+import java.text.SimpleDateFormat
 import java.util.*
+
+
+fun Date.formatToServerDateDefaults(): String{
+    val sdf= SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return sdf.format(this)
+}
+
+fun Date.formatToServerTimeDefaults(): String{
+    val sdf= SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    return sdf.format(this)
+}
 
 fun Date.add(field: Int, amount: Int): Date {
     Calendar.getInstance().apply {

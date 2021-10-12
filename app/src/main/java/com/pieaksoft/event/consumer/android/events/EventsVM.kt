@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.events
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.Failure
@@ -13,6 +14,7 @@ class EventsVM(private val repo: EventsRepo) : BaseVM() {
     val eventLiveData: LiveData<Event> = eventObserver
 
     fun insertEvent(event: Event) {
+        Log.e("test_log","test = "+event)
         launch {
             when (val response = repo.insertEvent(event)) {
                 is Success -> {
