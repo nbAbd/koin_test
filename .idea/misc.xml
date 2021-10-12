@@ -34,6 +34,7 @@
         <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/item_event.xml" value="0.165" />
         <entry key="app/src/main/res/layout/log_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/reg_company.xml" value="0.11854103343465046" />
         <entry key="app/src/main/res/layout/reg_personal.xml" value="0.11854103343465046" />

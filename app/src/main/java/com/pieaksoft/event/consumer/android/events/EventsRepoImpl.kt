@@ -15,4 +15,13 @@ class EventsRepoImpl(private val serviceApi: ServiceApi): EventsRepo {
             Failure(e)
         }
     }
+
+    override suspend fun getEventList(): Result<List<Event>, Exception> {
+        return try {
+            val response = serviceApi.getEventList()
+            Success(response)
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
 }

@@ -88,7 +88,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-        initChartView()
+       // initChartView()
+        eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
@@ -166,11 +167,53 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatImageView>(R.id.close_log).setOnClickListener {
             findViewById<ConstraintLayout>(R.id.log_view).hide()
         }
+
+        findViewById<AppCompatButton>(R.id.insert_btn).setOnClickListener {
+            Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
+                override fun onEventClick(event: EventInsertCode) {
+                    insertEvent = event.code
+                    Dialogs.showDateTimeSelector(
+                        this@MainActivity,
+                        object : Dialogs.DateSelectListener {
+                            override fun onDateSelect(date: Date) {
+                                insertEventDate = date
+                                var event = Event(
+                                    null,
+                                    EventInsertType.statusChange.type,
+                                    insertEvent,
+                                    date = date.formatToServerDateDefaults(),
+                                    time = date.formatToServerTimeDefaults(),
+                                    Location(-10.12345f, 48.23432f),
+                                    shippingDocumentNumber = "test",
+                                    totalEngineHours = 20,
+                                    totalEngineMiles = 450,
+                                    eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
+                                    eventRecordStatus = "ACTIVE",
+                                    malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
+                                    dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
+                                    driverLocationDescription = "chicago, IL",
+                                    dutyStatus = "OFF_DUTY",
+                                    certification = Certification("2021-10-11", "CERTIFIED"))
+                                eventsVm.insertEvent(event)
+
+                            }
+                        })
+                }
+            })
+        }
     }
 
     override fun bindVM() {
         eventsVm.eventLiveData.observe(this, {
             Log.e("test_log","test response = "+it)
+        })
+
+        eventsVm.eventListLiveData.observe(this, {
+            Log.e("test_log","test eventList response = "+it)
+        })
+
+        eventsVm.eventGroupByDateObservable.observe(this, {
+            Log.e("test_log","test eventList response Grpuop by = "+it)
         })
     }
 
@@ -285,39 +328,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         adapter.body = body
         adapter.setSection(body)
         findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
-        findViewById<AppCompatButton>(R.id.insert_btn).setOnClickListener {
-            Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
-                override fun onEventClick(event: EventInsertCode) {
-                    insertEvent = event.code
-                    Dialogs.showDateTimeSelector(
-                        this@MainActivity,
-                        object : Dialogs.DateSelectListener {
-                            override fun onDateSelect(date: Date) {
-                                insertEventDate = date
-                                var event = Event(
-                                    null,
-                                    EventInsertType.statusChange.type,
-                                    insertEvent,
-                                    date = date.formatToServerDateDefaults(),
-                                    time = date.formatToServerTimeDefaults(),
-                                Location(-10.12345f, 48.23432f),
-                                    shippingDocumentNumber = "test",
-                                    totalEngineHours = 20,
-                                    totalEngineMiles = 450,
-                                    eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
-                                    eventRecordStatus = "ACTIVE",
-                                    malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-                                    dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
-                                    driverLocationDescription = "chicago, IL",
-                                    dutyStatus = "OFF_DUTY",
-                                    certification = Certification("2021-10-11", "CERTIFIED"))
-                                eventsVm.insertEvent(event)
 
-                            }
-                        })
-                }
-            })
-        }
     }
 
     private val header: MutableList<String>

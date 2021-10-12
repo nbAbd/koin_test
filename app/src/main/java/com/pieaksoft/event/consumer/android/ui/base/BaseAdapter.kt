@@ -1,4 +1,4 @@
-package com.peaksoft.e_commerce.base
+package com.pieaksoft.event.consumer.android.ui.base
 
 import android.view.LayoutInflater
 import android.view.View
