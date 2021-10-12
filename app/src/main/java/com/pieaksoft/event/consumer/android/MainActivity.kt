@@ -37,11 +37,14 @@ import android.bluetooth.BluetoothManager
 import android.graphics.Point
 import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
+import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
 import nl.joery.timerangepicker.TimeRangePicker
+import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
 
 
@@ -60,6 +63,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             .setReportDelay(10L)
             .build()
     }
+
+    private val eventsVm: EventsVM by viewModel()
 
     private val scanCallback by lazy {
         object : ScanCallback() {
@@ -164,7 +169,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     override fun bindVM() {
+        eventsVm.eventLiveData.observe(this, {
 
+        })
     }
 
 
@@ -296,10 +303,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         }
 
                     })
-                    Log.e("test_log", "test event = " + insertEvent)
+
                 }
             })
         }
+
+
     }
 
     private val header: MutableList<String>

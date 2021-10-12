@@ -3,6 +3,9 @@ package com.pieaksoft.event.consumer.android.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.pieaksoft.event.consumer.android.BuildConfig
+import com.pieaksoft.event.consumer.android.events.EventsRepo
+import com.pieaksoft.event.consumer.android.events.EventsRepoImpl
+import com.pieaksoft.event.consumer.android.events.EventsVM
 
 import com.pieaksoft.event.consumer.android.network.OkHttpInterceptor
 import com.pieaksoft.event.consumer.android.network.ServiceApi
@@ -66,6 +69,7 @@ val AppModule = module {
 
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepo> { ProfileRepoImpl(get()) }
+    single<EventsRepo> { EventsRepoImpl(get()) }
 //    single { FavoritesRepository(get()) }
 //    single { ChatRepository(get()) }
 //    single { EventsRepository(get()) }
@@ -73,6 +77,7 @@ val AppModule = module {
 //    single { BasketRepository(get()) }
     viewModel { LoginVM(get()) }
     viewModel { ProfileVM(get()) }
+    viewModel { EventsVM(get()) }
 //    viewModel { RecommendedVM(get()) }
 //    viewModel { StoreVM(get()) }
 //    viewModel { ProfileVM(get()) }
