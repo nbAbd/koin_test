@@ -11,10 +11,11 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.Common
+import com.pieaksoft.event.consumer.android.utils.getCode
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
 
 
-class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>() {
+class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>() {
 
     var list: Map<String, List<Event>> = emptyMap()
 
@@ -22,15 +23,47 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>
     inner class EventsAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(eventList: List<Event>, position: Int) {
             val fullList: MutableList<MyGantItem> = ArrayList()
-            val row1 = MyGantItem(false, "Off", Point(0, 3))
-            val row2 = MyGantItem(false, "SB", Point(4, 6))
-            val row3 = MyGantItem(false, "D", Point(4, 6))
-            val row4 = MyGantItem(false, "On", Point(7, 10))
+            val offEvent = eventList.firstOrNull { it.getCode() == "Off" }
+            val SB = eventList.firstOrNull { it.getCode() == "SB" }
+            val D = eventList.firstOrNull { it.getCode() == "D" }
+            val On = eventList.firstOrNull { it.getCode() == "On" }
 
-            fullList.add(row1)
-            fullList.add(row2)
-            fullList.add(row3)
-            fullList.add(row4)
+
+            if (offEvent != null) {
+                val startPoint = offEvent.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                val endPoint =  startPoint+5
+                fullList.add(MyGantItem(false, "Off", Point(startPoint, endPoint)))
+            } else {
+                fullList.add(MyGantItem(false, "Off", Point(0, 0)))
+            }
+            if (SB != null) {
+                val startPoint = SB.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                val endPoint =  startPoint+5
+                fullList.add(
+                    MyGantItem(
+                        false,
+                        "SB",
+                        Point(startPoint, endPoint)
+                    )
+                )
+            } else {
+                fullList.add(MyGantItem(false, "SB", Point(0, 0)))
+            }
+            if (D != null) {
+                val startPoint = D.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                val endPoint =  startPoint+5
+                fullList.add(MyGantItem(false, "D", Point(startPoint, endPoint)))
+            } else {
+                fullList.add(MyGantItem(false, "D", Point(0, 0)))
+            }
+            if (On != null) {
+                val startPoint = On.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                val endPoint =  startPoint+5
+                fullList.add(MyGantItem(false, "On", Point(startPoint, endPoint)))
+            } else {
+                fullList.add(MyGantItem(false, "On", Point(0, 0)))
+            }
+
 
             val adapter = MyGanttAdapter(itemView.context, fullList)
             val body = getBody(fullList)
@@ -39,7 +72,7 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>
             adapter.header = header
             adapter.body = body
             adapter.setSection(body)
-            itemView.findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter =  adapter
+            itemView.findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
         }
     }
 
@@ -49,11 +82,13 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsAdapterViewHolder {
-        return EventsAdapterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false))
+        return EventsAdapterViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
-      return list.size
+        return list.size
     }
 
     private val header: MutableList<String>
