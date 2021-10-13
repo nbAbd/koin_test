@@ -59,6 +59,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private var insertEvent: String = ""
     private var insertEventDate: Date? = null
+    private var sliderPosition: Int = 0
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -316,9 +317,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun initChartView() {
-        findViewById<RecyclerView>(R.id.events_list).layoutManager = LinearLayoutManager(
+        val llm = LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, true
         )
+        findViewById<RecyclerView>(R.id.events_list).layoutManager = llm
         val eventsAdapter = EventsAdapter()
         findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter
         eventsAdapter.list = eventsVm.getEventsGroupByDate()
@@ -333,6 +335,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL_STATE_IDLE,
             object : OnSnapPositionChangeListener {
                 override fun onSnapPositionChange(position: Int) {
+                    sliderPosition = position
                     launch {
                         findViewById<AppCompatTextView>(R.id.date_text).text =
                             eventsAdapter.list.keys.elementAt(position)
@@ -352,6 +355,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                     }
                 }
             })
+
+//        findViewById<AppCompatButton>(R.id.back_btn).setOnClickListener {
+//            llm.scrollToPositionWithOffset(sliderPosition+1, eventsAdapter.list.size)
+//            //findViewById<RecyclerView>(R.id.events_list).layoutManager.scrollToPositionWithOffset(sliderPosition + 1)
+//            Log.e("test_log","test = scroll = "+ (sliderPosition - 1))
+//        }
+//        findViewById<AppCompatButton>(R.id.next_btn).setOnClickListener {
+//            llm.scrollToPositionWithOffset(sliderPosition-1, eventsAdapter.list.size)
+//           // Log.e("test_log","test = scroll = "+ (sliderPosition + 1))
+//           // findViewById<RecyclerView>(R.id.events_list).layoutManager?.scrollToPosition(sliderPosition - 1)
+//        }
     }
 
 
