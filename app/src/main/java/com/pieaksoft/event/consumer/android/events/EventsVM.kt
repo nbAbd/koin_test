@@ -54,7 +54,7 @@ class EventsVM(private val repo: EventsRepo) : BaseVM() {
         }
     }
 
-    private fun getEventsGroupByDate(): Map<String, List<Event>> {
+     fun getEventsGroupByDate(): Map<String, List<Event>> {
         return Storage.eventList.groupBy { it.date ?: "" }
     }
 }

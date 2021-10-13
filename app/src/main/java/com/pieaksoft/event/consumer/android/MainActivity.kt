@@ -35,10 +35,13 @@ import com.pieaksoft.event.consumer.android.utils.*
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
 import android.graphics.Point
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
@@ -88,7 +91,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-       // initChartView()
+        // initChartView()
         eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
@@ -193,7 +196,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                                     dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                                     driverLocationDescription = "chicago, IL",
                                     dutyStatus = "OFF_DUTY",
-                                    certification = Certification("2021-10-11", "CERTIFIED"))
+                                    certification = Certification("2021-10-11", "CERTIFIED")
+                                )
                                 eventsVm.insertEvent(event)
 
                             }
@@ -205,15 +209,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun bindVM() {
         eventsVm.eventLiveData.observe(this, {
-            Log.e("test_log","test response = "+it)
+            Log.e("test_log", "test response = " + it)
         })
 
         eventsVm.eventListLiveData.observe(this, {
-            Log.e("test_log","test eventList response = "+it)
+            Log.e("test_log", "test eventList response = " + it)
         })
 
         eventsVm.eventGroupByDateObservable.observe(this, {
-            Log.e("test_log","test eventList response Grpuop by = "+it)
+            Log.e("test_log", "test eventList response Grpuop by = " + it)
+            initChartView()
         })
     }
 
@@ -309,52 +314,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun initChartView() {
-        val fullList: MutableList<MyGantItem> = ArrayList()
-        val row1 = MyGantItem(false, "Off", Point(0, 3))
-        val row2 = MyGantItem(false, "SB", Point(4, 6))
-        val row3 = MyGantItem(false, "D", Point(4, 6))
-        val row4 = MyGantItem(false, "On", Point(7, 10))
-
-        fullList.add(row1)
-        fullList.add(row2)
-        fullList.add(row3)
-        fullList.add(row4)
-
-        val adapter = MyGanttAdapter(this, fullList)
-        val body = getBody(fullList)
-
-        adapter.setFirstBody(body)
-        adapter.header = header
-        adapter.body = body
-        adapter.setSection(body)
-        findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
-
-    }
-
-    private val header: MutableList<String>
-        private get() {
-            val header: MutableList<String> = ArrayList()
-            for (i in 0 until Common.HEADER_COUNT) header.add(StringBuilder().append(i).toString())
-            return header
-        }
-
-    private fun getBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
-        val rows: MutableList<List<String>> = ArrayList()
-
-        for (ganttItem in fullList) {
-            val cols: MutableList<String> = ArrayList()
-            if (!ganttItem.isEmpty) {
-                for (col in 0 until Common.COLUMN_COUNT)
-                    if (col >= ganttItem.point.x && col < ganttItem.point.y)
-                        if (ganttItem.isError) cols.add("error") else cols.add(ganttItem.title)
-                    else cols.add("empty")
-                rows.add(cols)
-            } else {
-                for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")
-                rows.add(cols)
-            }
-        }
-        return rows
+        findViewById<RecyclerView>(R.id.events_list).layoutManager = LinearLayoutManager(
+            this, LinearLayoutManager.HORIZONTAL, false)
+        val eventsAdapter = EventsAdapter()
+        findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter
+        eventsAdapter.list = eventsVm.getEventsGroupByDate()
+        eventsAdapter.notifyDataSetChanged()
     }
 
 
