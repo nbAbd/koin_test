@@ -40,3 +40,13 @@ fun Date.addMinutes(minutes: Int): Date{
 fun Date.addSeconds(seconds: Int): Date{
     return add(Calendar.SECOND, seconds)
 }
+
+fun String.getDateFromString(): Date{
+    val dateFormat =  SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    return dateFormat.parse(this)
+}
+
+fun Date.formatToServerDateDefaults2(): String{
+    val sdf= SimpleDateFormat("dd-MMM-yyyy", Locale.US)
+    return sdf.format(this)
+}

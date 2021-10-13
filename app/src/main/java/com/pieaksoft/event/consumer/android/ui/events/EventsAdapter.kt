@@ -40,7 +40,6 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>
             adapter.body = body
             adapter.setSection(body)
             itemView.findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter =  adapter
-            Log.e("test_log","test = onBind" )
         }
     }
 

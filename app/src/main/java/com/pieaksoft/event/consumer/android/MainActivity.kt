@@ -36,6 +36,7 @@ import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
 import android.graphics.Point
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
@@ -45,6 +46,7 @@ import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
+import kotlinx.coroutines.launch
 import nl.joery.timerangepicker.TimeRangePicker
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
@@ -315,11 +317,41 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun initChartView() {
         findViewById<RecyclerView>(R.id.events_list).layoutManager = LinearLayoutManager(
-            this, LinearLayoutManager.HORIZONTAL, false)
+            this, LinearLayoutManager.HORIZONTAL, true
+        )
         val eventsAdapter = EventsAdapter()
         findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter
         eventsAdapter.list = eventsVm.getEventsGroupByDate()
         eventsAdapter.notifyDataSetChanged()
+
+        findViewById<AppCompatTextView>(R.id.date_text).text =
+            eventsAdapter.list.keys.elementAt(0)
+                .getDateFromString().formatToServerDateDefaults2()
+
+        findViewById<RecyclerView>(R.id.events_list).attachSnapHelperWithListener(
+            PagerSnapHelper(),
+            SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL_STATE_IDLE,
+            object : OnSnapPositionChangeListener {
+                override fun onSnapPositionChange(position: Int) {
+                    launch {
+                        findViewById<AppCompatTextView>(R.id.date_text).text =
+                            eventsAdapter.list.keys.elementAt(position)
+                                .getDateFromString().formatToServerDateDefaults2()
+                    }
+                }
+
+                override fun onSnapPositionDragging() {
+
+                }
+
+                override fun onSnapPositionNotChange(position: Int) {
+                    launch {
+                        findViewById<AppCompatTextView>(R.id.date_text).text =
+                            eventsAdapter.list.keys.elementAt(position)
+                                .getDateFromString().formatToServerDateDefaults2()
+                    }
+                }
+            })
     }
 
 
