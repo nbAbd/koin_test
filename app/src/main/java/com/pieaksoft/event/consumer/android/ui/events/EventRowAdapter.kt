@@ -18,15 +18,16 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
         fun bind(eventList: List<MyGantItem>, position: Int) {
             val eventCellItems: MutableList<String> = ArrayList()
             if(eventList[position].title == "time"){
+                Log.e("test12","test pos = "+ position)
                 eventCellItems.add("time")
-                for (i in 1 .. 25){
-                    eventCellItems.add((i-1).toString())
+                for (i in 1 ..  25){
+                    val index = i-1
+                    eventCellItems.add((index).toString())
                 }
-            } else {
-              //  val title = eventList[0].title
-               // eventCellItems.add(title)
             }
 
+            Log.e("test123","test pos = "+ position)
+            Log.e("test123","test pos size = "+ eventList.size)
             val adapter = EventCellAdapter()
             itemView.findViewById<RecyclerView>(R.id.gant_rv).adapter = adapter
             itemView.findViewById<RecyclerView>(R.id.gant_rv).layoutManager = LinearLayoutManager(
@@ -34,9 +35,6 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
             itemView.findViewById<RecyclerView>(R.id.gant_rv).setRecycledViewPool(viewPool)
             adapter.fullList = eventCellItems
             adapter.notifyDataSetChanged()
-
-            Log.e("test_log4", "test = "+eventCellItems )
-            Log.e("test_log44", "test = "+eventList.size )
         }
     }
 
@@ -63,6 +61,5 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
     companion object {
         const val VIEW_TYPE_HEADER_BODY = 10001
         const val VIEW_TYPE_EVENT = 10002
-        const val VIEW_TYPE_EVENT_NAME = 10003
     }
 }
