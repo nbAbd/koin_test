@@ -42,6 +42,7 @@ import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.ui.events.EventRowAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.views.Dialogs

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.R
@@ -20,84 +21,75 @@ import miguelbcr.ui.tableFixHeadesWrapper.TableFixHeaderAdapter
 class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>() {
 
     var list: Map<String, List<Event>> = emptyMap()
-
+    val viewPool = RecyclerView.RecycledViewPool()
 
     inner class EventsAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(eventList: List<Event>, position: Int) {
             val fullList: MutableList<MyGantItem> = ArrayList()
-            val offEvent = eventList.firstOrNull { it.getCode() == "Off" }
-            val SB = eventList.firstOrNull { it.getCode() == "SB" }
-            val D = eventList.firstOrNull { it.getCode() == "D" }
-            val On = eventList.firstOrNull { it.getCode() == "On" }
             val eventsGroup = eventList.groupBy { it.getCode() ?: "" }
 
 
-//            eventsGroup.forEach { (key, value) ->
-//                value.forEach { event ->
-//
+//            if (eventsGroup.containsKey("Off")) {
+//                val points: MutableList<Point> = ArrayList()
+//                eventsGroup["Off"]?.forEach { event ->
+//                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+//                    val endPoint = startPoint + 5
+//                    points.add(Point(startPoint, endPoint))
 //                }
-//
+//                fullList.add(MyGantItem(false, "Off", points))
+//            } else {
+//                fullList.add(MyGantItem(false, "Off", mutableListOf()))
 //            }
-
-
-            if (eventsGroup.containsKey("Off")) {
-                val points: MutableList<Point> = ArrayList()
-                eventsGroup["Off"]?.forEach { event ->
-                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
-                    points.add(Point(startPoint, endPoint))
-                }
-                fullList.add(MyGantItem(false, "Off", points))
-            } else {
-                fullList.add(MyGantItem(false, "Off", mutableListOf()))
-            }
-
-            if (eventsGroup.containsKey("SB")) {
-                val points: MutableList<Point> = ArrayList()
-                eventsGroup["SB"]?.forEach { event ->
-                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
-                    points.add(Point(startPoint, endPoint))
-                }
-                fullList.add(MyGantItem(false, "SB", points))
-            } else {
-                fullList.add(MyGantItem(false, "SB", mutableListOf()))
-            }
-
-            if (eventsGroup.containsKey("D")) {
-                val points: MutableList<Point> = ArrayList()
-                eventsGroup["D"]?.forEach { event ->
-                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
-                    points.add(Point(startPoint, endPoint))
-                }
-                fullList.add(MyGantItem(false, "D", points))
-            } else {
-                fullList.add(MyGantItem(false, "D", mutableListOf()))
-            }
-            if (eventsGroup.containsKey("On")) {
-                val points: MutableList<Point> = ArrayList()
-                eventsGroup["On"]?.forEach { event ->
-                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
-                    points.add(Point(startPoint, endPoint))
-                }
-                fullList.add(MyGantItem(false, "On", points))
-            } else {
-                fullList.add(MyGantItem(false, "On", mutableListOf()))
-            }
+//
+//            if (eventsGroup.containsKey("SB")) {
+//                val points: MutableList<Point> = ArrayList()
+//                eventsGroup["SB"]?.forEach { event ->
+//                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+//                    val endPoint = startPoint + 5
+//                    points.add(Point(startPoint, endPoint))
+//                }
+//                fullList.add(MyGantItem(false, "SB", points))
+//            } else {
+//                fullList.add(MyGantItem(false, "SB", mutableListOf()))
+//            }
+//
+//            if (eventsGroup.containsKey("D")) {
+//                val points: MutableList<Point> = ArrayList()
+//                eventsGroup["D"]?.forEach { event ->
+//                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+//                    val endPoint = startPoint + 5
+//                    points.add(Point(startPoint, endPoint))
+//                }
+//                fullList.add(MyGantItem(false, "D", points))
+//            } else {
+//                fullList.add(MyGantItem(false, "D", mutableListOf()))
+//            }
+//            if (eventsGroup.containsKey("On")) {
+//                val points: MutableList<Point> = ArrayList()
+//                eventsGroup["On"]?.forEach { event ->
+//                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+//                    val endPoint = startPoint + 5
+//                    points.add(Point(startPoint, endPoint))
+//                }
+//                fullList.add(MyGantItem(false, "On", points))
+//            } else {
+//                fullList.add(MyGantItem(false, "On", mutableListOf()))
+//            }
 
             Log.e("test_log3", "test = " + fullList)
 
-            val adapter = MyGanttAdapter(itemView.context, fullList)
-            val body = getBody(fullList)
-            //val body1 = getBody1(fullList)
+            val adapter = EventRowAdapter()
+            fullList.add(0, MyGantItem("time", false))
+            adapter.fullList = fullList
 
-            adapter.setFirstBody(body)
-            adapter.header = header
-            adapter.body = body
-            adapter.setSection(body)
-            itemView.findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
+            itemView.findViewById<RecyclerView>(R.id.row_rv).layoutManager = LinearLayoutManager(
+                itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            itemView.findViewById<RecyclerView>(R.id.row_rv).setRecycledViewPool(viewPool)
+
+            itemView.findViewById<RecyclerView>(R.id.row_rv).adapter = adapter
+            adapter.notifyDataSetChanged()
+
+
         }
     }
 
