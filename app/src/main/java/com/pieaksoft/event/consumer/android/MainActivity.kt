@@ -150,6 +150,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
+        Log.e("test_log","test = "+ sp.get(SHARED_PREFERENCES_CURRENT_USER_ID, ""))
+
 
         findViewById<AppCompatImageView>(R.id.menu).setOnClickListener {
             if (findViewById<ConstraintLayout>(R.id.menu_opened).visibility == View.GONE) {

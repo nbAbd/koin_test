@@ -41,7 +41,7 @@ class DefaultCellViewGroup : FrameLayout,
     }
 
     override fun bindFirstBody(bodyList: List<String>?, row: Int) {
-        text_view.text = rowList!![row].title
+//        text_view.text = rowList!![row].title
     }
 
     override fun bindBody(items: List<String>?, row: Int, col: Int) {

@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_rules"
             android:drawablePadding="8dp"
-            android:text="@string/dot_inspect"
+            android:text="@string/rules"
             android:textColor="@color/grey2"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/menu"

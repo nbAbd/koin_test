@@ -11,8 +11,10 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.Common
+import com.pieaksoft.event.consumer.android.utils.Storage
 import com.pieaksoft.event.consumer.android.utils.getCode
 import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
+import miguelbcr.ui.tableFixHeadesWrapper.TableFixHeaderAdapter
 
 
 class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>() {
@@ -27,46 +29,69 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             val SB = eventList.firstOrNull { it.getCode() == "SB" }
             val D = eventList.firstOrNull { it.getCode() == "D" }
             val On = eventList.firstOrNull { it.getCode() == "On" }
+            val eventsGroup = eventList.groupBy { it.getCode() ?: "" }
 
 
-            if (offEvent != null) {
-                val startPoint = offEvent.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                val endPoint =  startPoint+5
-                fullList.add(MyGantItem(false, "Off", Point(startPoint, endPoint)))
+//            eventsGroup.forEach { (key, value) ->
+//                value.forEach { event ->
+//
+//                }
+//
+//            }
+
+
+            if (eventsGroup.containsKey("Off")) {
+                val points: MutableList<Point> = ArrayList()
+                eventsGroup["Off"]?.forEach { event ->
+                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                    val endPoint = startPoint + 5
+                    points.add(Point(startPoint, endPoint))
+                }
+                fullList.add(MyGantItem(false, "Off", points))
             } else {
-                fullList.add(MyGantItem(false, "Off", Point(0, 0)))
-            }
-            if (SB != null) {
-                val startPoint = SB.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                val endPoint =  startPoint+5
-                fullList.add(
-                    MyGantItem(
-                        false,
-                        "SB",
-                        Point(startPoint, endPoint)
-                    )
-                )
-            } else {
-                fullList.add(MyGantItem(false, "SB", Point(0, 0)))
-            }
-            if (D != null) {
-                val startPoint = D.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                val endPoint =  startPoint+5
-                fullList.add(MyGantItem(false, "D", Point(startPoint, endPoint)))
-            } else {
-                fullList.add(MyGantItem(false, "D", Point(0, 0)))
-            }
-            if (On != null) {
-                val startPoint = On.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                val endPoint =  startPoint+5
-                fullList.add(MyGantItem(false, "On", Point(startPoint, endPoint)))
-            } else {
-                fullList.add(MyGantItem(false, "On", Point(0, 0)))
+                fullList.add(MyGantItem(false, "Off", mutableListOf()))
             }
 
+            if (eventsGroup.containsKey("SB")) {
+                val points: MutableList<Point> = ArrayList()
+                eventsGroup["SB"]?.forEach { event ->
+                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                    val endPoint = startPoint + 5
+                    points.add(Point(startPoint, endPoint))
+                }
+                fullList.add(MyGantItem(false, "SB", points))
+            } else {
+                fullList.add(MyGantItem(false, "SB", mutableListOf()))
+            }
+
+            if (eventsGroup.containsKey("D")) {
+                val points: MutableList<Point> = ArrayList()
+                eventsGroup["D"]?.forEach { event ->
+                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                    val endPoint = startPoint + 5
+                    points.add(Point(startPoint, endPoint))
+                }
+                fullList.add(MyGantItem(false, "D", points))
+            } else {
+                fullList.add(MyGantItem(false, "D", mutableListOf()))
+            }
+            if (eventsGroup.containsKey("On")) {
+                val points: MutableList<Point> = ArrayList()
+                eventsGroup["On"]?.forEach { event ->
+                    val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
+                    val endPoint = startPoint + 5
+                    points.add(Point(startPoint, endPoint))
+                }
+                fullList.add(MyGantItem(false, "On", points))
+            } else {
+                fullList.add(MyGantItem(false, "On", mutableListOf()))
+            }
+
+            Log.e("test_log3", "test = " + fullList)
 
             val adapter = MyGanttAdapter(itemView.context, fullList)
             val body = getBody(fullList)
+            //val body1 = getBody1(fullList)
 
             adapter.setFirstBody(body)
             adapter.header = header
@@ -98,9 +123,8 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             return header
         }
 
-    private fun getBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
+    private fun getFirstBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
         val rows: MutableList<List<String>> = ArrayList()
-
         for (ganttItem in fullList) {
             val cols: MutableList<String> = ArrayList()
             if (!ganttItem.isEmpty) {
@@ -109,6 +133,26 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
                         if (ganttItem.isError) cols.add("error") else cols.add(ganttItem.title)
                     else cols.add("empty")
                 rows.add(cols)
+            } else {
+                for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")
+                rows.add(cols)
+            }
+        }
+        return rows
+    }
+
+    private fun getBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
+        val rows: MutableList<List<String>> = ArrayList()
+
+        for (ganttItem in fullList) {
+            val cols: MutableList<String> = ArrayList()
+            if (!ganttItem.isEmpty) {
+                for (col in 0 until Common.COLUMN_COUNT){
+                    if (col >= ganttItem.point.x && col < ganttItem.point.y)
+                        if (ganttItem.isError) cols.add("error") else cols.add(ganttItem.title)
+                    else cols.add("empty")
+                    rows.add(cols)
+                }
             } else {
                 for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")
                 rows.add(cols)

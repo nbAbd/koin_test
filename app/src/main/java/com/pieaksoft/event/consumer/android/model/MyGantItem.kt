@@ -6,6 +6,7 @@ class MyGantItem {
     var isError = false
     var title: String = ""
     var point: Point = Point()
+    var pointList:MutableList<Point> = mutableListOf()
     var isEmpty = false
 
 
@@ -21,4 +22,14 @@ class MyGantItem {
         this.point = point
     }
 
+    constructor(isError: Boolean, title: String, pointList:MutableList<Point>) {
+        this.isError = isError
+        this.title = title
+        this.pointList = pointList
+    }
+
+
+    override fun toString(): String {
+        return "is Error = "+ isError +" title = "+ title+" pointList = "+pointList
+    }
 }
