@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.utils.getGantColor
+import com.pieaksoft.event.consumer.android.utils.toColorInt
 
 class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>() {
 
@@ -13,10 +15,20 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
 
     inner class EventCellAdapterViewHolder(itemView: View) : BaseViewHolder(itemView) {
         override fun bind(eventList: MutableList<String>, position: Int) {
-            if (position == 1 || position == 25) {
-                itemView.findViewById<AppCompatTextView>(R.id.text_view).text = "M"
+            if (eventList[position].length > 1) {
+                if (eventList[position] != "empty") {
+                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundResource(R.drawable.dotted)
+                } else {
+                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundResource(R.drawable.gant_line)
+                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundColor(eventList[position].getGantColor().toColorInt())
+                }
             } else {
-                itemView.findViewById<AppCompatTextView>(R.id.text_view).text = (position - 1).toString()
+                if (position == 1 || position == 25) {
+                    itemView.findViewById<AppCompatTextView>(R.id.text_view).text = "M"
+                } else {
+                    itemView.findViewById<AppCompatTextView>(R.id.text_view).text =
+                        (position - 1).toString()
+                }
             }
         }
     }
@@ -35,10 +47,12 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
         return if (viewType == VIEW_TYPE_FIRST_BODY) {
             EventFirstCellAdapterViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_gant_first_cell, parent, false))
+                    .inflate(R.layout.item_gant_first_cell, parent, false)
+            )
         } else {
             EventCellAdapterViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.text_view, parent, false))
+                LayoutInflater.from(parent.context).inflate(R.layout.text_view, parent, false)
+            )
         }
     }
 

@@ -80,7 +80,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             adapter.fullList = fullList
 
             itemView.findViewById<RecyclerView>(R.id.row_rv).layoutManager = LinearLayoutManager(
-                itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                itemView.context, LinearLayoutManager.VERTICAL, false)
             itemView.findViewById<RecyclerView>(R.id.row_rv).setRecycledViewPool(viewPool)
 
             itemView.findViewById<RecyclerView>(R.id.row_rv).adapter = adapter

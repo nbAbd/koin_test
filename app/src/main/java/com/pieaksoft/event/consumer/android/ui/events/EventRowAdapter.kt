@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.utils.getGantColor
+import com.pieaksoft.event.consumer.android.utils.toColorInt
 
 class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterViewHolder>() {
 
@@ -17,21 +19,33 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
     inner class EventRowAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(eventList: List<MyGantItem>, position: Int) {
             val eventCellItems: MutableList<String> = ArrayList()
-            if(eventList[position].title == "time"){
-                Log.e("test12","test pos = "+ position)
+            if (position == 0) {
                 eventCellItems.add("time")
-                for (i in 1 ..  25){
-                    val index = i-1
+                for (i in 1..25) {
+                    val index = i - 1
                     eventCellItems.add((index).toString())
+                }
+            } else {
+                val ganttItem = eventList[position]
+                eventCellItems.add(ganttItem.title)
+                for (i in 1..25) {
+                    val index = i - 1
+                    for (point in eventList[position].pointList) {
+                        if (index >= ganttItem.point.x && index < ganttItem.point.y) {
+                            eventCellItems.add(ganttItem.title.getGantColor())
+                        } else {
+                            eventCellItems.add("empty")
+                        }
+                    }
                 }
             }
 
-            Log.e("test123","test pos = "+ position)
-            Log.e("test123","test pos size = "+ eventList.size)
+
             val adapter = EventCellAdapter()
             itemView.findViewById<RecyclerView>(R.id.gant_rv).adapter = adapter
             itemView.findViewById<RecyclerView>(R.id.gant_rv).layoutManager = LinearLayoutManager(
-                itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                itemView.context, LinearLayoutManager.HORIZONTAL, false
+            )
             itemView.findViewById<RecyclerView>(R.id.gant_rv).setRecycledViewPool(viewPool)
             adapter.fullList = eventCellItems
             adapter.notifyDataSetChanged()
