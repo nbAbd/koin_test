@@ -66,7 +66,6 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
 
         })
         loginVM.error.observe(this, Observer { message ->
-            Log.e("test_log", "test error = " + message)
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, this))
             }

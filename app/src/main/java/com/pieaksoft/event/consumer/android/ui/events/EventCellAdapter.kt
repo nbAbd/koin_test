@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.utils.getGantColor
+import com.pieaksoft.event.consumer.android.utils.hide
+import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.toColorInt
 
 class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>() {
@@ -15,14 +18,18 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
 
     inner class EventCellAdapterViewHolder(itemView: View) : BaseViewHolder(itemView) {
         override fun bind(eventList: MutableList<String>, position: Int) {
-            if (eventList[position].length > 1) {
+            if (eventList[position].length > 2) {
+                itemView.findViewById<AppCompatTextView>(R.id.text_view).hide()
+                itemView.findViewById<View>(R.id.line_body).show()
                 if (eventList[position] != "empty") {
-                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundResource(R.drawable.dotted)
+                    itemView.findViewById<View>(R.id.line_body)?.setBackgroundResource(R.drawable.gant_line)
+                    itemView.findViewById<View>(R.id.line_body)?.setBackgroundColor(eventList[position].toColorInt())
                 } else {
-                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundResource(R.drawable.gant_line)
-                    itemView.findViewById<AppCompatTextView>(R.id.text_view)?.setBackgroundColor(eventList[position].getGantColor().toColorInt())
+                    itemView.findViewById<View>(R.id.line_body)?.setBackgroundResource(R.drawable.dotted)
                 }
             } else {
+                itemView.findViewById<AppCompatTextView>(R.id.text_view).show()
+                itemView.findViewById<View>(R.id.line_body).hide()
                 if (position == 1 || position == 25) {
                     itemView.findViewById<AppCompatTextView>(R.id.text_view).text = "M"
                 } else {
