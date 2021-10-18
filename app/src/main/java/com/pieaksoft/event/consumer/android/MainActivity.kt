@@ -280,14 +280,15 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
 
         locationAllowTextView?.setOnClickListener {
-            ExcuseMe.couldYouGive(this).permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) {
-                locationAllowTextView.text = getString(R.string.allowed)
-                locationAllowTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
-                locationAllowTextView.background?.colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(
-                        ContextCompat.getColor(this, R.color.blue),
-                        BlendModeCompat.SRC_IN
-                    )
+            ExcuseMe.couldYouGive(this).permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) { status ->
+                    locationAllowTextView.text = getString(R.string.allowed)
+                    locationAllowTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    locationAllowTextView.background?.colorFilter = BlendModeColorFilterCompat
+                        .createBlendModeColorFilterCompat(
+                            ContextCompat.getColor(this, R.color.blue),
+                            BlendModeCompat.SRC_IN
+                        )
+                permissionDialog?.dismiss()
             }
         }
         permissionDialog?.show()
