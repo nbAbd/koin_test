@@ -30,12 +30,14 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
                 eventCellItems.add(ganttItem.title)
                 for (i in 1..25) {
                     val index = i - 1
-                    if(ganttItem.pointList.isNotEmpty()){
+                    if (ganttItem.pointList.isNotEmpty()) {
                         for (point in ganttItem.pointList) {
                             if (index >= point.x && index <= point.y) {
                                 eventCellItems.add(ganttItem.title.getGantColor())
                             } else {
-                                eventCellItems.add("empty")
+                                if (eventCellItems.size < i+1) {
+                                    eventCellItems.add("empty")
+                                }
                             }
                         }
                     } else {

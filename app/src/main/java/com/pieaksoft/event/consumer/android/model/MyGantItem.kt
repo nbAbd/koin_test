@@ -29,6 +29,13 @@ class MyGantItem {
     }
 
 
+    fun getSortedPointList(): MutableList<Point> {
+        //            .sortWith(compareBy { it.x })
+//        pointList.sortBy({it.x})
+//        sortedList
+        return pointList.toList().sortedWith(compareBy { it.x }).toMutableList()
+    }
+
     override fun toString(): String {
         return "is Error = "+ isError +" title = "+ title+" pointList = "+pointList
     }

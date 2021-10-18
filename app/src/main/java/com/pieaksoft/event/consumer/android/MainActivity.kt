@@ -42,6 +42,7 @@ import java.util.*
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.events.EventRowAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
@@ -225,6 +226,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         eventsVm.eventGroupByDateObservable.observe(this, {
             Log.e("test_log", "test eventList response Grpuop by = " + it)
             initChartView()
+        })
+
+        eventsVm.error.observe(this, {
+            val error = ErrorHandler.getErrorMessage(it, this)
+            Log.e("test_logerrror", "test insert error response = " + error)
         })
     }
 
