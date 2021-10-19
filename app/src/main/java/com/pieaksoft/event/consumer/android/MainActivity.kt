@@ -35,6 +35,7 @@ import com.pieaksoft.event.consumer.android.utils.*
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
 import android.graphics.Point
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -62,6 +63,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private var insertEvent: String = ""
     private var insertEventDate: Date? = null
     private var sliderPosition: Int = 0
+
+    private val eventsAdapter by lazy {
+        EventsAdapter()
+    }
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -96,11 +101,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-        // initChartView()
+
         eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
+        LocalBroadcastManager.getInstance(this).apply {
+            registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
+        }
+
+        initChartView()
         Log.e("test_log", "test = " + getBluetoothManager().adapter)
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
         registerReceiver(bluetoothReceiver, filter)
@@ -216,16 +226,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun bindVM() {
         eventsVm.eventLiveData.observe(this, {
-            Log.e("test_log", "test response = " + it)
+            eventsVm.getEventList()
         })
 
         eventsVm.eventListLiveData.observe(this, {
-            Log.e("test_log", "test eventList response = " + it)
+            setEventsData()
         })
 
         eventsVm.eventGroupByDateObservable.observe(this, {
             Log.e("test_log", "test eventList response Grpuop by = " + it)
-            initChartView()
+            setEventsData()
         })
 
         eventsVm.error.observe(this, {
@@ -327,20 +337,22 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    private fun setEventsData(){
+        eventsAdapter.list = eventsVm.getEventsGroupByDate()
+        eventsAdapter.notifyDataSetChanged()
+
+        findViewById<AppCompatTextView>(R.id.date_text).text =
+            eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
+                ?.formatToServerDateDefaults2() ?: ""
+    }
+
     private fun initChartView() {
         val llm = LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, true
         )
         findViewById<RecyclerView>(R.id.events_list).layoutManager = llm
-        val eventsAdapter = EventsAdapter()
         findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter
-        eventsAdapter.list = eventsVm.getEventsGroupByDate()
-        eventsAdapter.notifyDataSetChanged()
 
-
-        findViewById<AppCompatTextView>(R.id.date_text).text =
-            eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
-                ?.formatToServerDateDefaults2() ?: ""
 
         findViewById<RecyclerView>(R.id.events_list).attachSnapHelperWithListener(
             PagerSnapHelper(),
@@ -380,6 +392,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 //        }
     }
 
+    private val driverSwapReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            eventsVm.getEventList()
+        }
+    }
 
     private fun getBluetoothManager(): BluetoothManager {
         return Objects.requireNonNull(

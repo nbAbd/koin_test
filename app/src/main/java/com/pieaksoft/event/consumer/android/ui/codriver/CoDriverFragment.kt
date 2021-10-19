@@ -1,6 +1,8 @@
 package com.pieaksoft.event.consumer.android.ui.codriver
 
+import android.content.Intent
 import androidx.core.widget.addTextChangedListener
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 import com.pieaksoft.event.consumer.android.R
@@ -87,6 +89,9 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
 
         profileVM.needUpdateObservable.observe(this, {
             getDriversInfo()
+            LocalBroadcastManager
+                .getInstance(requireContext())
+                .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))
         })
 
         profileVM.error.observe(this, { message ->
