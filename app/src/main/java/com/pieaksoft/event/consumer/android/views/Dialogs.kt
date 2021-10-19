@@ -48,6 +48,27 @@ object Dialogs {
         dialog.show()
     }
 
+    fun showSwapDriversDialog(activity: Activity, listener: SwapDriversListener) {
+        val dialog = Dialog(activity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_swap_drivers)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.findViewById<AppCompatButton>(R.id.swap_confirm_btn).setOnClickListener {
+            listener.onSwapDriversClick()
+            dialog.dismiss()
+        }
+        dialog.findViewById<AppCompatButton>(R.id.swap_cancel_btn).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    interface SwapDriversListener {
+        fun onSwapDriversClick()
+    }
+
     interface EventInsertClick {
         fun onEventClick(event: EventInsertCode)
     }

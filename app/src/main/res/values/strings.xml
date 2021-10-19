@@ -69,6 +69,10 @@
     <string name="duration">Duration:\n %s:%sh</string>
     <string name="apply">Apply</string>
     <string name="choose_date_time">Choose date and time</string>
+    <string name="confirm">Confirm</string>
+    <string name="swap_ask">Are you sure you want to swap the driver?</string>
+    <string name="current_driver">Current driver</string>
+    <string name="co_driver">Co-Driver</string>
 
     
     <string-array name="countries">

@@ -10,6 +10,7 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.ui.login.LoginVM
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -72,9 +73,20 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
         })
         profileVM.driver2.observe(this, {
             launch {
-                binding.driver2.setDriverInfo(it)
+                binding.driver2.setDriverInfo(it, false)
                 binding.driver2.setEmpty(false)
+                binding.driver2.setOnClickListener {
+                    Dialogs.showSwapDriversDialog(requireActivity(), object : Dialogs.SwapDriversListener{
+                        override fun onSwapDriversClick() {
+                            profileVM.swapDrivers()
+                        }
+                    })
+                }
             }
+        })
+
+        profileVM.needUpdateObservable.observe(this, {
+            getDriversInfo()
         })
 
         profileVM.error.observe(this, { message ->

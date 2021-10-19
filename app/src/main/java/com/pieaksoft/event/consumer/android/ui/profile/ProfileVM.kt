@@ -19,6 +19,7 @@ class ProfileVM(val app: Application, private val repo: ProfileRepo) : BaseVM(ap
     val driver1: LiveData<ProfileModel> = _driver1
     private val _driver2 = SingleLiveEvent<ProfileModel>()
     val driver2: LiveData<ProfileModel> = _driver2
+    val needUpdateObservable = SingleLiveEvent<Boolean>()
 
     fun isAuth(): Boolean {
         return sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "") != ""
@@ -30,8 +31,11 @@ class ProfileVM(val app: Application, private val repo: ProfileRepo) : BaseVM(ap
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
                 ""
-            ) else sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, sp.getString(
-                SHARED_PREFERENCES_CURRENT_USER_ID, ""))
+            ) else sp.getString(
+                SHARED_PREFERENCES_MAIN_USER_ID, sp.getString(
+                    SHARED_PREFERENCES_CURRENT_USER_ID, ""
+                )
+            )
             when (val response = repo.getProfile(token ?: "")) {
                 is Success -> {
                     response.data.let {
@@ -47,6 +51,17 @@ class ProfileVM(val app: Application, private val repo: ProfileRepo) : BaseVM(ap
                 }
             }
         }
+    }
+
+    fun swapDrivers() {
+        val mainToken = sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, "")
+        val additionalToken = sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "")
+
+        sp.edit().putString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, mainToken).apply()
+        sp.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken).apply()
+        sp.edit().putString(SHARED_PREFERENCES_MAIN_USER_ID, additionalToken).apply()
+        needUpdateObservable.postValue(true)
+
     }
 //
 //    fun updateProfile(name: String?, phone: String?, file: File) {

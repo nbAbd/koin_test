@@ -37,6 +37,7 @@
         app:layout_constraintTop_toTopOf="@+id/driver_image"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/driver_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="current driver"

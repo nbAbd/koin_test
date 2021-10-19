@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/layout/dialog_insert_event.xml" value="0.12291666666666666" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/dialog_range_picker.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/dialog_swap_drivers.xml" value="0.20260416666666667" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
         <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />

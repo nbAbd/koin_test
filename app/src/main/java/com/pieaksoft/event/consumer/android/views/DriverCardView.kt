@@ -1,9 +1,12 @@
 package com.pieaksoft.event.consumer.android.views
 
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
@@ -28,13 +31,30 @@ class DriverCardView(context: Context, attrs: AttributeSet): ConstraintLayout(co
 
     }
 
-    fun setDriverInfo(driver: ProfileModel){
+    fun setDriverInfo(driver: ProfileModel, current: Boolean = true){
         with(binding){
             driverName.text = String.format("%s %s", driver.user?.firstName, driver.user?.lastName)
             loginValue.text = driver.user?.email
             loginValue.text = driver.user?.email
             companyValue.text = driver.company?.name
             locationValue.text = driver.company?.state
+            if(current){
+                driverStatus.text = context.getString(R.string.current_driver)
+                driverStatus.background.colorFilter = PorterDuffColorFilter(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.green
+                    ), PorterDuff.Mode.SRC_IN
+                )
+            } else {
+                driverStatus.text = context.getString(R.string.co_driver)
+                driverStatus.background.colorFilter = PorterDuffColorFilter(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.grey2
+                    ), PorterDuff.Mode.SRC_IN
+                )
+            }
         }
     }
     fun setEmpty(empty: Boolean){
