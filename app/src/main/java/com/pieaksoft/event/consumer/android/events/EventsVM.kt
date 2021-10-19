@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.events
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Event
@@ -10,7 +11,7 @@ import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import com.pieaksoft.event.consumer.android.utils.Storage
 import kotlinx.coroutines.launch
 
-class EventsVM(private val repo: EventsRepo) : BaseVM() {
+class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app) {
     private val eventObserver = SingleLiveEvent<Event>()
     val eventLiveData: LiveData<Event> = eventObserver
 

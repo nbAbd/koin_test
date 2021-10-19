@@ -1,6 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.profile
 
-import android.text.BoringLayout
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Failure
@@ -13,7 +13,7 @@ import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_MAIN_USER_I
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
+class ProfileVM(val app: Application, private val repo: ProfileRepo) : BaseVM(app) {
 
     private val _driver1 = SingleLiveEvent<ProfileModel>()
     val driver1: LiveData<ProfileModel> = _driver1
@@ -40,7 +40,6 @@ class ProfileVM(private val repo: ProfileRepo) : BaseVM() {
                         } else {
                             _driver1.value = it
                         }
-
                     }
                 }
                 is Failure -> {

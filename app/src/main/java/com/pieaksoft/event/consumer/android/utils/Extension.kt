@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.*
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.text.Editable
 import android.text.SpannableString
@@ -432,4 +435,25 @@ fun SnapHelper.getSnapPosition(recyclerView: RecyclerView): Int {
     val layoutManager = recyclerView.layoutManager ?: return RecyclerView.NO_POSITION
     val snapView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
     return layoutManager.getPosition(snapView)
+}
+
+fun Context.isNetworkAvailable(): Boolean {
+    val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val capabilities = manager?.activeNetwork ?: return false
+        val active = manager.getNetworkCapabilities(capabilities) ?: return false
+        return when {
+            active.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            active.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            active.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    } else {
+        return when (manager?.activeNetworkInfo?.type) {
+            ConnectivityManager.TYPE_WIFI,
+            ConnectivityManager.TYPE_MOBILE,
+            ConnectivityManager.TYPE_ETHERNET -> manager.activeNetworkInfo?.isConnected == true
+            else -> false
+        }
+    }
 }

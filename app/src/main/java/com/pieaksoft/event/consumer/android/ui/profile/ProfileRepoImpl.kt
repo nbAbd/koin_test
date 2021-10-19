@@ -9,7 +9,7 @@ import com.pieaksoft.event.consumer.android.network.ServiceApi
 class ProfileRepoImpl(private val serviceApi: ServiceApi): ProfileRepo {
     override suspend fun getProfile(token: String): Result<ProfileModel, Exception> {
         return try {
-            val response = serviceApi.getProfile(token)
+            val response = serviceApi.getProfile("Bearer $token")
             Success(response)
         } catch (e: Exception) {
             Failure(e)

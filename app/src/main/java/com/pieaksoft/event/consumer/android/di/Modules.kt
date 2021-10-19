@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.pieaksoft.event.consumer.android.BuildConfig
@@ -49,15 +50,6 @@ val RetrofitModule = module {
     single { get<Retrofit>().create(ServiceApi::class.java) }
 }
 
-//val repositoryModule = module {
-//
-//    fun provideLoginRepo(api: ServiceApi): LoginRepo {
-//        return LoginRepoImpl(api)
-//    }
-//    single { provideLoginRepo(get()) }
-//
-//}
-
 
 val AppModule = module {
     single<SharedPreferences> {
@@ -75,9 +67,9 @@ val AppModule = module {
 //    single { EventsRepository(get()) }
 //    single { OrderRepository(get()) }
 //    single { BasketRepository(get()) }
-    viewModel { LoginVM(get()) }
-    viewModel { ProfileVM(get()) }
-    viewModel { EventsVM(get()) }
+    viewModel { LoginVM(get(), get()) }
+    viewModel { ProfileVM(get(), get()) }
+    viewModel { EventsVM(get(), get()) }
 //    viewModel { RecommendedVM(get()) }
 //    viewModel { StoreVM(get()) }
 //    viewModel { ProfileVM(get()) }

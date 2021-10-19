@@ -152,7 +152,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        Log.e("test_log","test = "+ sp.get(SHARED_PREFERENCES_CURRENT_USER_ID, ""))
+        Log.e("test_log", "test = " + sp.get(SHARED_PREFERENCES_CURRENT_USER_ID, ""))
 
 
         findViewById<AppCompatImageView>(R.id.menu).setOnClickListener {
@@ -280,7 +280,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
 
         locationAllowTextView?.setOnClickListener {
-            ExcuseMe.couldYouGive(this).permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) { status ->
+            ExcuseMe.couldYouGive(this)
+                .permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) { status ->
                     locationAllowTextView.text = getString(R.string.allowed)
                     locationAllowTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
                     locationAllowTextView.background?.colorFilter = BlendModeColorFilterCompat
@@ -288,8 +289,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                             ContextCompat.getColor(this, R.color.blue),
                             BlendModeCompat.SRC_IN
                         )
-                permissionDialog?.dismiss()
-            }
+                    permissionDialog?.dismiss()
+                }
         }
         permissionDialog?.show()
     }
@@ -336,9 +337,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         eventsAdapter.list = eventsVm.getEventsGroupByDate()
         eventsAdapter.notifyDataSetChanged()
 
+
         findViewById<AppCompatTextView>(R.id.date_text).text =
-            eventsAdapter.list.keys.elementAt(0)
-                .getDateFromString().formatToServerDateDefaults2()
+            eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
+                ?.formatToServerDateDefaults2() ?: ""
 
         findViewById<RecyclerView>(R.id.events_list).attachSnapHelperWithListener(
             PagerSnapHelper(),
