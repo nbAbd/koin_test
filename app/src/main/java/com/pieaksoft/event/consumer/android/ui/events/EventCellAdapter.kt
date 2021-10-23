@@ -26,27 +26,35 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
                 itemView.findViewById<AppCompatTextView>(R.id.text_view).hide()
                 itemView.findViewById<View>(R.id.line_body).show()
                 if (event.title != "empty") {
-
-                    if(event.pointStart.isNullOrBlank()){
-                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress = 100
-                    } else  {
-                        val minutes =  event.pointStart.split(":")?.toTypedArray()?.getOrNull(1)?.toInt() ?: 0
+                    var startTimeSet = false
+                    if (event.pointStart.isNullOrBlank()) {
+                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =
+                            100
+                    } else {
+                        val minutes =
+                            event.pointStart.split(":")?.toTypedArray()?.getOrNull(1)?.toInt() ?: 0
                         val lastMin = 60 - minutes
                         val progress = (lastMin.toDouble() / 60) * 100
 
-                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress = progress.toInt()
-                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.rotation = 180f
-
+                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =
+                            progress.toInt()
+                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.rotation =
+                            180f
+                        startTimeSet = true
                     }
-
-                    if (event.pointEnd.isNullOrBlank()){
-                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress = 100
-                    } else {
-                        val minutes =  event.pointEnd.split(":")?.toTypedArray()?.getOrNull(1)?.toInt() ?: 0
-                        val progress = (minutes.toDouble() / 60) * 100
-                        itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress = progress.toInt()
+                    if (!startTimeSet) {
+                        if (event.pointEnd.isNullOrBlank()) {
+                            itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =
+                                100
+                        } else {
+                            val minutes =
+                                event.pointEnd.split(":")?.toTypedArray()?.getOrNull(1)?.toInt()
+                                    ?: 0
+                            val progress = (minutes.toDouble() / 60) * 100
+                            itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =
+                                progress.toInt()
+                        }
                     }
-
 
                     itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progressTintList =
                         ColorStateList.valueOf(event.title.toColorInt())
@@ -71,7 +79,8 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
             if (eventList[position].title == "time") {
                 itemView.findViewById<AppCompatTextView>(R.id.title).text = ""
             } else {
-                itemView.findViewById<AppCompatTextView>(R.id.title).text = eventList[position].title
+                itemView.findViewById<AppCompatTextView>(R.id.title).text =
+                    eventList[position].title
             }
         }
     }
