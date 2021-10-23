@@ -234,7 +234,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
 
         eventsVm.eventGroupByDateObservable.observe(this, {
-            Log.e("test_log", "test eventList response Grpuop by = " + it)
             setEventsData()
         })
 
@@ -344,6 +343,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatTextView>(R.id.date_text).text =
             eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
                 ?.formatToServerDateDefaults2() ?: ""
+
+        eventsVm.calculateEndTime()
     }
 
     private fun initChartView() {

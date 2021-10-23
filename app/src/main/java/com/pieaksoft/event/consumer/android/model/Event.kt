@@ -24,5 +24,6 @@ data class Event(
     val distanceSinceLastValidCoordinates: String?= "",
     val eventSequenceId: String?= "",
 ): Serializable {
-
+    var endDate: String?= ""
+    var endTime: String?= "24:00"
 }

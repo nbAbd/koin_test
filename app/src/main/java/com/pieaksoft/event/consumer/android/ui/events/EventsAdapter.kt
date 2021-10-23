@@ -33,7 +33,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
                 val points: MutableList<Point> = ArrayList()
                 eventsGroup["Off"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
+                    val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     points.add(Point(startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "Off", points))
@@ -45,7 +45,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
                 val points: MutableList<Point> = ArrayList()
                 eventsGroup["SB"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
+                    val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     points.add(Point(startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "SB", points))
@@ -57,7 +57,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
                 val points: MutableList<Point> = ArrayList()
                 eventsGroup["D"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
+                    val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     points.add(Point(startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "D", points))
@@ -68,7 +68,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
                 val points: MutableList<Point> = ArrayList()
                 eventsGroup["On"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    val endPoint = startPoint + 5
+                    val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     points.add(Point(startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "On", points))

@@ -42,9 +42,10 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         launch {
             when (val response = repo.getEventList()) {
                 is Success -> {
-                    response.data.let {
-                        eventListObserver.postValue(it)
-                        Storage.eventList = it
+                    response.data.let { list ->
+                        eventListObserver.postValue(list)
+                        Storage.eventList = list
+                        Storage.eventListGroupByDate = Storage.eventList.groupBy { it.date ?: "" }
                         eventGroupByDateObservable.postValue(getEventsGroupByDate())
                     }
                 }
@@ -55,7 +56,16 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         }
     }
 
-     fun getEventsGroupByDate(): Map<String, List<Event>> {
-        return Storage.eventList.groupBy { it.date ?: "" }
+    fun getEventsGroupByDate(): Map<String, List<Event>> {
+        return Storage.eventListGroupByDate
+    }
+
+    fun calculateEndTime() {
+        Storage.eventList.forEachIndexed { index, event ->
+            if (index < Storage.eventList.size - 1) {
+                event.endDate = Storage.eventList[index + 1].date
+                event.endTime = Storage.eventList[index + 1].time
+            }
+        }
     }
 }
