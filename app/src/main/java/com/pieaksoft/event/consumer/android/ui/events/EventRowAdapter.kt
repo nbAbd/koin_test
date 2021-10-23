@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.model.GantItemPoint
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.getGantColor
 import com.pieaksoft.event.consumer.android.utils.toColorInt
@@ -18,30 +19,36 @@ class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterView
 
     inner class EventRowAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(eventList: List<MyGantItem>, position: Int) {
-            val eventCellItems: MutableList<String> = ArrayList()
+            val eventCellItems: MutableList<GantItemPoint> = ArrayList()
             if (position == 0) {
-                eventCellItems.add("time")
+                eventCellItems.add(GantItemPoint("time"))
                 for (i in 1..25) {
                     val index = i - 1
-                    eventCellItems.add((index).toString())
+                    eventCellItems.add(GantItemPoint((index).toString()))
                 }
             } else {
                 val ganttItem = eventList[position]
-                eventCellItems.add(ganttItem.title)
+                eventCellItems.add(GantItemPoint(ganttItem.title))
                 for (i in 1..25) {
                     val index = i - 1
                     if (ganttItem.pointList.isNotEmpty()) {
                         for (point in ganttItem.pointList) {
                             if (index >= point.x && index <= point.y) {
-                                eventCellItems.add(ganttItem.title.getGantColor())
+                                eventCellItems.add(
+                                    GantItemPoint(
+                                        ganttItem.title.getGantColor(),
+                                        if (index == point.x) point.pointStart else "",
+                                        if (index == point.y) point.pointEnd else ""
+                                    )
+                                )
                             } else {
-                                if (eventCellItems.size < i+1) {
-                                    eventCellItems.add("empty")
+                                if (eventCellItems.size < i + 1) {
+                                    eventCellItems.add(GantItemPoint("empty"))
                                 }
                             }
                         }
                     } else {
-                        eventCellItems.add("empty")
+                        eventCellItems.add(GantItemPoint("empty"))
                     }
                 }
             }

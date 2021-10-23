@@ -3,7 +3,7 @@
     android:layout_width="@dimen/_30dp"
     android:layout_height="@dimen/_40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/transparent">
+    android:background="@drawable/border_time">
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -16,16 +16,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <View
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
         android:id="@+id/line_body"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@drawable/dotted"
-        android:layerType="software"
         android:visibility="gone"
+        android:max="100"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:progressTint="@color/blue"
+        android:progressDrawable="@drawable/round_progress_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

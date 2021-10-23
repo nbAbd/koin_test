@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/drawable/menu_sub_bkg.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/permissions_text_bkg.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
+        <entry key="app/src/main/res/drawable/round_progress_bar.xml" value="0.2153846153846154" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />

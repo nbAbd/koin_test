@@ -349,7 +349,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun initChartView() {
         val llm = LinearLayoutManager(
-            this, LinearLayoutManager.HORIZONTAL, true
+            this, LinearLayoutManager.HORIZONTAL, false
         )
         findViewById<RecyclerView>(R.id.events_list).layoutManager = llm
         findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter

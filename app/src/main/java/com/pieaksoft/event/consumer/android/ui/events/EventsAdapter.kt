@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.Event
+import com.pieaksoft.event.consumer.android.model.GantItemPoint
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.Common
 import com.pieaksoft.event.consumer.android.utils.Storage
@@ -30,11 +31,11 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             fullList.add(0, MyGantItem("time", false))
 
             if (eventsGroup.containsKey("Off")) {
-                val points: MutableList<Point> = ArrayList()
+                val points: MutableList<GantItemPoint> = ArrayList()
                 eventsGroup["Off"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    points.add(Point(startPoint, endPoint))
+                    points.add(GantItemPoint("Off",event.time ?:"", event.endTime ?:"" ,startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "Off", points))
             } else {
@@ -42,11 +43,11 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             }
 
             if (eventsGroup.containsKey("SB")) {
-                val points: MutableList<Point> = ArrayList()
+                val points: MutableList<GantItemPoint> = ArrayList()
                 eventsGroup["SB"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    points.add(Point(startPoint, endPoint))
+                    points.add(GantItemPoint("SB",event.time ?:"", event.endTime ?:"" ,startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "SB", points))
             } else {
@@ -54,22 +55,22 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
             }
 
             if (eventsGroup.containsKey("D")) {
-                val points: MutableList<Point> = ArrayList()
+                val points: MutableList<GantItemPoint> = ArrayList()
                 eventsGroup["D"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    points.add(Point(startPoint, endPoint))
+                    points.add(GantItemPoint("D",event.time ?:"", event.endTime ?:"" ,startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "D", points))
             } else {
                 fullList.add(MyGantItem(false, "D", mutableListOf()))
             }
             if (eventsGroup.containsKey("On")) {
-                val points: MutableList<Point> = ArrayList()
+                val points: MutableList<GantItemPoint> = ArrayList()
                 eventsGroup["On"]?.forEach { event ->
                     val startPoint = event.time?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
                     val endPoint = event.endTime?.split(":")?.toTypedArray()?.first()?.toInt() ?: 0
-                    points.add(Point(startPoint, endPoint))
+                    points.add(GantItemPoint("D",event.time ?:"", event.endTime ?:"" ,startPoint, endPoint))
                 }
                 fullList.add(MyGantItem(false, "On", points))
             } else {

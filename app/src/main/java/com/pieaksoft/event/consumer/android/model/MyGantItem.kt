@@ -6,7 +6,7 @@ class MyGantItem {
     var isError = false
     var title: String = ""
     var point: Point = Point()
-    var pointList:MutableList<Point> = mutableListOf()
+    var pointList:MutableList<GantItemPoint> = mutableListOf()
     var isEmpty = false
 
 
@@ -22,19 +22,19 @@ class MyGantItem {
         this.point = point
     }
 
-    constructor(isError: Boolean, title: String, pointList:MutableList<Point>) {
+    constructor(isError: Boolean, title: String, pointList:MutableList<GantItemPoint>) {
         this.isError = isError
         this.title = title
         this.pointList = pointList
     }
 
 
-    fun getSortedPointList(): MutableList<Point> {
-        //            .sortWith(compareBy { it.x })
-//        pointList.sortBy({it.x})
-//        sortedList
-        return pointList.toList().sortedWith(compareBy { it.x }).toMutableList()
-    }
+//    fun getSortedPointList(): MutableList<Point> {
+//        //            .sortWith(compareBy { it.x })
+////        pointList.sortBy({it.x})
+////        sortedList
+//        return pointList.toList().sortedWith(compareBy { it.x }).toMutableList()
+//    }
 
     override fun toString(): String {
         return "is Error = "+ isError +" title = "+ title+" pointList = "+pointList
