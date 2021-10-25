@@ -78,6 +78,7 @@
     <string name="license">License</string>
     <string name="ship_doc_number">Shipping document number</string>
     <string name="odometer">Odometer</string>
+    <string name="trailer_number">Trailer number</string>
 
     
     <string-array name="countries">

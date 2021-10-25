@@ -51,6 +51,7 @@
             app:title="@string/truck"
             app:hint="@string/cancel"
             app:text_all_caps="true"
+            android:visibility="gone"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toStartOf="@+id/ship_doc_number"
@@ -61,13 +62,15 @@
             android:id="@+id/trailer_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:title="@string/truck"
+            app:title="@string/trailer_number"
             app:hint="@string/input_data"
             app:text_all_caps="true"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/truck"
-            app:layout_constraintEnd_toEndOf="@+id/truck"
-            app:layout_constraintStart_toStartOf="@id/truck" />
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/ship_doc_number"
+            app:layout_constraintTop_toBottomOf="@+id/insert_title"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.pieaksoft.event.consumer.android.views.CustomEditTextWithTitle
             android:id="@+id/license"
@@ -78,8 +81,8 @@
             app:text_all_caps="true"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/trailer_number"
-            app:layout_constraintEnd_toEndOf="@+id/truck"
-            app:layout_constraintStart_toStartOf="@id/truck" />
+            app:layout_constraintEnd_toEndOf="@+id/trailer_number"
+            app:layout_constraintStart_toStartOf="@id/trailer_number" />
 
         <com.pieaksoft.event.consumer.android.views.CustomEditTextWithTitle
             android:id="@+id/odometer"
@@ -90,8 +93,8 @@
             app:text_all_caps="true"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/license"
-            app:layout_constraintEnd_toEndOf="@+id/truck"
-            app:layout_constraintStart_toStartOf="@id/truck" />
+            app:layout_constraintEnd_toEndOf="@+id/trailer_number"
+            app:layout_constraintStart_toStartOf="@id/trailer_number" />
 
         <com.pieaksoft.event.consumer.android.views.CustomEditTextWithTitle
             android:id="@+id/ship_doc_number"
@@ -103,7 +106,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toTopOf="@+id/trailer_number"
-            app:layout_constraintStart_toEndOf="@+id/truck"
+            app:layout_constraintStart_toEndOf="@+id/trailer_number"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.pieaksoft.event.consumer.android.views.CustomEditTextWithTitle
