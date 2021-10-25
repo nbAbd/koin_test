@@ -8,13 +8,17 @@
     android:layout_marginStart="40dp"
     android:layout_marginBottom="50dp"
     android:layout_marginEnd="40dp"
-    android:visibility="visible"
+    android:visibility="gone"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/insert_event_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/menu_sub_bkg">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -125,6 +129,24 @@
             app:layout_constraintTop_toTopOf="@+id/odometer"
             app:layout_constraintStart_toStartOf="@+id/ship_doc_number"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/next"
+            android:layout_width="260dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_order_button"
+            android:enabled="true"
+            android:lines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="15dp"
+            android:text="@string/next"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/odometer"
+            app:layout_constraintTop_toBottomOf="@+id/odometer"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
