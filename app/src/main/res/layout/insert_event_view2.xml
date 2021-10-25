@@ -8,7 +8,7 @@
     android:layout_marginStart="40dp"
     android:layout_marginBottom="50dp"
     android:layout_marginEnd="40dp"
-    android:visibility="visible"
+    android:visibility="gone"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,6 +72,36 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment_title"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@+id/state_province"
+            app:layout_constraintTop_toBottomOf="@+id/state_province" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/comment_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/custom_input"
+            android:drawablePadding="5dp"
+            android:hint="@string/input_data"
+            android:paddingStart="12dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="5dp"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grey"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/comment_title"
+            app:layout_constraintStart_toStartOf="@+id/state_province"
+            app:layout_constraintEnd_toEndOf="@+id/city_province" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save"
@@ -88,7 +118,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/state_province"
-            app:layout_constraintTop_toBottomOf="@+id/state_province"
+            app:layout_constraintTop_toBottomOf="@+id/comment_edit_text"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
