@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/border_time.xml" value="0.13518518518518519" />
         <entry key="app/src/main/res/drawable/bottom_nav_item_color.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/drawable/co_driver_bkg.xml" value="0.13240740740740742" />
+        <entry key="app/src/main/res/drawable/custom_input.xml" value="0.2169230769230769" />
         <entry key="app/src/main/res/drawable/dotted.xml" value="0.11" />
         <entry key="app/src/main/res/drawable/driver_selector.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/gant_line.xml" value="0.1287037037037037" />
@@ -24,6 +25,7 @@
         <entry key="app/src/main/res/drawable/round_progress_bar.xml" value="0.2153846153846154" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_registration.xml" value="0.10562310030395136" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
@@ -35,7 +37,9 @@
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
         <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />
+        <entry key="app/src/main/res/layout/insert_event_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/item_edit_text.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/item_event.xml" value="0.165" />
         <entry key="app/src/main/res/layout/item_gant_first_cell.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/layout/item_row.xml" value="0.16510416666666666" />

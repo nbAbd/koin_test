@@ -162,9 +162,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        Log.e("test_log", "test = " + sp.get(SHARED_PREFERENCES_CURRENT_USER_ID, ""))
-
-
         findViewById<AppCompatImageView>(R.id.menu).setOnClickListener {
             if (findViewById<ConstraintLayout>(R.id.menu_opened).visibility == View.GONE) {
                 findViewById<ConstraintLayout>(R.id.menu_opened).show()
@@ -197,6 +194,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         object : Dialogs.DateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 insertEventDate = date
+
+                                findViewById<ConstraintLayout>(R.id.insert_event_view).show()
+
+
                                 var event = Event(
                                     null,
                                     EventInsertType.statusChange.type,
@@ -215,7 +216,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                                     dutyStatus = "OFF_DUTY",
                                     certification = Certification("2021-10-11", "CERTIFIED")
                                 )
-                                eventsVm.insertEvent(event)
+                              //  eventsVm.insertEvent(event)
 
                             }
                         })

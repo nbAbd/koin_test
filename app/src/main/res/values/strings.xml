@@ -73,6 +73,11 @@
     <string name="swap_ask">Are you sure you want to swap the driver?</string>
     <string name="current_driver">Current driver</string>
     <string name="co_driver">Co-Driver</string>
+    <string name="truck">Truck</string>
+    <string name="input_data">Input data</string>
+    <string name="license">License</string>
+    <string name="ship_doc_number">Shipping document number</string>
+    <string name="odometer">Odometer</string>
 
     
     <string-array name="countries">

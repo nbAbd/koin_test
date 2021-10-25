@@ -17,4 +17,11 @@
         <attr name="image" format="string"/>
         <attr name="name" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomEditTextWithTitle">
+        <attr name="title" format="string"/>
+        <attr name="text_all_caps" format="boolean"/>
+        <attr name="hint" format="string"/>
+        <attr name="edit_icon" format="string"/>
+    </declare-styleable>
 </resources>

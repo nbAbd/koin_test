@@ -356,4 +356,5 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/log_view" />
+    <include layout="@layout/insert_event_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
