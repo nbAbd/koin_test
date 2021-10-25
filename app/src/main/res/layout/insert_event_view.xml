@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:title="@string/truck"
-            app:hint="@string/cancel"
+            app:hint="@string/input_data"
             app:text_all_caps="true"
             android:visibility="gone"
             android:layout_marginStart="32dp"

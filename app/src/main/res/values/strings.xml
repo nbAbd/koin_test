@@ -79,6 +79,10 @@
     <string name="ship_doc_number">Shipping document number</string>
     <string name="odometer">Odometer</string>
     <string name="trailer_number">Trailer number</string>
+    <string name="save">Save</string>
+    <string name="location_description">Location Description</string>
+    <string name="state_province">State/province</string>
+    <string name="city_province">City (requires state/province)</string>
 
     
     <string-array name="countries">
