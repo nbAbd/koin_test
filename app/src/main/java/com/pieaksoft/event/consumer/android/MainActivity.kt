@@ -60,6 +60,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private var permissionDialog: Dialog? = null
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
+
     private var insertEvent: String = ""
     private var insertEventDate: Date? = null
     private var sliderPosition: Int = 0
@@ -185,6 +186,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             findViewById<ConstraintLayout>(R.id.log_view).hide()
         }
 
+        setUpInsertEventViews()
+    }
+
+    private fun setUpInsertEventViews(){
         findViewById<AppCompatButton>(R.id.insert_btn).setOnClickListener {
             Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
                 override fun onEventClick(event: EventInsertCode) {
@@ -194,39 +199,60 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         object : Dialogs.DateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 insertEventDate = date
-
                                 findViewById<ConstraintLayout>(R.id.insert_event_view).show()
-
-
-                                var event = Event(
-                                    null,
-                                    EventInsertType.statusChange.type,
-                                    insertEvent,
-                                    date = date.formatToServerDateDefaults(),
-                                    time = date.formatToServerTimeDefaults(),
-                                    Location(-10.12345f, 48.23432f),
-                                    shippingDocumentNumber = "test",
-                                    totalEngineHours = 20,
-                                    totalEngineMiles = 450,
-                                    eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
-                                    eventRecordStatus = "ACTIVE",
-                                    malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-                                    dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
-                                    driverLocationDescription = "chicago, IL",
-                                    dutyStatus = "OFF_DUTY",
-                                    certification = Certification("2021-10-11", "CERTIFIED")
-                                )
-                              //  eventsVm.insertEvent(event)
-
                             }
                         })
                 }
             })
         }
+
+
+        findViewById<AppCompatImageView>(R.id.back_insert_btn).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).hide()
+            findViewById<AppCompatButton>(R.id.insert_btn).performClick()
+        }
+
+        findViewById<AppCompatImageView>(R.id.back_insert_loc_btn).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).show()
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
+        }
+
+        findViewById<AppCompatButton>(R.id.next).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).hide()
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).show()
+        }
+
+
+        findViewById<AppCompatButton>(R.id.save).setOnClickListener {
+            var event = Event(
+                null,
+                EventInsertType.statusChange.type,
+                insertEvent,
+                date = insertEventDate?.formatToServerDateDefaults(),
+                time = insertEventDate?.formatToServerTimeDefaults(),
+                Location(-10.12345f, 48.23432f),
+                shippingDocumentNumber = "test",
+                totalEngineHours = 20,
+                totalEngineMiles = 450,
+                eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
+                eventRecordStatus = "ACTIVE",
+                malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
+                dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
+                driverLocationDescription = "chicago, IL",
+                dutyStatus = "OFF_DUTY",
+                certification = Certification("2021-10-11", "CERTIFIED")
+            )
+              eventsVm.insertEvent(event)
+        }
+
+
+
+
     }
 
     override fun bindVM() {
         eventsVm.eventLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
             eventsVm.getEventList()
         })
 
