@@ -18,7 +18,7 @@ data class Event(
     val dataDiagnosticEventIndicatorStatus: String?= "",
     val driverLocationDescription: String?= "",
     val dutyStatus: String?= "",
-    val certification: Certification?=Certification("",""),
+    val certification: Certification?,
     val recordOrigin: String?= "",
     val createdAt: String?= "",
     val distanceSinceLastValidCoordinates: String?= "",

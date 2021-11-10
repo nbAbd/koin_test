@@ -34,25 +34,18 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
-import android.graphics.Point
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
-import com.inqbarna.tablefixheaders.TableFixHeaders
 import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
-import com.pieaksoft.event.consumer.android.ui.events.EventRowAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
 import com.pieaksoft.event.consumer.android.views.Dialogs
-import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
 import kotlinx.coroutines.launch
-import nl.joery.timerangepicker.TimeRangePicker
 import org.koin.android.viewmodel.ext.android.viewModel
-import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -264,6 +257,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             setEventsData()
         })
 
+        eventsVm.certificationNeedListObservable.observe(this, {
+
+        })
+
         eventsVm.error.observe(this, {
             val error = ErrorHandler.getErrorMessage(it, this)
             Log.e("test_logerrror", "test insert error response = " + error)
@@ -372,6 +369,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 ?.formatToServerDateDefaults2() ?: ""
 
         eventsVm.calculateEndTime()
+        eventsVm.checkCertifications()
     }
 
     private fun initChartView() {

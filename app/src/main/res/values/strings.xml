@@ -85,6 +85,8 @@
     <string name="city_province">City (requires state/province)</string>
     <string name="comment_title">Comment(0/60)</string>
     <string name="comment_title_din">Comment(%s/60)</string>
+    <string name="records_certification">Records Certification</string>
+    <string name="records_certification_desc">You can select and certify all days in list below:</string>
 
     
     <string-array name="countries">

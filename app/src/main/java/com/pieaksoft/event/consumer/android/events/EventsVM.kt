@@ -22,8 +22,11 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         SingleLiveEvent<Map<String, List<Event>>>()
     }
 
+    val certificationNeedListObservable by lazy {
+        SingleLiveEvent<List<Event>>()
+    }
+
     fun insertEvent(event: Event) {
-        Log.e("test_log", "test = " + event)
         launch {
             when (val response = repo.insertEvent(event)) {
                 is Success -> {
@@ -58,6 +61,16 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
         return Storage.eventListGroupByDate
+    }
+
+    fun checkCertifications() {
+        val eventNeedCertList = mutableListOf<Event>()
+        for (event in Storage.eventList) {
+            if (event.certification == null) {
+                eventNeedCertList.add(event)
+            }
+        }
+        certificationNeedListObservable.postValue(eventNeedCertList)
     }
 
     fun calculateEndTime() {
