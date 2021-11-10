@@ -18,6 +18,8 @@
         <entry key="app/src/main/res/drawable/ic_back_left.xml" value="0.1287037037037037" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/ic_close2.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_shape.xml" value="0.2123076923076923" />
+        <entry key="app/src/main/res/drawable/ic_shape_orange.xml" value="0.2123076923076923" />
         <entry key="app/src/main/res/drawable/menu_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/menu_sub_bkg.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/permissions_text_bkg.xml" value="0.15092592592592594" />
@@ -40,6 +42,7 @@
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />
         <entry key="app/src/main/res/layout/insert_event_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/insert_event_view2.xml" value="0.21195652173913043" />
+        <entry key="app/src/main/res/layout/item_cert.xml" value="0.2033514492753623" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.125" />
         <entry key="app/src/main/res/layout/item_edit_text.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/item_event.xml" value="0.165" />

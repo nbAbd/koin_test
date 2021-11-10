@@ -42,6 +42,7 @@ import java.util.*
 import com.pieaksoft.event.consumer.android.events.EventsVM
 import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
+import com.pieaksoft.event.consumer.android.ui.events.EventCertificationAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
@@ -61,6 +62,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val eventsAdapter by lazy {
         EventsAdapter()
     }
+
+    private val certAdapter by lazy {
+        EventCertificationAdapter()
+    }
+
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -180,6 +186,15 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         setUpInsertEventViews()
+        setCertList()
+
+        findViewById<ConstraintLayout>(R.id.certification_need_view).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.cert_view).show()
+        }
+
+        findViewById<AppCompatImageView>(R.id.close_cert_view).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.cert_view).hide()
+        }
     }
 
     private fun setUpInsertEventViews(){
@@ -258,13 +273,25 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         })
 
         eventsVm.certificationNeedListObservable.observe(this, {
-
+            if(it.isNotEmpty()){
+                findViewById<ConstraintLayout>(R.id.certification_need_view).show()
+                val keys = it.groupBy { it.date ?: "" }.keys
+                certAdapter.list = keys.toList()
+            } else {
+                findViewById<ConstraintLayout>(R.id.certification_need_view).hide()
+            }
         })
 
         eventsVm.error.observe(this, {
             val error = ErrorHandler.getErrorMessage(it, this)
             Log.e("test_logerrror", "test insert error response = " + error)
         })
+    }
+
+    private fun setCertList() {
+        findViewById<RecyclerView>(R.id.certification_list).layoutManager =  LinearLayoutManager(
+            this, LinearLayoutManager.VERTICAL, false)
+        findViewById<RecyclerView>(R.id.certification_list).adapter = certAdapter
     }
 
 

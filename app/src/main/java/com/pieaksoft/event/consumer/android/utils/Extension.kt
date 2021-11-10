@@ -8,7 +8,6 @@ import android.content.res.ColorStateList
 import android.graphics.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.text.Editable
@@ -25,20 +24,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.facebook.drawee.view.SimpleDraweeView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pieaksoft.event.consumer.android.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -455,5 +448,13 @@ fun Context.isNetworkAvailable(): Boolean {
             ConnectivityManager.TYPE_ETHERNET -> manager.activeNetworkInfo?.isConnected == true
             else -> false
         }
+    }
+}
+
+fun ImageView.switchSelectStopIcon(select: Boolean) {
+    if (select) {
+        setImageResource(R.drawable.ic_radio_on)
+    } else {
+        setImageResource(R.drawable.ic_radio_off)
     }
 }
