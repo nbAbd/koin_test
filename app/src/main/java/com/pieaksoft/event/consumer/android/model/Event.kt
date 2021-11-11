@@ -4,9 +4,9 @@ import java.io.Serializable
 
 data class Event(
     val id: String? = "",
-    val eventType: String?= "",
-    val eventCode: String?= "",
-    val date: String?= "",
+    var eventType: String?= "",
+    var eventCode: String?= "",
+    var date: String?= "",
     val time: String?= "",
     val coordinates: Location? = Location(0f,0f),
     val shippingDocumentNumber: String?= "",
@@ -18,7 +18,8 @@ data class Event(
     val dataDiagnosticEventIndicatorStatus: String?= "",
     val driverLocationDescription: String?= "",
     val dutyStatus: String?= "",
-    val certification: Certification?,
+    var certification: Certification? = null,
+    var certifyDate: List<Certification>? = null,
     val recordOrigin: String?= "",
     val createdAt: String?= "",
     val distanceSinceLastValidCoordinates: String?= "",

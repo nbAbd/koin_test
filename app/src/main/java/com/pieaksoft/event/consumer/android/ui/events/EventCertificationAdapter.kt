@@ -22,10 +22,7 @@ class EventCertificationAdapter(): BaseAdapter<String>(R.layout.item_cert) {
                 dateList.add(item)
             }
             notifyDataSetChanged()
+            onClick(position, item)
         }
-    }
-
-    override fun onClick(position: Int, item: String) {
-
     }
 }

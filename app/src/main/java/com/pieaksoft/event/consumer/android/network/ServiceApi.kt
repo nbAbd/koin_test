@@ -18,6 +18,9 @@ interface ServiceApi {
     @POST("api/event")
     suspend fun insertEvent(@Body body: Event): Event
 
+    @POST("api/event")
+    suspend fun certifyEvent(@Body body: Event): Event
+
     @GET("api/event")
     suspend fun getEventList(): List<Event>
 

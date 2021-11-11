@@ -16,6 +16,15 @@ class EventsRepoImpl(private val serviceApi: ServiceApi): EventsRepo {
         }
     }
 
+    override suspend fun certifyEvent(event: Event): Result<Event, Exception> {
+        return try {
+            val response = serviceApi.certifyEvent(event)
+            Success(response)
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
+
     override suspend fun getEventList(): Result<List<Event>, Exception> {
         return try {
             val response = serviceApi.getEventList()

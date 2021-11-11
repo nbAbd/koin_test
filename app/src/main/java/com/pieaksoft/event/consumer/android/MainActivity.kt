@@ -34,6 +34,7 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
+import android.widget.BaseAdapter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -247,15 +248,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
                 dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                 driverLocationDescription = "chicago, IL",
-                dutyStatus = "OFF_DUTY",
-                certification = Certification("2021-10-11", "CERTIFIED")
-            )
+                dutyStatus = "OFF_DUTY")
               eventsVm.insertEvent(event)
         }
-
-
-
-
     }
 
     override fun bindVM() {
@@ -264,8 +259,15 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             eventsVm.getEventList()
         })
 
+        eventsVm.eventCertLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.cert_view).hide()
+            eventsVm.getEventList()
+
+        })
+
         eventsVm.eventListLiveData.observe(this, {
             setEventsData()
+            Log.e("test_logsuc","test eventListLiveData = "+ it)
         })
 
         eventsVm.eventGroupByDateObservable.observe(this, {
@@ -282,6 +284,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         })
 
+        eventsVm.progress.observe(this, {
+            setProgressVisible(it)
+        })
+
         eventsVm.error.observe(this, {
             val error = ErrorHandler.getErrorMessage(it, this)
             Log.e("test_logerrror", "test insert error response = " + error)
@@ -292,6 +298,33 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<RecyclerView>(R.id.certification_list).layoutManager =  LinearLayoutManager(
             this, LinearLayoutManager.VERTICAL, false)
         findViewById<RecyclerView>(R.id.certification_list).adapter = certAdapter
+        certAdapter.setClickListener(object : com.pieaksoft.event.consumer.android.ui.base.BaseAdapter.ItemClickListener<String> {
+            override fun onClick(position: Int, item: String) {
+                findViewById<AppCompatButton>(R.id.confirm_cert).isEnabled = certAdapter.dateList.isNotEmpty()
+            }
+        })
+
+        findViewById<AppCompatButton>(R.id.confirm_cert).setOnClickListener {
+            for (date in certAdapter.dateList){
+                var event = Event(
+                    null,
+                    EventInsertType.certificate.type,
+                    EventInsertCode.FirstCertification.code,
+                    date = Date().formatToServerDateDefaults(),
+                    time = Date().formatToServerTimeDefaults(),
+                    Location(-10.12345f, 48.23432f),
+                    shippingDocumentNumber = "test",
+                    totalEngineHours = 20,
+                    totalEngineMiles = 450,
+                    eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
+                    eventRecordStatus = "ACTIVE",
+                    malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
+                    dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
+                    driverLocationDescription = "chicago, IL",
+                    dutyStatus = "OFF_DUTY")
+                eventsVm.certifyEvent(date, event)
+            }
+        }
     }
 
 
@@ -394,9 +427,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatTextView>(R.id.date_text).text =
             eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
                 ?.formatToServerDateDefaults2() ?: ""
-
-        eventsVm.calculateEndTime()
-        eventsVm.checkCertifications()
     }
 
     private fun initChartView() {

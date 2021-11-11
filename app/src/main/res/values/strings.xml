@@ -88,6 +88,7 @@
     <string name="records_certification">Records Certification</string>
     <string name="records_certification_desc">You can select and certify all days in list below:</string>
     <string name="certification_need">Certification need</string>
+    <string name="certify_all_selected">Certify all selected</string>
 
     
     <string-array name="countries">
