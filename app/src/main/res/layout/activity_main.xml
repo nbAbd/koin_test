@@ -361,7 +361,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/top_buttons"
+        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/red">
 
         <androidx.appcompat.widget.AppCompatTextView
