@@ -7,7 +7,7 @@
 
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/break_progress_bar"
         android:layout_width="200dp"
         android:layout_height="200dp"
         app:cpb_background_progressbar_color="#b6bbd8"
@@ -25,16 +25,16 @@
         app:layout_constraintEnd_toStartOf="@+id/progress_bar2"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/progress_text"
+        android:id="@+id/break_in_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="07:51"
         android:textSize="37sp"
         android:textColor="@color/white"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/break_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
         app:layout_constraintBottom_toTopOf="@+id/separator"/>
 
     <View
@@ -45,10 +45,10 @@
         android:background="@drawable/gradient_separator2"
         android:layout_marginStart="36dp"
         android:layout_marginEnd="36dp"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"/>
+        app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/break_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/break_in"
@@ -58,10 +58,10 @@
         android:textSize="13sp"
         android:textColor="@color/white"
         android:layout_marginBottom="26dp"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
         app:layout_constraintTop_toBottomOf="@+id/separator"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"/>
+        app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"/>
 
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -77,9 +77,9 @@
         app:cpb_progress="95"
         app:cpb_progress_max="100"
         android:rotation="90"
-        app:layout_constraintStart_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toEndOf="@+id/break_progress_bar"
         app:layout_constraintEnd_toStartOf="@+id/progress_bar3"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"/>
+        app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/progress_text2"

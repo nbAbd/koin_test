@@ -10,6 +10,7 @@ import com.pieaksoft.event.consumer.android.events.EventsVM
 
 import com.pieaksoft.event.consumer.android.network.OkHttpInterceptor
 import com.pieaksoft.event.consumer.android.network.ServiceApi
+import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationVM
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepo
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepoImpl
 import com.pieaksoft.event.consumer.android.ui.login.LoginVM
@@ -70,6 +71,7 @@ val AppModule = module {
     viewModel { LoginVM(get(), get()) }
     viewModel { ProfileVM(get(), get()) }
     viewModel { EventsVM(get(), get()) }
+    viewModel { EventsCalculationVM(get()) }
 //    viewModel { RecommendedVM(get()) }
 //    viewModel { StoreVM(get()) }
 //    viewModel { ProfileVM(get()) }

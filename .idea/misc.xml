@@ -20,9 +20,12 @@
         <entry key="app/src/main/res/drawable/ic_close2.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_shape.xml" value="0.2123076923076923" />
         <entry key="app/src/main/res/drawable/ic_shape_orange.xml" value="0.2123076923076923" />
+        <entry key="app/src/main/res/drawable/ic_sleep_comp.xml" value="0.19897435897435897" />
         <entry key="app/src/main/res/drawable/menu_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/menu_sub_bkg.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/permissions_text_bkg.xml" value="0.15092592592592594" />
+        <entry key="app/src/main/res/drawable/rectangle_rounde_off.xml" value="0.19897435897435897" />
+        <entry key="app/src/main/res/drawable/rectangle_rounde_on.xml" value="0.19897435897435897" />
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/drawable/round_progress_bar.xml" value="0.2153846153846154" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10462962962962963" />
@@ -38,6 +41,7 @@
         <entry key="app/src/main/res/layout/dialog_range_picker.xml" value="0.165" />
         <entry key="app/src/main/res/layout/dialog_swap_drivers.xml" value="0.20260416666666667" />
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.165" />
         <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />
         <entry key="app/src/main/res/layout/insert_event_view.xml" value="0.1" />

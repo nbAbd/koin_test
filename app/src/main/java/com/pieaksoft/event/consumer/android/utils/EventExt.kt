@@ -1,8 +1,11 @@
 package com.pieaksoft.event.consumer.android.utils
 
 import com.pieaksoft.event.consumer.android.model.Event
+import com.pieaksoft.event.consumer.android.model.EventCalculationModel
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
-fun Event.getCode(): String{
+fun Event.getCode(): String {
     return when {
         eventCode?.equals("DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY") == true -> {
             "Off"
@@ -20,4 +23,18 @@ fun Event.getCode(): String{
             ""
         }
     }
+}
+
+fun hmsTimeFormatter(millis: Long, withSeconds: Boolean = false): String {
+    val hours = abs(TimeUnit.MILLISECONDS.toHours(millis))
+    val min = abs(TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)))
+    val sec = abs(TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)))
+    var format = "%02d:%02d"
+    if (millis < 0) format = "-$format"
+    return if (withSeconds){
+        format += ":%02d"
+        String.format(format, hours, min, sec)
+    } else
+        String.format(format, hours, min)
+
 }

@@ -267,7 +267,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         eventsVm.eventListLiveData.observe(this, {
             setEventsData()
-            Log.e("test_logsuc","test eventListLiveData = "+ it)
         })
 
         eventsVm.eventGroupByDateObservable.observe(this, {
