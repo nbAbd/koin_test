@@ -2,15 +2,12 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.app.Application
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.EventCalculationModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseVM
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
-import java.text.DecimalFormat
 
 class EventsCalculationVM(val app: Application) : BaseVM(app) {
-
 
     private val _breakInEvent = SingleLiveEvent<EventCalculationModel>()
     val breakInEventLiveData: LiveData<EventCalculationModel> = _breakInEvent
