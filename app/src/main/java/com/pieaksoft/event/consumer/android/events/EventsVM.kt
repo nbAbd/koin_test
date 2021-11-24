@@ -11,7 +11,6 @@ import com.pieaksoft.event.consumer.android.utils.getCode
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -85,7 +84,7 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                         checkCertifications()
                         Storage.eventListGroupByDate = Storage.eventList.groupBy { it.date ?: "" }
                         eventGroupByDateObservable.postValue(getEventsGroupByDate())
-                        Log.e("test_log","test")
+                        Log.e("test_log3","test list = "+ Storage.eventList)
                     }
                 }
                 is Failure -> {
@@ -118,12 +117,9 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                 event.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 event.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
             }
-        }
-    }
 
-    private fun calculateDuration() {
-        Storage.eventListGroupByDate["D"]?.forEach { event ->
-
+            event.calculateDuration()
+            Log.e("test_log5","test duration = "+ hmsTimeFormatter(event.durationInMillis))
         }
     }
 }

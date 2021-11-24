@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
+import android.util.Log
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
@@ -12,13 +13,14 @@ class EventsCalculationFragment: BaseFragment(R.layout.fragment_home) {
      private val eventsCalculationVM: EventsCalculationVM by viewModel()
 
      override fun setViews() {
-         eventsCalculationVM.initBreakIn()
-         eventsCalculationVM.startCountBreakIn()
+         eventsCalculationVM.initDrivingEvent()
+         eventsCalculationVM.startCountDrivingEvent()
 
      }
 
      override fun bindVM() {
-        eventsCalculationVM.breakInEventLiveData.observe(this, {
+        eventsCalculationVM.drivingEventLiveData.observe(this, {
+            Log.e("test_log","test drivingEventLiveData ="+it)
             binding.breakInValue.text = hmsTimeFormatter(it.remainMillis)
             binding.breakProgressBar.progress = ((it.remainMillis.toFloat()/it.totalLimit.toFloat()) * 100).toFloat()
         })
