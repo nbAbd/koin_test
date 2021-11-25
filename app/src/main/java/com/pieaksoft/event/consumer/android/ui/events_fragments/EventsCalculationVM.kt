@@ -18,7 +18,7 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     private val _drivingEvent = SingleLiveEvent<EventCalculationModel>()
     val drivingEventLiveData: LiveData<EventCalculationModel> = _drivingEvent
 
-    var lastEvent = Storage.eventList.last()
+    var lastEvent = Storage.eventList.lastOrNull()
 
     var breakIn: EventCalculationModel? = null
     var drivingEvent: EventCalculationModel? = null
@@ -33,13 +33,15 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     }
 
     fun initDrivingEvent(){
-        if(lastEvent.getCode() == "D"){
-            lastEvent.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            lastEvent.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
-            lastEvent.calculateDuration()
-            drivingEvent = EventCalculationModel()
-            drivingEvent?.totalLimit = 8 * 60 * 60 * 1000
-            drivingEvent?.remainMillis = ((drivingEvent?.totalLimit?:0) - lastEvent.durationInMillis)
+        lastEvent?.let {
+            if(it.getCode() == "D"){
+                it.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                it.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+                it.calculateDuration()
+                drivingEvent = EventCalculationModel()
+                drivingEvent?.totalLimit = 8 * 60 * 60 * 1000
+                drivingEvent?.remainMillis = ((drivingEvent?.totalLimit?:0) - it.durationInMillis)
+            }
         }
     }
 
