@@ -1,6 +1,5 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
-import android.util.Log
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
@@ -13,24 +12,20 @@ class EventsCalculationFragment: BaseFragment(R.layout.fragment_home) {
      private val eventsCalculationVM: EventsCalculationVM by viewModel()
 
      override fun setViews() {
-         Log.e("test_log","test = setViews")
-         eventsCalculationVM.initDrivingEvent()
-         eventsCalculationVM.initOnEvent()
+         eventsCalculationVM.calculateEvents()
          eventsCalculationVM.startCountDrivingEvent()
          eventsCalculationVM.startCountOnEvent()
      }
 
      override fun bindVM() {
         eventsCalculationVM.drivingEventLiveData.observe(this, {
-            Log.e("test_log","test drivingEventLiveData ="+it)
-            binding.breakInValue.text = hmsTimeFormatter(it.remainMillis)
-            binding.breakProgressBar.progress = ((it.remainMillis.toFloat()/it.totalLimit.toFloat()) * 100).toFloat()
+            binding.breakInValue.text = hmsTimeFormatter(it)
+            binding.breakProgressBar.progress = ((it.toFloat()/60000/on_Duty_Break_In_Minutes) * 100).toFloat()
         })
 
          eventsCalculationVM.onEventEventLiveData.observe(this, {
-            Log.e("test_log","test onEventLiveData ="+it)
-            binding.onValue.text = hmsTimeFormatter(it.remainMillis)
-            binding.progressBar2.progress = ((it.remainMillis.toFloat()/it.totalLimit.toFloat()) * 100).toFloat()
+            binding.onValue.text = hmsTimeFormatter(it)
+            binding.progressBar2.progress = ((it.toFloat()/60000/on_Duty_Window_Minutes) * 100).toFloat()
         })
      }
  }
