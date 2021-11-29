@@ -13,9 +13,11 @@ class EventsCalculationFragment: BaseFragment(R.layout.fragment_home) {
      private val eventsCalculationVM: EventsCalculationVM by viewModel()
 
      override fun setViews() {
+         Log.e("test_log","test = setViews")
          eventsCalculationVM.initDrivingEvent()
+         eventsCalculationVM.initOnEvent()
          eventsCalculationVM.startCountDrivingEvent()
-
+         eventsCalculationVM.startCountOnEvent()
      }
 
      override fun bindVM() {
@@ -23,6 +25,12 @@ class EventsCalculationFragment: BaseFragment(R.layout.fragment_home) {
             Log.e("test_log","test drivingEventLiveData ="+it)
             binding.breakInValue.text = hmsTimeFormatter(it.remainMillis)
             binding.breakProgressBar.progress = ((it.remainMillis.toFloat()/it.totalLimit.toFloat()) * 100).toFloat()
+        })
+
+         eventsCalculationVM.onEventEventLiveData.observe(this, {
+            Log.e("test_log","test onEventLiveData ="+it)
+            binding.onValue.text = hmsTimeFormatter(it.remainMillis)
+            binding.progressBar2.progress = ((it.remainMillis.toFloat()/it.totalLimit.toFloat()) * 100).toFloat()
         })
      }
  }

@@ -17,20 +17,18 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
 
     private val _drivingEvent = SingleLiveEvent<EventCalculationModel>()
     val drivingEventLiveData: LiveData<EventCalculationModel> = _drivingEvent
+    private val _onEvent = SingleLiveEvent<EventCalculationModel>()
+    val onEventEventLiveData: LiveData<EventCalculationModel> = _onEvent
 
     var lastEvent = Storage.eventList.lastOrNull()
 
-    var breakIn: EventCalculationModel? = null
+
     var drivingEvent: EventCalculationModel? = null
+    var onEvent: EventCalculationModel? = null
 
 
     var drivingTimer: CountDownTimer? = null
-
-    fun initBreakIn() {
-        breakIn = EventCalculationModel()
-        breakIn?.totalLimit = 8 * 60 * 60 * 1000
-        breakIn?.remainMillis = 8 * 60 * 60 * 1000
-    }
+    var onTimer: CountDownTimer? = null
 
     fun initDrivingEvent(){
         lastEvent?.let {
@@ -41,6 +39,19 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
                 drivingEvent = EventCalculationModel()
                 drivingEvent?.totalLimit = 8 * 60 * 60 * 1000
                 drivingEvent?.remainMillis = ((drivingEvent?.totalLimit?:0) - it.durationInMillis)
+            }
+        }
+    }
+
+    fun initOnEvent(){
+        lastEvent?.let {
+            if(it.getCode() == "D"){
+                it.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                it.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+                it.calculateDuration()
+                onEvent = EventCalculationModel()
+                onEvent?.totalLimit = 14 * 60 * 60 * 1000
+                onEvent?.remainMillis = ((onEvent?.totalLimit?:0) - it.durationInMillis)
             }
         }
     }
@@ -56,6 +67,23 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
                 override fun onFinish() {
                     it.remainMillis = 0
                     _drivingEvent.postValue(it)
+                }
+
+            }.start()
+        }
+    }
+
+    fun startCountOnEvent() {
+        onEvent?.let {
+            onTimer = object : CountDownTimer(it.remainMillis, 60000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    it.remainMillis = millisUntilFinished
+                    _onEvent.postValue(it)
+                }
+
+                override fun onFinish() {
+                    it.remainMillis = 0
+                    _onEvent.postValue(it)
                 }
 
             }.start()
