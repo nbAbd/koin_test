@@ -33,12 +33,6 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     private val _onEvent = SingleLiveEvent<Long>()
     val onEventEventLiveData: LiveData<Long> = _onEvent
 
-    var lastEvent = Storage.eventList.lastOrNull()
-
-
-    var drivingEvent: EventCalculationModel? = null
-    var onEvent: EventCalculationModel? = null
-
 
     var drivingTimer: CountDownTimer? = null
     var onTimer: CountDownTimer? = null
@@ -54,10 +48,10 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
             val min = event.durationInMillis / 1000 / 60
             when {
                 event.getCode() == "D" -> {
-                    Log.e("test_log123","test = "+ onDutyBreakInMinutes)
-                    onDutyBreakInMinutes -= min.toInt()
+                    if(index == 0){
+                        onDutyBreakInMinutes -= min.toInt()
+                    }
                     onDutyWindowMinutes -= min.toInt()
-                    Log.e("test_log123","test22 = "+ onDutyBreakInMinutes)
                 }
                 event.getCode() == "On" -> {
                     onDutyWindowMinutes -= min.toInt()
