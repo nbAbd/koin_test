@@ -138,7 +138,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/progress_text3"
+        android:id="@+id/dutyCycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="70:00"

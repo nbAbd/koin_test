@@ -17,6 +17,7 @@ class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
         if (Storage.eventList.isNotEmpty()) {
             eventsCalculationVM.startCountDrivingEvent()
             eventsCalculationVM.startCountOnEvent()
+            eventsCalculationVM.startCountDutyCycleEvent()
         }
     }
 
@@ -27,10 +28,16 @@ class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
                 ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100).toFloat()
         })
 
-        eventsCalculationVM.onEventEventLiveData.observe(this, {
+        eventsCalculationVM.onEventLiveData.observe(this, {
             binding.onValue.text = hmsTimeFormatter(it)
             binding.progressBar2.progress =
                 ((it.toFloat() / 60000 / on_Duty_Window_Minutes) * 100).toFloat()
+        })
+
+        eventsCalculationVM.dutyCycleEventLiveData.observe(this, {
+            binding.dutyCycle.text = hmsTimeFormatter(it)
+            binding.progressBar3.progress =
+                ((it.toFloat() / 60000 / on_Duty_Cycle_Minutes) * 100).toFloat()
         })
     }
 }

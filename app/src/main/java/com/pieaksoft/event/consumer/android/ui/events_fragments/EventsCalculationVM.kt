@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.EventCalculationModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseVM
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
@@ -27,43 +28,82 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     private var onDutyWindowMinutes = 840 // per minute 14 hour
     private var sleeperBethMinutes = 600 // per minute 10 hour
     private var onDutyBreakInMinutes = 480 // per minute 8 hour
+    private var needResetCycleMinutes: Long = 2040 // per minute 34 hour
+    private var needResetCycleDay = 9
 
     private val _drivingEvent = SingleLiveEvent<Long>()
     val drivingEventLiveData: LiveData<Long> = _drivingEvent
     private val _onEvent = SingleLiveEvent<Long>()
-    val onEventEventLiveData: LiveData<Long> = _onEvent
+    val onEventLiveData: LiveData<Long> = _onEvent
+    private val _dutyCycleEvent = SingleLiveEvent<Long>()
+    val dutyCycleEventLiveData: LiveData<Long> = _dutyCycleEvent
 
 
     var drivingTimer: CountDownTimer? = null
     var onTimer: CountDownTimer? = null
+    var dutyCycleTimer: CountDownTimer? = null
 
 
     fun calculateEvents() {
-        Storage.eventList.reversed().forEachIndexed { index, event ->
+        val reverseEvents = Storage.eventList.reversed()
+        reverseEvents.forEachIndexed { index, event ->
             if (event.endDate == null) {
                 event.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 event.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
             }
             event.calculateDuration()
-            val min = event.durationInMillis / 1000 / 60
+            val duration = event.durationInMillis / 1000 / 60
             when {
                 event.getCode() == "D" -> {
-                    if(index == 0){
-                        onDutyBreakInMinutes -= min.toInt()
+                    if (index == 0) {
+                        onDutyBreakInMinutes -= duration.toInt()
                     }
-                    onDutyWindowMinutes -= min.toInt()
+                    onDutyWindowMinutes -= duration.toInt()
+                    onDutyCycleMinutes -= duration.toInt()
                 }
                 event.getCode() == "On" -> {
-                    onDutyWindowMinutes -= min.toInt()
-                }
-                event.getCode() == "SB" -> {
-                    sleeperBethMinutes -= min.toInt()
+                    onDutyWindowMinutes -= duration.toInt()
+                    onDutyCycleMinutes -= duration.toInt()
                 }
                 event.getCode() == "Off" -> {
+                    val workingTime = if (duration > 0) duration else (-1 * duration)
+                    if ((index + 1) < reverseEvents.size && reverseEvents[index + 1].eventCode == "Off") {
+                        needResetCycleMinutes -= workingTime
+                    } else {
+                        resetNeedOnDutyCycleMinutes()
+                    }
 
+                    if (needResetCycleMinutes <= 0) {
+                        sendResetCycle()
+                    } else if (needResetCycleMinutes <= 1440) {
+                        resetOnDutyWindowMinutes()
+                    }
+                    sleeperBethMinutes -= duration.toInt()
+                    onDutyCycleMinutes -= duration.toInt()
+                }
+                event.getCode() == "SB" -> {
+                    var workingTime = if(duration > 0)  duration else (-1 * duration)
+                    if ((index + 1) < reverseEvents.size && reverseEvents[index + 1].eventCode == "Off") {
+                        needResetCycleMinutes -= workingTime
+                    } else {
+                        resetNeedOnDutyCycleMinutes()
+                    }
+
+                    if (needResetCycleMinutes <= 0) {
+                        sendResetCycle()
+                    } else if (needResetCycleMinutes <= 1440) {
+                        resetOnDutyWindowMinutes()
+                    }
                 }
             }
-            Log.e("test_log", "test minutes = $min")
+
+            if (onDutyCycleMinutes <= 0) {
+              //  showMessage(title: "Warning", messageBody: "You onduty more 70 hour", statusColor: .warning)
+            }
+
+            if (onDutyWindowMinutes <= 0) {
+              //  showMessage(title: "Warning", messageBody: "You continously onduty more 14 hour", statusColor: .warning)
+            }
         }
     }
 
@@ -83,17 +123,55 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
 
     fun startCountOnEvent() {
         val remainMillis = (onDutyWindowMinutes) * 60 * 1000
-            onTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _onEvent.postValue(millisUntilFinished)
-                }
+        onTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
+            override fun onTick(millisUntilFinished: Long) {
+                _onEvent.postValue(millisUntilFinished)
+            }
 
-                override fun onFinish() {
-                    _onEvent.postValue(0)
-                }
+            override fun onFinish() {
+                _onEvent.postValue(0)
+            }
 
-            }.start()
+        }.start()
     }
+
+    fun startCountDutyCycleEvent() {
+        val remainMillis = (onDutyCycleMinutes) * 60 * 1000
+        dutyCycleTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
+            override fun onTick(millisUntilFinished: Long) {
+                _dutyCycleEvent.postValue(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                _dutyCycleEvent.postValue(0)
+            }
+
+        }.start()
+    }
+
+
+    private fun resetMinutes() {
+        onDutyCycleMinutes = 4200
+        onDutyWindowMinutes = 840
+        sleeperBethMinutes = 600
+        onDutyBreakInMinutes = 480
+    }
+
+    private fun resetOnDutyWindowMinutes() {
+        onDutyWindowMinutes = 840
+    }
+
+    private fun resetNeedOnDutyCycleMinutes() {
+        needResetCycleMinutes = 2040
+    }
+
+    private fun sendResetCycle() {
+        var event = Event()
+//        event.eventType = . CYCLE_RESET
+//        event.eventCode = . CYCLE_RESET
+//        viewModel.postEvent(event: event)
+    }
+
 
     fun stopCountBreakIn() {
         drivingTimer?.cancel()
