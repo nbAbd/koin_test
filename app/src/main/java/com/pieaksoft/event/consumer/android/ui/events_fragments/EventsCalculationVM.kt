@@ -2,6 +2,8 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.app.Application
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Event
@@ -38,17 +40,51 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     private val _dutyCycleEvent = SingleLiveEvent<Long>()
     val dutyCycleEventLiveData: LiveData<Long> = _dutyCycleEvent
 
+    private val _onEventWarning = SingleLiveEvent<Boolean>()
+    val onEventWarningLiveData: LiveData<Boolean> = _onEventWarning
+    private val _dutyCycleWarning = SingleLiveEvent<Boolean>()
+    val dutyCycleWarningLiveData: LiveData<Boolean> = _dutyCycleWarning
 
-    var drivingTimer: CountDownTimer? = null
-    var onTimer: CountDownTimer? = null
-    var dutyCycleTimer: CountDownTimer? = null
 
+    private var drivingTimer = Handler(Looper.getMainLooper())
+    private val driverCountTask: Runnable by lazy {
+        kotlinx.coroutines.Runnable {
+            val remainMillis = (onDutyBreakInMinutes) * 60 * 1000
+            _drivingEvent.postValue(remainMillis.toLong())
+            drivingTimer.removeCallbacks(driverCountTask)
+            drivingTimer.postDelayed(driverCountTask, 60000)
+            onDutyBreakInMinutes -= 1
+        }
+    }
+
+    private var onTimer = Handler(Looper.getMainLooper())
+    private val onCountTask: Runnable by lazy {
+        kotlinx.coroutines.Runnable {
+            val remainMillis = (onDutyWindowMinutes) * 60 * 1000
+            _onEvent.postValue(remainMillis.toLong())
+            onTimer.removeCallbacks(onCountTask)
+            onTimer.postDelayed(onCountTask, 60000)
+            onDutyWindowMinutes -= 1
+        }
+    }
+
+    private var dutyCycleTimer = Handler(Looper.getMainLooper())
+    private val dutyCycleCountTask: Runnable by lazy {
+        kotlinx.coroutines.Runnable {
+            val remainMillis = (onDutyCycleMinutes) * 60 * 1000
+            _dutyCycleEvent.postValue(remainMillis.toLong())
+            dutyCycleTimer.removeCallbacks(dutyCycleCountTask)
+            dutyCycleTimer.postDelayed(dutyCycleCountTask, 60000)
+            onDutyCycleMinutes -= 1
+        }
+    }
 
     fun calculateEvents() {
         val reverseEvents = Storage.eventList.reversed()
         reverseEvents.forEachIndexed { index, event ->
             if (event.endDate == null) {
-                event.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                event.endDate =
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 event.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
             }
             event.calculateDuration()
@@ -82,7 +118,7 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
                     onDutyCycleMinutes -= duration.toInt()
                 }
                 event.getCode() == "SB" -> {
-                    var workingTime = if(duration > 0)  duration else (-1 * duration)
+                    var workingTime = if (duration > 0) duration else (-1 * duration)
                     if ((index + 1) < reverseEvents.size && reverseEvents[index + 1].eventCode == "Off") {
                         needResetCycleMinutes -= workingTime
                     } else {
@@ -98,55 +134,31 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
             }
 
             if (onDutyCycleMinutes <= 0) {
-              //  showMessage(title: "Warning", messageBody: "You onduty more 70 hour", statusColor: .warning)
+                _dutyCycleWarning.postValue(true)
+                //  showMessage(title: "Warning", messageBody: "You onduty more 70 hour", statusColor: .warning)
             }
 
             if (onDutyWindowMinutes <= 0) {
-              //  showMessage(title: "Warning", messageBody: "You continously onduty more 14 hour", statusColor: .warning)
+                _onEventWarning.postValue(true)
+                //  showMessage(title: "Warning", messageBody: "You continously onduty more 14 hour", statusColor: .warning)
             }
         }
+
+        _drivingEvent.postValue(onDutyBreakInMinutes.toLong() * 60 * 1000)
+        _onEvent.postValue(onDutyWindowMinutes.toLong() * 60 * 1000)
+        _dutyCycleEvent.postValue(onDutyCycleMinutes.toLong() * 60 * 1000)
     }
 
     fun startCountDrivingEvent() {
-        val remainMillis = (onDutyBreakInMinutes) * 60 * 1000
-        drivingTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _drivingEvent.postValue(millisUntilFinished)
-            }
-
-            override fun onFinish() {
-                _drivingEvent.postValue(0)
-            }
-
-        }.start()
+        drivingTimer.postDelayed(driverCountTask, 60000)
     }
 
     fun startCountOnEvent() {
-        val remainMillis = (onDutyWindowMinutes) * 60 * 1000
-        onTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _onEvent.postValue(millisUntilFinished)
-            }
-
-            override fun onFinish() {
-                _onEvent.postValue(0)
-            }
-
-        }.start()
+        onTimer.postDelayed(onCountTask, 60000)
     }
 
     fun startCountDutyCycleEvent() {
-        val remainMillis = (onDutyCycleMinutes) * 60 * 1000
-        dutyCycleTimer = object : CountDownTimer(remainMillis.toLong(), 60000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _dutyCycleEvent.postValue(millisUntilFinished)
-            }
-
-            override fun onFinish() {
-                _dutyCycleEvent.postValue(0)
-            }
-
-        }.start()
+        dutyCycleTimer.postDelayed(dutyCycleCountTask, 60000)
     }
 
 
@@ -172,10 +184,6 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
 //        viewModel.postEvent(event: event)
     }
 
-
-    fun stopCountBreakIn() {
-        drivingTimer?.cancel()
-    }
 
 
 }

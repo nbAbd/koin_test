@@ -50,3 +50,5 @@ fun Date.formatToServerDateDefaults2(): String{
     val sdf= SimpleDateFormat("dd-MMM-yyyy", Locale.US)
     return sdf.format(this)
 }
+
+fun getCurrentTime() = Calendar.getInstance().time.time / 1000
