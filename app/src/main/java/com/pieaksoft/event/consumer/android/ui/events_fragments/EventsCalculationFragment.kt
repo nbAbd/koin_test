@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.util.Log
+import android.widget.Toast
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
@@ -25,29 +26,51 @@ class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
     override fun bindVM() {
         eventsCalculationVM.drivingEventLiveData.observe(this, {
             binding.breakInValue.text = hmsTimeFormatter(it)
-            Log.e("test_log444","test = "+ hmsTimeFormatter(it))
             binding.breakProgressBar.progress =
                 ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100).toFloat()
         })
 
         eventsCalculationVM.onEventLiveData.observe(this, {
+
             binding.onValue.text = hmsTimeFormatter(it)
             binding.progressBar2.progress =
                 ((it.toFloat() / 60000 / on_Duty_Window_Minutes) * 100).toFloat()
+            if (it < 0) {
+                Toast.makeText(
+                    requireContext(),
+                    "Warning!\n You continously onduty more 14 hour",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
 
         eventsCalculationVM.dutyCycleEventLiveData.observe(this, {
             binding.dutyCycle.text = hmsTimeFormatter(it)
             binding.progressBar3.progress =
                 ((it.toFloat() / 60000 / on_Duty_Cycle_Minutes) * 100).toFloat()
+            if (it < 0) {
+                Toast.makeText(
+                    requireContext(),
+                    "Warning!\n You onduty more 70 hour",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
 
         eventsCalculationVM.onEventWarningLiveData.observe(this, {
-
+            Toast.makeText(
+                requireContext(),
+                "Warning!\n You continously onduty more 14 hour",
+                Toast.LENGTH_SHORT
+            ).show()
         })
 
         eventsCalculationVM.dutyCycleEventLiveData.observe(this, {
-
+            Toast.makeText(
+                requireContext(),
+                "Warning!\n You onduty more 70 hour",
+                Toast.LENGTH_SHORT
+            ).show()
         })
     }
 }
