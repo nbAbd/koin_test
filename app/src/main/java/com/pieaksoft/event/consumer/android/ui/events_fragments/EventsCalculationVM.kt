@@ -30,11 +30,15 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
     private var onDutyWindowMinutes = 840 // per minute 14 hour
     private var sleeperBethMinutes = 600 // per minute 10 hour
     private var onDutyBreakInMinutes = 480 // per minute 8 hour
+    private var drivingDutyMinutes = 660 // per minute 11 hour
     private var needResetCycleMinutes: Long = 2040 // per minute 34 hour
+    private var needThiryMinuteBreak: Boolean = false
     private var needResetCycleDay = 9
 
     private val _drivingEvent = SingleLiveEvent<Long>()
     val drivingEventLiveData: LiveData<Long> = _drivingEvent
+    private val _drivingLimit = SingleLiveEvent<Long>()
+    val drivingLimitLiveData: LiveData<Long> = _drivingLimit
     private val _onEvent = SingleLiveEvent<Long>()
     val onEventLiveData: LiveData<Long> = _onEvent
     private val _dutyCycleEvent = SingleLiveEvent<Long>()
@@ -79,6 +83,17 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
         }
     }
 
+    private var drivingLimitTimer = Handler(Looper.getMainLooper())
+    private val drivingLimitCountTask: Runnable by lazy {
+        kotlinx.coroutines.Runnable {
+            val remainMillis = (drivingDutyMinutes) * 60 * 1000
+            _dutyCycleEvent.postValue(remainMillis.toLong())
+            drivingLimitTimer.removeCallbacks(drivingLimitCountTask)
+            drivingLimitTimer.postDelayed(drivingLimitCountTask, 60000)
+            drivingDutyMinutes -= 1
+        }
+    }
+
     fun calculateEvents() {
         val reverseEvents = Storage.eventList.reversed()
         reverseEvents.forEachIndexed { index, event ->
@@ -96,10 +111,17 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
                     }
                     onDutyWindowMinutes -= duration.toInt()
                     onDutyCycleMinutes -= duration.toInt()
+                    drivingDutyMinutes -= duration.toInt()
+                    if (duration >= 480) {
+                        needThiryMinuteBreak = true
+                    }
                 }
                 event.getCode() == "On" -> {
                     onDutyWindowMinutes -= duration.toInt()
                     onDutyCycleMinutes -= duration.toInt()
+                    if (duration > 30) {
+                        needThiryMinuteBreak = false
+                    }
                 }
                 event.getCode() == "Off" -> {
                     val workingTime = if (duration > 0) duration else (-1 * duration)
@@ -147,6 +169,7 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
         _drivingEvent.postValue(onDutyBreakInMinutes.toLong() * 60 * 1000)
         _onEvent.postValue(onDutyWindowMinutes.toLong() * 60 * 1000)
         _dutyCycleEvent.postValue(onDutyCycleMinutes.toLong() * 60 * 1000)
+        _drivingLimit.postValue(drivingDutyMinutes.toLong() * 60 * 1000)
     }
 
     fun startCountDrivingEvent() {
@@ -161,12 +184,17 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
         dutyCycleTimer.postDelayed(dutyCycleCountTask, 60000)
     }
 
+    fun startCountDrivingLimit() {
+        drivingLimitTimer.postDelayed(drivingLimitCountTask, 60000)
+    }
+
 
     private fun resetMinutes() {
         onDutyCycleMinutes = 4200
         onDutyWindowMinutes = 840
         sleeperBethMinutes = 600
         onDutyBreakInMinutes = 480
+        drivingDutyMinutes = 660
     }
 
     private fun resetOnDutyWindowMinutes() {
@@ -175,6 +203,10 @@ class EventsCalculationVM(val app: Application) : BaseVM(app) {
 
     private fun resetNeedOnDutyCycleMinutes() {
         needResetCycleMinutes = 2040
+    }
+
+    private fun resetDrivingDutyCycleMinutes() {
+        drivingDutyMinutes = 660
     }
 
     private fun sendResetCycle() {

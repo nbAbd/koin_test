@@ -6,6 +6,29 @@
     android:background="@color/black">
 
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/driving_limit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/driving_limit"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="106dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/driving_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/driving_limit_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/break_progress_bar"/>
+
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/break_progress_bar"
         android:layout_width="200dp"

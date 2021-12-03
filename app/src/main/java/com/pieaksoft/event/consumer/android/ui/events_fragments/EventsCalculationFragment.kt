@@ -10,6 +10,7 @@ import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 import com.pieaksoft.event.consumer.android.utils.Storage
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
+import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
@@ -22,6 +23,7 @@ class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
             eventsCalculationVM.startCountDrivingEvent()
             eventsCalculationVM.startCountOnEvent()
             eventsCalculationVM.startCountDutyCycleEvent()
+            eventsCalculationVM.startCountDrivingLimit()
         }
     }
 
@@ -71,6 +73,10 @@ class EventsCalculationFragment : BaseFragment(R.layout.fragment_home) {
                     ((it.toFloat() / 60000 / on_Duty_Cycle_Minutes) * 100).toFloat()
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
+        })
+
+        eventsCalculationVM.drivingLimitLiveData.observe(this, {
+            binding.drivingLimit.text = hmsTimeFormatter2(it)
         })
 
         eventsCalculationVM.onEventWarningLiveData.observe(this, {
