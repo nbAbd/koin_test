@@ -111,12 +111,12 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
             if(dbd == 0){
                 calculateList.add(event)
             } else if(dbd > 0){
-                val mEvent = event.copy(endDate = event.date, endTime =  "24:00")
+                val mEvent = event.copy(endDate = event.date, endTime =  "25:00")
                 calculateList.add(mEvent)
                 for (i in 1..dbd){
                     val date = startDate.plusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     val endDate = startDate.plusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                    val mEvent = event.copy(date = date, endDate = endDate, time = "00:00", endTime =  "24:00")
+                    val mEvent = event.copy(date = date, endDate = endDate, time = "00:00", endTime =  "25:00")
                     if(i == dbd){
                         if (index < Storage.eventList.size - 1) {
                             mEvent.endDate = Storage.eventList[index + 1].date
