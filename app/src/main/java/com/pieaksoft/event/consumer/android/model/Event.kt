@@ -14,7 +14,7 @@ data class Event(
     var eventType: String? = "",
     var eventCode: String? = "",
     var date: String? = "",
-    val time: String? = "",
+    var time: String? = "",
     val coordinates: Location? = Location(0f, 0f),
     val shippingDocumentNumber: String? = "",
     val totalEngineHours: Int? = 0,

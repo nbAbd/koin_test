@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app) {
     private val eventObserver = SingleLiveEvent<Event>()
@@ -80,9 +82,8 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                         eventListObserver.postValue(list)
                         Storage.eventList =
                             list.filter { it.eventType == EventInsertType.statusChange.type }
-                        calculateEndTime()
                         checkCertifications()
-                        Storage.eventListGroupByDate = Storage.eventList.groupBy { it.date ?: "" }
+                        Storage.eventListGroupByDate =  calculateEvents()
                         eventGroupByDateObservable.postValue(getEventsGroupByDate())
                         Log.e("test_log3","test list = "+ Storage.eventList)
                     }
@@ -96,6 +97,50 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
         return Storage.eventListGroupByDate
+    }
+
+
+    private fun calculateEvents(): Map<String, List<Event>> {
+        calculateEndTime()
+        val calculateList: MutableList<Event> = mutableListOf()
+        Storage.eventList.forEachIndexed {index, event ->
+            Log.e("test_log","test date before parse = "+event.date )
+            val startDate = LocalDate.parse(event.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val endDate = LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val dbd = ChronoUnit.DAYS.between(startDate, endDate).toInt()
+            if(dbd == 0){
+                calculateList.add(event)
+            } else if(dbd > 0){
+                val mEvent = event.copy(endDate = event.date, endTime =  "24:00")
+                calculateList.add(mEvent)
+                for (i in 1..dbd){
+                    val date = startDate.plusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val endDate = startDate.plusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val mEvent = event.copy(date = date, endDate = endDate, time = "00:00", endTime =  "24:00")
+                    if(i == dbd){
+                        if (index < Storage.eventList.size - 1) {
+                            mEvent.endDate = Storage.eventList[index + 1].date
+                            mEvent.endTime = Storage.eventList[index + 1].time
+                        } else {
+                            mEvent.endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            mEvent.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+                        }
+                    }
+                    calculateList.add(mEvent)
+                }
+            }
+        }
+        return calculateList.groupBy { it.date ?: "" }
+    }
+
+    fun setEventsMock(){
+        val currentDay = LocalDate.now()
+        Storage.eventList.groupBy { it.date ?: "" }
+        for(i in 1..7){
+            val date = currentDay.minusDays(i.toLong()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            Storage.eventListMock.add(date)
+        }
+        Log.e("test_dates"," test dates = "+ Storage.eventListMock)
     }
 
     private fun checkCertifications() {

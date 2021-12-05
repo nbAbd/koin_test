@@ -32,7 +32,8 @@
         <activity
             android:name="com.pieaksoft.event.consumer.android.ui.login.LoginActivity"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

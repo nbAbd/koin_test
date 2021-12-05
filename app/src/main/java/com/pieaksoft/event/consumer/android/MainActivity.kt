@@ -102,7 +102,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-
+        eventsVm.setEventsMock()
         eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
