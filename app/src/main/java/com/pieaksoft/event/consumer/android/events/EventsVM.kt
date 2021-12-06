@@ -130,14 +130,20 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                 }
             }
         }
-        return calculateList.groupBy { it.date ?: "" }
+        var map = calculateList.groupBy { it.date ?: "" }.toMutableMap()
+        for (i in  Storage.eventListMock){
+            if(!map.containsKey(i)){
+                map[i] = emptyList()
+            }
+        }
+        return map.toSortedMap()
     }
 
     fun setEventsMock(){
         val currentDay = LocalDate.now()
         Storage.eventList.groupBy { it.date ?: "" }
         for(i in 1..7){
-            val date = currentDay.minusDays(i.toLong()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            val date = currentDay.minusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             Storage.eventListMock.add(date)
         }
         Log.e("test_dates"," test dates = "+ Storage.eventListMock)
