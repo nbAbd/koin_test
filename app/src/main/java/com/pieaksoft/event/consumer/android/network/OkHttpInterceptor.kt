@@ -14,11 +14,15 @@ class OkHttpInterceptor : Interceptor, KoinComponent {
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.run {
             val request = request().newBuilder()
+            val original = chain.request()
+            val shouldAddAuthHeaders = original.headers["isAuthorizable"] != "false"
 
-            sharedPreferences.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "")?.let {
-                if(it.isNotEmpty()){
-                    request.header("Authorization", "Bearer $it")
-                    Log.wtf("Token", it)
+            if (shouldAddAuthHeaders){
+                sharedPreferences.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "")?.let {
+                    if(it.isNotEmpty()){
+                        request.header("Authorization", "Bearer $it")
+                        Log.wtf("Token", it)
+                    }
                 }
             }
 

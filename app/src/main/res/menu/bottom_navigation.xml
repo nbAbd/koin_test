@@ -6,14 +6,15 @@
         android:title="ic_driver_comp" />
 
     <item
-        android:id="@+id/recommendationListFragment"
+        android:id="@+id/breakInFragment"
         android:icon="@drawable/ic_sleep_comp"
         android:title="sleep_comp"/>
     <item
         android:id="@+id/categoryListFragment"
         android:title="" />
+
     <item
-        android:id="@+id/basketFragment"
+        android:id="@+id/drivingFragment"
         android:icon="@drawable/ic_wheel_comp"
         android:title="wheel_comp"/>
 

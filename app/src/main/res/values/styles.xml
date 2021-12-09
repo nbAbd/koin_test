@@ -34,5 +34,6 @@
     <style name="ThemeDialog" parent="android:Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 </resources>

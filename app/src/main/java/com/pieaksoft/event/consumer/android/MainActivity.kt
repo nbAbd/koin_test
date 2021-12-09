@@ -34,12 +34,20 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import android.content.IntentFilter
 import android.bluetooth.BluetoothManager
-import android.graphics.Point
+import android.widget.BaseAdapter
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
-import com.inqbarna.tablefixheaders.TableFixHeaders
-import com.pieaksoft.event.consumer.android.model.MyGantItem
-import com.pieaksoft.event.consumer.android.views.gant.MyGanttAdapter
-import kotlin.collections.ArrayList
+import com.pieaksoft.event.consumer.android.events.EventsVM
+import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.network.ErrorHandler
+import com.pieaksoft.event.consumer.android.ui.events.EventCertificationAdapter
+import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
+import com.pieaksoft.event.consumer.android.views.Dialogs
+import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -47,6 +55,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private var permissionDialog: Dialog? = null
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
+
+    private var insertEvent: String = ""
+    private var insertEventDate: Date? = null
+    private var sliderPosition: Int = 0
+
+    private val eventsAdapter by lazy {
+        EventsAdapter()
+    }
+
+    private val certAdapter by lazy {
+        EventCertificationAdapter()
+    }
+
     private val scanSettings by lazy {
         ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
@@ -56,6 +77,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             .setReportDelay(10L)
             .build()
     }
+
+    private val eventsVm: EventsVM by viewModel()
 
     private val scanCallback by lazy {
         object : ScanCallback() {
@@ -79,10 +102,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
-        initChartView()
+        eventsVm.setEventsMock()
+        eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
+        LocalBroadcastManager.getInstance(this).apply {
+            registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
+        }
+
+        initChartView()
         Log.e("test_log", "test = " + getBluetoothManager().adapter)
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
         registerReceiver(bluetoothReceiver, filter)
@@ -134,7 +163,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-
         findViewById<AppCompatImageView>(R.id.menu).setOnClickListener {
             if (findViewById<ConstraintLayout>(R.id.menu_opened).visibility == View.GONE) {
                 findViewById<ConstraintLayout>(R.id.menu_opened).show()
@@ -157,10 +185,145 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatImageView>(R.id.close_log).setOnClickListener {
             findViewById<ConstraintLayout>(R.id.log_view).hide()
         }
+
+        setUpInsertEventViews()
+        setCertList()
+
+        findViewById<ConstraintLayout>(R.id.certification_need_view).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.cert_view).show()
+        }
+
+        findViewById<AppCompatImageView>(R.id.close_cert_view).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.cert_view).hide()
+        }
+    }
+
+    private fun setUpInsertEventViews(){
+        findViewById<AppCompatButton>(R.id.insert_btn).setOnClickListener {
+            Dialogs.showInsertEventDialog(this, object : Dialogs.EventInsertClick {
+                override fun onEventClick(event: EventInsertCode) {
+                    insertEvent = event.code
+                    Dialogs.showDateTimeSelector(
+                        this@MainActivity,
+                        object : Dialogs.DateSelectListener {
+                            override fun onDateSelect(date: Date) {
+                                insertEventDate = date
+                                findViewById<ConstraintLayout>(R.id.insert_event_view).show()
+                            }
+                        })
+                }
+            })
+        }
+
+
+        findViewById<AppCompatImageView>(R.id.back_insert_btn).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).hide()
+            findViewById<AppCompatButton>(R.id.insert_btn).performClick()
+        }
+
+        findViewById<AppCompatImageView>(R.id.back_insert_loc_btn).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).show()
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
+        }
+
+        findViewById<AppCompatButton>(R.id.next).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.insert_event_view).hide()
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).show()
+        }
+
+
+        findViewById<AppCompatButton>(R.id.save).setOnClickListener {
+            var event = Event(
+                null,
+                EventInsertType.statusChange.type,
+                insertEvent,
+                date = insertEventDate?.formatToServerDateDefaults(),
+                time = insertEventDate?.formatToServerTimeDefaults(),
+                Location(-10.12345f, 48.23432f),
+                shippingDocumentNumber = "test",
+                totalEngineHours = 20,
+                totalEngineMiles = 450,
+                eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
+                eventRecordStatus = "ACTIVE",
+                malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
+                dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
+                driverLocationDescription = "chicago, IL",
+                dutyStatus = "OFF_DUTY")
+              eventsVm.insertEvent(event)
+        }
     }
 
     override fun bindVM() {
+        eventsVm.eventLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
+            eventsVm.getEventList()
+        })
 
+        eventsVm.eventCertLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.cert_view).hide()
+            eventsVm.getEventList()
+
+        })
+
+        eventsVm.eventListLiveData.observe(this, {
+            setEventsData()
+        })
+
+        eventsVm.eventGroupByDateObservable.observe(this, {
+            setEventsData()
+        })
+
+        eventsVm.certificationNeedListObservable.observe(this, {
+            if(it.isNotEmpty()){
+                findViewById<ConstraintLayout>(R.id.certification_need_view).show()
+                val keys = it.groupBy { it.date ?: "" }.keys
+                certAdapter.list = keys.toList()
+            } else {
+                findViewById<ConstraintLayout>(R.id.certification_need_view).hide()
+            }
+        })
+
+        eventsVm.progress.observe(this, {
+            setProgressVisible(it)
+        })
+
+        eventsVm.error.observe(this, {
+            val error = ErrorHandler.getErrorMessage(it, this)
+            Log.e("test_logerrror", "test insert error response = " + error)
+        })
+    }
+
+    private fun setCertList() {
+        findViewById<RecyclerView>(R.id.certification_list).layoutManager =  LinearLayoutManager(
+            this, LinearLayoutManager.VERTICAL, false)
+        findViewById<RecyclerView>(R.id.certification_list).adapter = certAdapter
+        certAdapter.setClickListener(object : com.pieaksoft.event.consumer.android.ui.base.BaseAdapter.ItemClickListener<String> {
+            override fun onClick(position: Int, item: String) {
+                findViewById<AppCompatButton>(R.id.confirm_cert).isEnabled = certAdapter.dateList.isNotEmpty()
+            }
+        })
+
+        findViewById<AppCompatButton>(R.id.confirm_cert).setOnClickListener {
+            for (date in certAdapter.dateList){
+                var event = Event(
+                    null,
+                    EventInsertType.certificate.type,
+                    EventInsertCode.FirstCertification.code,
+                    date = Date().formatToServerDateDefaults(),
+                    time = Date().formatToServerTimeDefaults(),
+                    Location(-10.12345f, 48.23432f),
+                    shippingDocumentNumber = "test",
+                    totalEngineHours = 20,
+                    totalEngineMiles = 450,
+                    eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
+                    eventRecordStatus = "ACTIVE",
+                    malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
+                    dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
+                    driverLocationDescription = "chicago, IL",
+                    dutyStatus = "OFF_DUTY")
+                eventsVm.certifyEvent(date, event)
+            }
+        }
     }
 
 
@@ -209,15 +372,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
 
         locationAllowTextView?.setOnClickListener {
-            ExcuseMe.couldYouGive(this).permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) {
-                locationAllowTextView.text = getString(R.string.allowed)
-                locationAllowTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
-                locationAllowTextView.background?.colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(
-                        ContextCompat.getColor(this, R.color.blue),
-                        BlendModeCompat.SRC_IN
-                    )
-            }
+            ExcuseMe.couldYouGive(this)
+                .permissionFor(Manifest.permission.ACCESS_FINE_LOCATION) { status ->
+                    locationAllowTextView.text = getString(R.string.allowed)
+                    locationAllowTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    locationAllowTextView.background?.colorFilter = BlendModeColorFilterCompat
+                        .createBlendModeColorFilterCompat(
+                            ContextCompat.getColor(this, R.color.blue),
+                            BlendModeCompat.SRC_IN
+                        )
+                    permissionDialog?.dismiss()
+                }
         }
         permissionDialog?.show()
     }
@@ -254,55 +419,66 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    private fun setEventsData(){
+        eventsAdapter.list = eventsVm.getEventsGroupByDate()
+        eventsAdapter.notifyDataSetChanged()
+
+        findViewById<AppCompatTextView>(R.id.date_text).text =
+            eventsAdapter.list.keys.elementAtOrNull(0)?.getDateFromString()
+                ?.formatToServerDateDefaults2() ?: ""
+    }
+
     private fun initChartView() {
-        val fullList: MutableList<MyGantItem> = ArrayList()
-        val row1 = MyGantItem(false, "Off", Point(0, 3))
-        val row2 = MyGantItem(false, "SB", Point(5, 10))
-        val row3 = MyGantItem("D", true)
-        val row4 = MyGantItem("On", true)
+        val llm = LinearLayoutManager(
+            this, LinearLayoutManager.HORIZONTAL, false
+        )
+        findViewById<RecyclerView>(R.id.events_list).layoutManager = llm
+        findViewById<RecyclerView>(R.id.events_list).adapter = eventsAdapter
 
-        fullList.add(row1)
-        fullList.add(row2)
-        fullList.add(row3)
-        fullList.add(row4)
 
-        val adapter = MyGanttAdapter(this, fullList)
-        val body = getBody(fullList)
-      //  adapter.setFirstHeader("task name")
-        adapter.setFirstBody(body)
-        adapter.header = header
-        adapter.body = body
-        adapter.setSection(body)
-        findViewById<TableFixHeaders>(R.id.tablefixheaders).adapter = adapter
+        findViewById<RecyclerView>(R.id.events_list).attachSnapHelperWithListener(
+            PagerSnapHelper(),
+            SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL_STATE_IDLE,
+            object : OnSnapPositionChangeListener {
+                override fun onSnapPositionChange(position: Int) {
+                    sliderPosition = position
+                    launch {
+                        findViewById<AppCompatTextView>(R.id.date_text).text =
+                            eventsAdapter.list.keys.elementAt(position)
+                                .getDateFromString().formatToServerDateDefaults2()
+                    }
+                }
 
+                override fun onSnapPositionDragging() {
+
+                }
+
+                override fun onSnapPositionNotChange(position: Int) {
+                    launch {
+                        findViewById<AppCompatTextView>(R.id.date_text).text =
+                            eventsAdapter.list.keys.elementAt(position)
+                                .getDateFromString().formatToServerDateDefaults2()
+                    }
+                }
+            })
+
+//        findViewById<AppCompatButton>(R.id.back_btn).setOnClickListener {
+//            llm.scrollToPositionWithOffset(sliderPosition+1, eventsAdapter.list.size)
+//            //findViewById<RecyclerView>(R.id.events_list).layoutManager.scrollToPositionWithOffset(sliderPosition + 1)
+//            Log.e("test_log","test = scroll = "+ (sliderPosition - 1))
+//        }
+//        findViewById<AppCompatButton>(R.id.next_btn).setOnClickListener {
+//            llm.scrollToPositionWithOffset(sliderPosition-1, eventsAdapter.list.size)
+//           // Log.e("test_log","test = scroll = "+ (sliderPosition + 1))
+//           // findViewById<RecyclerView>(R.id.events_list).layoutManager?.scrollToPosition(sliderPosition - 1)
+//        }
     }
 
-    private val header: MutableList<String>
-        private get() {
-            val header: MutableList<String> = ArrayList()
-            for (i in 0 until Common.HEADER_COUNT) header.add(StringBuilder().append(i).toString())
-            return header
+    private val driverSwapReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            eventsVm.getEventList()
         }
-
-    private fun getBody(fullList: MutableList<MyGantItem>): MutableList<List<String>> {
-        val rows: MutableList<List<String>> = ArrayList()
-
-        for (ganttItem in fullList) {
-            val cols: MutableList<String> = ArrayList()
-            if (!ganttItem.isEmpty) {
-                for (col in 0 until Common.COLUMN_COUNT)
-                    if (col >= ganttItem.point.x && col < ganttItem.point.y)
-                        if (ganttItem.isError) cols.add("error") else cols.add(ganttItem.title)
-                    else cols.add("empty")
-                rows.add(cols)
-            } else {
-                for (col in 0 until Common.COLUMN_COUNT) cols.add("empty")
-                rows.add(cols)
-            }
-        }
-        return rows
     }
-
 
     private fun getBluetoothManager(): BluetoothManager {
         return Objects.requireNonNull(

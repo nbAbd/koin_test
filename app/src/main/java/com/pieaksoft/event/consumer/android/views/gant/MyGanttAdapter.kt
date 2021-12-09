@@ -10,7 +10,7 @@ class MyGanttAdapter(
     private val context: Context, private val myGantItemList: List<MyGantItem>
 ) :
     TableFixHeaderAdapter<String, DefaultCellViewGroup,
-            String, DefaultCellViewGroup,
+            String, TimeCellView,
             List<String>,
             DefaultCellViewGroup,
             BarCellViewGroup,
@@ -20,8 +20,8 @@ class MyGanttAdapter(
         return DefaultCellViewGroup(context, myGantItemList)
     }
 
-    override fun inflateHeader(): DefaultCellViewGroup {
-        return DefaultCellViewGroup(context, myGantItemList)
+    override fun inflateHeader(): TimeCellView {
+        return TimeCellView(context, myGantItemList)
     }
 
     override fun inflateFirstBody(): DefaultCellViewGroup {
@@ -41,9 +41,9 @@ class MyGanttAdapter(
     override fun getHeaderWidths(): MutableList<Int> {
         val headerWidths: MutableList<Int> = ArrayList()
 
-        headerWidths.add(context.resources.getDimension(R.dimen._150dp).toInt())
+        headerWidths.add(context.resources.getDimension(R.dimen._50dp).toInt())
 
-        for (i in 0 until Common.COLUMN_COUNT) headerWidths.add(context.resources.getDimension(R.dimen._40dp).toInt())
+        for (i in 0 until Common.COLUMN_COUNT) headerWidths.add(context.resources.getDimension(R.dimen._25dp).toInt())
         return headerWidths
 
     }

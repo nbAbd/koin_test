@@ -1,11 +1,16 @@
 package com.pieaksoft.event.consumer.android.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.pieaksoft.event.consumer.android.BuildConfig
+import com.pieaksoft.event.consumer.android.events.EventsRepo
+import com.pieaksoft.event.consumer.android.events.EventsRepoImpl
+import com.pieaksoft.event.consumer.android.events.EventsVM
 
 import com.pieaksoft.event.consumer.android.network.OkHttpInterceptor
 import com.pieaksoft.event.consumer.android.network.ServiceApi
+import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationVM
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepo
 import com.pieaksoft.event.consumer.android.ui.login.LoginRepoImpl
 import com.pieaksoft.event.consumer.android.ui.login.LoginVM
@@ -46,15 +51,6 @@ val RetrofitModule = module {
     single { get<Retrofit>().create(ServiceApi::class.java) }
 }
 
-//val repositoryModule = module {
-//
-//    fun provideLoginRepo(api: ServiceApi): LoginRepo {
-//        return LoginRepoImpl(api)
-//    }
-//    single { provideLoginRepo(get()) }
-//
-//}
-
 
 val AppModule = module {
     single<SharedPreferences> {
@@ -66,13 +62,16 @@ val AppModule = module {
 
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepo> { ProfileRepoImpl(get()) }
+    single<EventsRepo> { EventsRepoImpl(get()) }
 //    single { FavoritesRepository(get()) }
 //    single { ChatRepository(get()) }
 //    single { EventsRepository(get()) }
 //    single { OrderRepository(get()) }
 //    single { BasketRepository(get()) }
-    viewModel { LoginVM(get()) }
-    viewModel { ProfileVM(get()) }
+    viewModel { LoginVM(get(), get()) }
+    viewModel { ProfileVM(get(), get()) }
+    viewModel { EventsVM(get(), get()) }
+    viewModel { EventsCalculationVM(get()) }
 //    viewModel { RecommendedVM(get()) }
 //    viewModel { StoreVM(get()) }
 //    viewModel { ProfileVM(get()) }

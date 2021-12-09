@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.*
-import android.net.Uri
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Handler
 import android.text.Editable
 import android.text.SpannableString
@@ -22,18 +24,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.facebook.drawee.view.SimpleDraweeView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pieaksoft.event.consumer.android.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -414,5 +412,49 @@ fun String.getGantColor(): String {
         else -> {
             "#9BAEC8"
         }
+    }
+}
+
+fun RecyclerView.attachSnapHelperWithListener(
+    snapHelper: SnapHelper,
+    behavior: SnapOnScrollListener.Behavior = SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
+    onSnapPositionChangeListener: OnSnapPositionChangeListener) {
+    snapHelper.attachToRecyclerView(this)
+    val snapOnScrollListener = SnapOnScrollListener(snapHelper, behavior, onSnapPositionChangeListener)
+    addOnScrollListener(snapOnScrollListener)
+}
+
+fun SnapHelper.getSnapPosition(recyclerView: RecyclerView): Int {
+    val layoutManager = recyclerView.layoutManager ?: return RecyclerView.NO_POSITION
+    val snapView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+    return layoutManager.getPosition(snapView)
+}
+
+fun Context.isNetworkAvailable(): Boolean {
+    val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val capabilities = manager?.activeNetwork ?: return false
+        val active = manager.getNetworkCapabilities(capabilities) ?: return false
+        return when {
+            active.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            active.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            active.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    } else {
+        return when (manager?.activeNetworkInfo?.type) {
+            ConnectivityManager.TYPE_WIFI,
+            ConnectivityManager.TYPE_MOBILE,
+            ConnectivityManager.TYPE_ETHERNET -> manager.activeNetworkInfo?.isConnected == true
+            else -> false
+        }
+    }
+}
+
+fun ImageView.switchSelectStopIcon(select: Boolean) {
+    if (select) {
+        setImageResource(R.drawable.ic_radio_on)
+    } else {
+        setImageResource(R.drawable.ic_radio_off)
     }
 }

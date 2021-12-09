@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="50dp"
+        android:background="@drawable/menu_sub_bkg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="@string/insert_event"
+            android:layout_gravity="center" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/event_off_btn"
+            android:layout_width="154dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/off"
+            android:textColor="@color/white"
+            android:background="@drawable/round_order_button"
+            android:backgroundTint="@color/red"
+            android:layout_gravity="center"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/event_sleep_btn"
+            android:layout_width="154dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/sleeper_berth"
+            android:textColor="@color/white"
+            android:background="@drawable/round_order_button"
+            android:backgroundTint="@color/blue"
+            android:layout_gravity="center"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/event_driving_btn"
+            android:layout_width="154dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/driving"
+            android:textColor="@color/white"
+            android:background="@drawable/round_order_button"
+            android:backgroundTint="@color/green2"
+            android:layout_gravity="center"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/event_on_btn"
+            android:layout_width="154dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/on"
+            android:textColor="@color/white"
+            android:background="@drawable/round_order_button"
+            android:backgroundTint="@color/orange"
+            android:layout_gravity="center"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/event_cancel_btn"
+            android:layout_width="154dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:background="@drawable/round_order_button"
+            android:backgroundTint="@color/grey2"
+            android:layout_gravity="center"/>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

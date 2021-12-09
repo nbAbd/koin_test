@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.login
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pieaksoft.event.consumer.android.model.Failure
@@ -11,15 +12,15 @@ import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_MAIN_USER_I
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class LoginVM(private val loginRepo: LoginRepo): BaseVM() {
+class LoginVM(val app: Application, private val loginRepo: LoginRepo): BaseVM(app) {
     private val _isSuccessLogin = SingleLiveEvent<Boolean>()
     val isSuccessLogin: LiveData<Boolean> = _isSuccessLogin
 
     fun login(email: String, password: String, isAdditionalDriver: Boolean = false) {
+        showProgress()
         launch {
-            when (val response = loginRepo.login(email, password)) {
+            when (val response = loginRepo.login(email.trim(), password.trim())) {
                 is Success -> {
-                    Log.e("Login_tag", "good = " + response.data.jwtToken)
                     if (isAdditionalDriver) {
                         sp.edit()
                             .putString(
@@ -42,8 +43,10 @@ class LoginVM(private val loginRepo: LoginRepo): BaseVM() {
                         .apply()
                 }
                     _isSuccessLogin.value = true
+                    hideProgress()
                 }
                 is Failure -> {
+                    hideProgress()
                     _error.value = response.error
                 }
             }
