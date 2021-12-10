@@ -4,8 +4,11 @@ import android.app.NotificationManager
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.utils.*
@@ -120,28 +123,28 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
 //        }
 //    }
 //
-//    fun showDialogWithOkNoButton(title: String, message: String,
-//                                 @StringRes positiveStringRes: Int = R.string.yes,
-//                                 @StringRes negativeStringRes: Int = R.string.no,
-//                                 listenerOk: View.OnClickListener?, listenerNo: View.OnClickListener?) {
-//        launch {
-//            if (!isUIAvailable()) {
-//                return@launch
-//            }
-//
-//            val alert = AlertDialog.Builder(this@BaseActivity).create()
-//            alert.setTitle(title)
-//            alert.setMessage(message)
-//            alert.setCancelable(false)
-//            alert.setButton(AlertDialog.BUTTON_POSITIVE, this@BaseActivity.getText(positiveStringRes)) { _, _ ->
-//                listenerOk?.onClick(null)
-//                alert.dismiss()
-//            }
-//            alert.setButton(AlertDialog.BUTTON_NEGATIVE, this@BaseActivity.getText(negativeStringRes)) { _, _ ->
-//                listenerNo?.onClick(null)
-//                alert.dismiss()
-//            }
-//            alert.show()
-//        }
-//    }
+    fun showDialogWithOkNoButton(title: String, message: String,
+                                 @StringRes positiveStringRes: Int = R.string.yes,
+                                 @StringRes negativeStringRes: Int = R.string.no,
+                                 listenerOk: View.OnClickListener?, listenerNo: View.OnClickListener?) {
+        launch {
+            if (!isUIAvailable()) {
+                return@launch
+            }
+
+            val alert = AlertDialog.Builder(this@BaseActivity).create()
+            alert.setTitle(title)
+            alert.setMessage(message)
+            alert.setCancelable(false)
+            alert.setButton(AlertDialog.BUTTON_POSITIVE, this@BaseActivity.getText(positiveStringRes)) { _, _ ->
+                listenerOk?.onClick(null)
+                alert.dismiss()
+            }
+            alert.setButton(AlertDialog.BUTTON_NEGATIVE, this@BaseActivity.getText(negativeStringRes)) { _, _ ->
+                listenerNo?.onClick(null)
+                alert.dismiss()
+            }
+            alert.show()
+        }
+    }
 }

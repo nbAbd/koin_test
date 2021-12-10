@@ -196,6 +196,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatImageView>(R.id.close_cert_view).setOnClickListener {
             findViewById<ConstraintLayout>(R.id.cert_view).hide()
         }
+
+        findViewById<AppCompatTextView>(R.id.logout).setOnClickListener {
+            showDialogWithOkNoButton(title = getString(R.string.logout), message = getString(R.string.logout_ask),
+                listenerOk =  View.OnClickListener {
+                    logout()
+                }, listenerNo = {})
+        }
+    }
+
+    private fun logout(){
+        sp.edit()
+            .putString(SHARED_PREFERENCES_CURRENT_USER_ID, "")
+            .apply()
     }
 
     private fun setUpInsertEventViews(){

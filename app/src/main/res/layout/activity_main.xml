@@ -96,7 +96,7 @@
             android:id="@+id/menu_opened"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/menu">
 
@@ -236,7 +236,6 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/separator2"
                     app:srcCompat="@drawable/ic_control" />
@@ -269,7 +268,6 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/separator3"
                     app:srcCompat="@drawable/ic_settings" />
@@ -279,7 +277,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="@string/md"
+                    android:text="@string/settings"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="@+id/settings_image"
@@ -302,7 +300,6 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/separator4"
                     app:srcCompat="@drawable/ic_faq" />
@@ -312,7 +309,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="@string/md"
+                    android:text="@string/faq"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="@+id/faq_image"
@@ -345,7 +342,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="@string/md"
+                    android:text="@string/logout"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="@+id/logout_image"

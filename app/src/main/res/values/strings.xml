@@ -60,7 +60,11 @@
     <string name="menu">Menu</string>
     <string name="canada_rules">Canada Rules</string>
     <string name="md">MD</string>
+    <string name="faq">FAQ</string>
+    <string name="logout">Logout</string>
     <string name="dvir">DVIR</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="insert_event">Insert event</string>
     <string name="driving">Driving</string>
     <string name="sleeper_berth">Sleeper berth</string>
@@ -71,6 +75,7 @@
     <string name="choose_date_time">Choose date and time</string>
     <string name="confirm">Confirm</string>
     <string name="swap_ask">Are you sure you want to swap the driver?</string>
+    <string name="logout_ask">Are you sure you want to log out?</string>
     <string name="current_driver">Current driver</string>
     <string name="co_driver">Co-Driver</string>
     <string name="truck">Truck</string>
