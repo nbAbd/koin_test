@@ -45,6 +45,7 @@ import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.events.EventCertificationAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
+import com.pieaksoft.event.consumer.android.ui.login.LoginActivity
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -209,6 +210,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         sp.edit()
             .putString(SHARED_PREFERENCES_CURRENT_USER_ID, "")
             .apply()
+        startActivity(LoginActivity.newInstance(this@MainActivity))
+        this.finish()
     }
 
     private fun setUpInsertEventViews(){

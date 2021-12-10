@@ -1,5 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.login
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
@@ -10,6 +12,7 @@ import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
+import com.pieaksoft.event.consumer.android.utils.newIntent
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -74,6 +77,14 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
 
     private fun isEnableButton(): Boolean {
         return loginValue != null && passwordValue != null
+    }
+
+    companion object {
+        fun newInstance(context: Context): Intent {
+            return newIntent<LoginActivity>(context).apply {
+
+            }
+        }
     }
 
 }
