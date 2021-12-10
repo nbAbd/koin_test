@@ -96,260 +96,272 @@
             android:id="@+id/menu_opened"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/menu">
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/menu_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="@string/menu"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/sub_menu"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/menu_sub_bkg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/menu_title"
-                app:layout_constraintWidth_percent="0.4">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/canada_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_canada" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/canada_rules"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/canada_rules"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/canada_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/canada_image"
-                    app:layout_constraintTop_toTopOf="@+id/canada_image" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="100dp">
 
 
-                <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                    android:id="@+id/separator"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/canada_rules"
-                    app:layout_constraintTop_toBottomOf="@+id/canada_image" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/menu_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="28dp"
+                        android:text="@string/menu"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sub_menu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/menu_sub_bkg"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/menu_title"
+                        app:layout_constraintWidth_percent="0.4">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/canada_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_canada" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/canada_rules"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/canada_rules"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/canada_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/canada_image"
+                            app:layout_constraintTop_toTopOf="@+id/canada_image" />
 
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/md_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/separator"
-                    app:srcCompat="@drawable/ic_control" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/md"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/md"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/md_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/md_image"
-                    app:layout_constraintTop_toTopOf="@+id/md_image" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                            android:id="@+id/separator"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintStart_toStartOf="@+id/canada_rules"
+                            app:layout_constraintTop_toBottomOf="@+id/canada_image" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/sub_menu2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/menu_sub_bkg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sub_menu"
-                app:layout_constraintWidth_percent="0.4">
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/md_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/separator"
+                            app:srcCompat="@drawable/ic_control" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/dvir_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_dvir" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/dvir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/dvir"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/dvir_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dvir_image"
-                    app:layout_constraintTop_toTopOf="@+id/dvir_image" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/md"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/md"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/md_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/md_image"
+                            app:layout_constraintTop_toTopOf="@+id/md_image" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                    android:id="@+id/separator2"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/dvir"
-                    app:layout_constraintTop_toBottomOf="@+id/dvir_image" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sub_menu2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/menu_sub_bkg"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sub_menu"
+                        app:layout_constraintWidth_percent="0.4">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/dvir_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_dvir" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/dvir"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/dvir"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/dvir_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/dvir_image"
+                            app:layout_constraintTop_toTopOf="@+id/dvir_image" />
 
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/truck_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/separator2"
-                    app:srcCompat="@drawable/ic_control" />
+                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                            android:id="@+id/separator2"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintStart_toStartOf="@+id/dvir"
+                            app:layout_constraintTop_toBottomOf="@+id/dvir_image" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/truck_settings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/md"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/truck_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/truck_image"
-                    app:layout_constraintTop_toTopOf="@+id/truck_image" />
 
-                <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                    android:id="@+id/separator3"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/truck_settings"
-                    app:layout_constraintTop_toBottomOf="@+id/truck_image" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/truck_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/separator2"
+                            app:srcCompat="@drawable/ic_control" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/settings_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/separator3"
-                    app:srcCompat="@drawable/ic_settings" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/truck_settings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/md"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/truck_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/truck_image"
+                            app:layout_constraintTop_toTopOf="@+id/truck_image" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/settings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/settings"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/settings_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/settings_image"
-                    app:layout_constraintTop_toTopOf="@+id/settings_image" />
+                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                            android:id="@+id/separator3"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintStart_toStartOf="@+id/truck_settings"
+                            app:layout_constraintTop_toBottomOf="@+id/truck_image" />
 
-                <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                    android:id="@+id/separator4"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/settings"
-                    app:layout_constraintTop_toBottomOf="@+id/settings_image" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/settings_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/separator3"
+                            app:srcCompat="@drawable/ic_settings" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/faq_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/separator4"
-                    app:srcCompat="@drawable/ic_faq" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/settings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/settings"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/settings_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/settings_image"
+                            app:layout_constraintTop_toTopOf="@+id/settings_image" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/faq"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/faq"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/faq_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/faq_image"
-                    app:layout_constraintTop_toTopOf="@+id/faq_image" />
+                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                            android:id="@+id/separator4"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintStart_toStartOf="@+id/settings"
+                            app:layout_constraintTop_toBottomOf="@+id/settings_image" />
 
-                <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                    android:id="@+id/separator5"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/faq"
-                    app:layout_constraintTop_toBottomOf="@+id/faq_image" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/faq_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/separator4"
+                            app:srcCompat="@drawable/ic_faq" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/logout_image"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/separator5"
-                    app:srcCompat="@drawable/ic_logout" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/faq"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/faq"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/faq_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/faq_image"
+                            app:layout_constraintTop_toTopOf="@+id/faq_image" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/logout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/logout"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/logout_image"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/logout_image"
-                    app:layout_constraintTop_toTopOf="@+id/logout_image" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
+                            android:id="@+id/separator5"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintStart_toStartOf="@+id/faq"
+                            app:layout_constraintTop_toBottomOf="@+id/faq_image" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/logout_image"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/separator5"
+                            app:srcCompat="@drawable/ic_logout" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/logout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/logout"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/logout_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/logout_image"
+                            app:layout_constraintTop_toTopOf="@+id/logout_image" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -357,24 +369,28 @@
         android:id="@+id/certification_need_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/red"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/red">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/certification_need"
-            android:textColor="@color/white"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/certification_need"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <include layout="@layout/log_view" />
+
     <include layout="@layout/insert_event_view" />
+
     <include layout="@layout/insert_event_view2" />
+
     <include layout="@layout/certificate_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
