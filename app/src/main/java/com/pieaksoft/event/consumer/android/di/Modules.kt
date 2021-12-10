@@ -3,7 +3,9 @@ package com.pieaksoft.event.consumer.android.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.pieaksoft.event.consumer.android.BuildConfig
+import com.pieaksoft.event.consumer.android.db.AppDataBase
 import com.pieaksoft.event.consumer.android.events.EventsRepo
 import com.pieaksoft.event.consumer.android.events.EventsRepoImpl
 import com.pieaksoft.event.consumer.android.events.EventsVM
@@ -60,29 +62,18 @@ val AppModule = module {
         )
     }
 
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDataBase::class.java,
+            "ELD_DB")
+            .build()
+    }
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepo> { ProfileRepoImpl(get()) }
     single<EventsRepo> { EventsRepoImpl(get()) }
-//    single { FavoritesRepository(get()) }
-//    single { ChatRepository(get()) }
-//    single { EventsRepository(get()) }
-//    single { OrderRepository(get()) }
-//    single { BasketRepository(get()) }
     viewModel { LoginVM(get(), get()) }
     viewModel { ProfileVM(get(), get()) }
     viewModel { EventsVM(get(), get()) }
     viewModel { EventsCalculationVM(get()) }
-//    viewModel { RecommendedVM(get()) }
-//    viewModel { StoreVM(get()) }
-//    viewModel { ProfileVM(get()) }
-//    viewModel { AuthVM(get()) }
-//    viewModel { FirebaseVM() }
-//    viewModel { FavoriteVM(get()) }
-//    viewModel { ChatViewModel(get()) }
-//    viewModel { EventStoreVM(get()) }
-//    viewModel { OrderVM(get()) }
-//    viewModel { SplashVM() }
-//    viewModel { OrdersListVM(get()) }
-//    viewModel { BasketVM(get()) }
-
 }

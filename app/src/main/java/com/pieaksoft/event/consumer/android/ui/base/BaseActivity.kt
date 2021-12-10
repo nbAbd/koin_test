@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android.ui.base
 import android.app.NotificationManager
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,14 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.db.AppDataBase
 import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.core.inject
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivity(),
@@ -28,6 +32,7 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
         getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
+    val db: AppDataBase by inject()
 
     internal val pd by lazy {
         ProgressDialog(this).apply {

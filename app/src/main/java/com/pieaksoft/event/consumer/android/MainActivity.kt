@@ -250,11 +250,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         findViewById<AppCompatButton>(R.id.save).setOnClickListener {
             var event = Event(
-                null,
+                "",
                 EventInsertType.statusChange.type,
                 insertEvent,
-                date = insertEventDate?.formatToServerDateDefaults(),
-                time = insertEventDate?.formatToServerTimeDefaults(),
+                date = insertEventDate?.formatToServerDateDefaults()?:"",
+                time = insertEventDate?.formatToServerTimeDefaults()?:"",
                 Location(-10.12345f, 48.23432f),
                 shippingDocumentNumber = "test",
                 totalEngineHours = 20,
@@ -322,7 +322,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatButton>(R.id.confirm_cert).setOnClickListener {
             for (date in certAdapter.dateList){
                 var event = Event(
-                    null,
+                    "",
                     EventInsertType.certificate.type,
                     EventInsertCode.FirstCertification.code,
                     date = Date().formatToServerDateDefaults(),

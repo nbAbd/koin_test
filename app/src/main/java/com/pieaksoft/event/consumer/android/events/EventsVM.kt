@@ -9,7 +9,9 @@ import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import com.pieaksoft.event.consumer.android.utils.Storage
 import com.pieaksoft.event.consumer.android.utils.getCode
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -85,7 +87,10 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                         checkCertifications()
                         Storage.eventListGroupByDate =  calculateEvents()
                         eventGroupByDateObservable.postValue(getEventsGroupByDate())
-                        Log.e("test_log3","test list = "+ Storage.eventList)
+                        saveEventsToDB()
+                        launch(Dispatchers.IO) {
+                            Log.e("test_log","test from db = "+getEventFromDB())
+                        }
                     }
                 }
                 is Failure -> {
@@ -99,6 +104,18 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         return Storage.eventListGroupByDate
     }
 
+
+    fun saveEventsToDB(){
+        launch(Dispatchers.IO) {
+            Storage.eventList.forEach {
+                db.getAppDao().saveEvent(it)
+            }
+        }
+    }
+
+     fun getEventFromDB(): List<Event>{
+        return db.getAppDao().getAllEvents()
+    }
 
     private fun calculateEvents(): Map<String, List<Event>> {
         calculateEndTime()
