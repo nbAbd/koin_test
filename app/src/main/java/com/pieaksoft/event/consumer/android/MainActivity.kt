@@ -264,7 +264,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
                 dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                 driverLocationDescription = "chicago, IL",
-                dutyStatus = "OFF_DUTY")
+                dutyStatus = "OFF_DUTY",
+                certification = null)
               eventsVm.insertEvent(event)
         }
     }
@@ -336,7 +337,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                     malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
                     dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                     driverLocationDescription = "chicago, IL",
-                    dutyStatus = "OFF_DUTY")
+                    dutyStatus = "OFF_DUTY",
+                    certification = null)
                 eventsVm.certifyEvent(date, event)
             }
         }

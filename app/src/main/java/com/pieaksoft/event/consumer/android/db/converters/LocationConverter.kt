@@ -6,12 +6,12 @@ import com.pieaksoft.event.consumer.android.model.Location
 
 class LocationConverter {
     @TypeConverter
-    fun fromLocation(location: Location): String {
+    fun fromLocation(location: Location?): String? {
         return Gson().toJson(location)
     }
 
     @TypeConverter
-    fun toLocation(data: String): Location {
-        return Gson().fromJson(data, Location::class.java) as Location
+    fun toLocation(data: String?): Location? {
+        return Gson().fromJson(data, Location::class.java) as Location?
     }
 }

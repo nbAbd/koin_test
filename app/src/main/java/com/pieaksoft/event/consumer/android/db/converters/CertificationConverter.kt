@@ -6,12 +6,12 @@ import com.pieaksoft.event.consumer.android.model.Certification
 
 class CertificationConverter {
     @TypeConverter
-    fun fromLocation(certification: Certification): String {
+    fun fromCertification(certification: Certification?): String? {
         return Gson().toJson(certification)
     }
 
     @TypeConverter
-    fun toLocation(data: String): Certification {
-        return Gson().fromJson(data, Certification::class.java) as Certification
+    fun toCertification(data: String?): Certification? {
+        return Gson().fromJson(data, Certification::class.java) as Certification?
     }
 }
