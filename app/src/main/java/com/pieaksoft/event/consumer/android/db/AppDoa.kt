@@ -15,4 +15,6 @@ interface AppDoa {
     @Query("SELECT * FROM event")
     fun getAllEvents(): List<Event>
 
+    @Query("DELETE FROM event")
+    fun deleteEvents()
 }

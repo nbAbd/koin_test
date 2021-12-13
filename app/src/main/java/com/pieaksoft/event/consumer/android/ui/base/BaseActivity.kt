@@ -65,17 +65,10 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
 
     override fun onResume() {
         super.onResume()
-
-//        sp.get("profileId", "").let {
-//            chatVM.setStatus(this, it, "online")
-//        }
     }
 
     override fun onPause() {
         super.onPause()
-//        sp.get("profileId", "").let {
-//            chatVM.setStatus(this, it, "offline")
-//        }
     }
 
     fun setProgressVisible(visible: Boolean) {

@@ -20,7 +20,6 @@ import kotlin.coroutines.CoroutineContext
 abstract class BaseVM(context: Application) : AndroidViewModel(context), CoroutineScope, KoinComponent {
     val appContext: Context by inject()
     val sp: SharedPreferences by inject()
-    val db: AppDataBase by inject()
 
     internal val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error

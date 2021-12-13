@@ -71,7 +71,7 @@ val AppModule = module {
     }
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepo> { ProfileRepoImpl(get()) }
-    single<EventsRepo> { EventsRepoImpl(get()) }
+    single<EventsRepo> { EventsRepoImpl(get(), get()) }
     viewModel { LoginVM(get(), get()) }
     viewModel { ProfileVM(get(), get()) }
     viewModel { EventsVM(get(), get()) }

@@ -7,4 +7,7 @@ interface EventsRepo {
     suspend fun insertEvent(event: Event): Result<Event, Exception>
     suspend fun certifyEvent(event: Event): Result<Event, Exception>
     suspend fun getEventList(): Result<List<Event>, Exception>
+    suspend fun getEventListFromDB(): List<Event>
+    suspend fun saveEventListToDB(eventList: List<Event>)
+    suspend fun deleteAllEvents()
 }

@@ -46,6 +46,7 @@ import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.events.EventCertificationAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
 import com.pieaksoft.event.consumer.android.ui.login.LoginActivity
+import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -101,10 +102,39 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (connectionStateMonitor == null)
+            connectionStateMonitor = ConnectionStateMonitor(this, this)
+
+        connectionStateMonitor?.enable()
+        if (connectionStateMonitor?.hasNetworkConnection() == false) onNegative()
+        else onPositive()
+
+        eventsVm.getEventList()
+    }
+
+    override fun onPause() {
+        connectionStateMonitor?.disable()
+        connectionStateMonitor = null
+        super.onPause()
+    }
+
+    override fun onPositive() {
+        runOnUiThread {
+            isNetworkEnable = true
+        }
+    }
+
+    override fun onNegative() {
+        runOnUiThread {
+            isNetworkEnable = false
+        }
+    }
+
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
         eventsVm.setEventsMock()
-        eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
