@@ -123,6 +123,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     override fun onPositive() {
         runOnUiThread {
             isNetworkEnable = true
+            eventsVm.checkNotSyncedEvents()
         }
     }
 
@@ -296,7 +297,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 driverLocationDescription = "chicago, IL",
                 dutyStatus = "OFF_DUTY",
                 certification = null)
-              eventsVm.insertEvent(event)
+              eventsVm.insertEvent(event, false)
         }
     }
 

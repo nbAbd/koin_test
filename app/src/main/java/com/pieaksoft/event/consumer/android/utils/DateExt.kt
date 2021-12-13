@@ -10,7 +10,7 @@ fun Date.formatToServerDateDefaults(): String{
 }
 
 fun Date.formatToServerTimeDefaults(): String{
-    val sdf= SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val sdf= SimpleDateFormat("HH:mm", Locale.getDefault())
     return sdf.format(this)
 }
 

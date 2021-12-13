@@ -18,6 +18,11 @@ class EventsRepoImpl(private val serviceApi: ServiceApi, val db: AppDataBase): E
         }
     }
 
+    override suspend fun insertEventToDB(event: Event) {
+        event.isSyncWithServer = false
+        db.getAppDao().saveEvent(event)
+    }
+
     override suspend fun certifyEvent(event: Event): Result<Event, Exception> {
         return try {
             val response = serviceApi.certifyEvent(event)

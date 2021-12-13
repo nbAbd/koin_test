@@ -37,19 +37,39 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         SingleLiveEvent<List<Event>>()
     }
 
-    fun insertEvent(event: Event) {
+    fun insertEvent(event: Event, fromDb: Boolean) {
         _progress.postValue(true)
         launch {
-            when (val response = repo.insertEvent(event)) {
-                is Success -> {
-                    response.data.let {
-                        eventObserver.postValue(it)
+            if (isNetworkAvailable && !fromDb) {
+                when (val response = repo.insertEvent(event)) {
+                    is Success -> {
+                        response.data.let {
+                            eventObserver.postValue(it)
+                            _progress.postValue(false)
+                        }
+                    }
+                    is Failure -> {
+                        _error.value = response.error
                         _progress.postValue(false)
                     }
                 }
-                is Failure -> {
-                    _error.value = response.error
+            } else {
+                launch(Dispatchers.IO) {
+                    repo.insertEventToDB(event)
+                    eventObserver.postValue(event)
                     _progress.postValue(false)
+                }
+            }
+        }
+    }
+
+    fun checkNotSyncedEvents() {
+        launch(Dispatchers.IO) {
+            val events = repo.getEventListFromDB()
+            events.forEach { event ->
+                if (event.isSyncWithServer == false) {
+                    Log.e("test_log","test sync with db = "+ event)
+                    insertEvent(event, true)
                 }
             }
         }
