@@ -297,7 +297,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 driverLocationDescription = "chicago, IL",
                 dutyStatus = "OFF_DUTY",
                 certification = null)
-              eventsVm.insertEvent(event, false)
+              eventsVm.insertEvent(event)
         }
     }
 
@@ -305,6 +305,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         eventsVm.eventLiveData.observe(this, {
             findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
             eventsVm.getEventList()
+        })
+
+        eventsVm.eventDBLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
+            eventsVm.getEventList(true)
         })
 
         eventsVm.eventCertLiveData.observe(this, {

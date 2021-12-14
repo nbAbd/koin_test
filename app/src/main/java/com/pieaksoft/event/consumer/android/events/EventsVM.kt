@@ -22,6 +22,8 @@ import java.util.*
 class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app) {
     private val eventObserver = SingleLiveEvent<Event>()
     val eventLiveData: LiveData<Event> = eventObserver
+    private val eventDBObserver = SingleLiveEvent<Event>()
+    val eventDBLiveData: LiveData<Event> = eventDBObserver
 
     private val _eventCertObserver = SingleLiveEvent<Event>()
     val eventCertLiveData: LiveData<Event> = _eventCertObserver
@@ -37,10 +39,10 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         SingleLiveEvent<List<Event>>()
     }
 
-    fun insertEvent(event: Event, fromDb: Boolean) {
+    fun insertEvent(event: Event) {
         _progress.postValue(true)
         launch {
-            if (isNetworkAvailable && !fromDb) {
+            if (isNetworkAvailable) {
                 when (val response = repo.insertEvent(event)) {
                     is Success -> {
                         response.data.let {
@@ -54,22 +56,27 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                     }
                 }
             } else {
-                launch(Dispatchers.IO) {
-                    repo.insertEventToDB(event)
-                    eventObserver.postValue(event)
-                    _progress.postValue(false)
-                }
+                insertEventToDB(event)
             }
         }
     }
+
+    private fun insertEventToDB(event: Event){
+        launch(Dispatchers.IO) {
+            repo.insertEventToDB(event)
+            eventDBObserver.postValue(event)
+            _progress.postValue(false)
+        }
+    }
+
 
     fun checkNotSyncedEvents() {
         launch(Dispatchers.IO) {
             val events = repo.getEventListFromDB()
             events.forEach { event ->
                 if (event.isSyncWithServer == false) {
-                    Log.e("test_log","test sync with db = "+ event)
-                    insertEvent(event, true)
+                    Log.e("test_log", "test sync with db = " + event)
+                    insertEvent(event)
                 }
             }
         }
@@ -96,7 +103,7 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
         }
     }
 
-    fun getEventList() {
+    fun getEventList(fromDb: Boolean = false) {
         launch {
             if (Storage.isNetworkEnable) {
                 when (val response = repo.getEventList()) {
@@ -104,8 +111,10 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
                         response.data.let { list ->
                             handleEventsList(list)
                             launch(Dispatchers.IO) {
-                                repo.deleteAllEvents()
-                                repo.saveEventListToDB(Storage.eventList)
+                                if (!fromDb) {
+                                    repo.deleteAllEvents()
+                                    repo.saveEventListToDB(Storage.eventList)
+                                }
                                 Log.e("test_log", "test from db = " + repo.getEventListFromDB())
                             }
                         }
