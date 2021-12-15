@@ -198,12 +198,12 @@ class EventsVM(val app: Application, private val repo: EventsRepo) : BaseVM(app)
     fun setEventsMock() {
         val currentDay = LocalDate.now()
         Storage.eventList.groupBy { it.date ?: "" }
+        Storage.eventListMock.add(currentDay.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
         for (i in 1..7) {
             val date =
                 currentDay.minusDays(i.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             Storage.eventListMock.add(date)
         }
-        Log.e("test_dates", " test dates = " + Storage.eventListMock)
     }
 
     private fun checkCertifications() {
