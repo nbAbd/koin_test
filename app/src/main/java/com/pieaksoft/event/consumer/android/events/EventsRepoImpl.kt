@@ -1,12 +1,14 @@
 package com.pieaksoft.event.consumer.android.events
 
+import com.pieaksoft.event.consumer.android.db.AppDataBase
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Result
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.network.ServiceApi
+import com.pieaksoft.event.consumer.android.utils.Storage
 
-class EventsRepoImpl(private val serviceApi: ServiceApi): EventsRepo {
+class EventsRepoImpl(private val serviceApi: ServiceApi, val db: AppDataBase): EventsRepo {
     override suspend fun insertEvent(event: Event): Result<Event, Exception> {
         return try {
             val response = serviceApi.insertEvent(event)
@@ -14,6 +16,11 @@ class EventsRepoImpl(private val serviceApi: ServiceApi): EventsRepo {
         } catch (e: Exception) {
             Failure(e)
         }
+    }
+
+    override suspend fun insertEventToDB(event: Event) {
+        event.isSyncWithServer = false
+        db.getAppDao().saveEvent(event)
     }
 
     override suspend fun certifyEvent(event: Event): Result<Event, Exception> {
@@ -32,5 +39,20 @@ class EventsRepoImpl(private val serviceApi: ServiceApi): EventsRepo {
         } catch (e: Exception) {
             Failure(e)
         }
+    }
+
+    override suspend fun getEventListFromDB(): List<Event> {
+        return db.getAppDao().getAllEvents()?: emptyList()
+    }
+
+    override suspend fun saveEventListToDB(eventList: List<Event>) {
+        eventList.forEach { event ->
+            event.isSyncWithServer = true
+            db.getAppDao().saveEvent(event)
+        }
+    }
+
+    override suspend fun deleteAllEvents() {
+        db.getAppDao().deleteEvents()
     }
 }

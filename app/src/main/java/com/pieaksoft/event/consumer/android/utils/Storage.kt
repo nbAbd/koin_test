@@ -6,6 +6,7 @@ object Storage {
     var eventList: List<Event> = emptyList()
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
+    var isNetworkEnable: Boolean = true
 
 
 }

@@ -45,6 +45,8 @@ import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.events.EventCertificationAdapter
 import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
+import com.pieaksoft.event.consumer.android.ui.login.LoginActivity
+import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -100,10 +102,40 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (connectionStateMonitor == null)
+            connectionStateMonitor = ConnectionStateMonitor(this, this)
+
+        connectionStateMonitor?.enable()
+        if (connectionStateMonitor?.hasNetworkConnection() == false) onNegative()
+        else onPositive()
+
+        eventsVm.getEventList()
+    }
+
+    override fun onPause() {
+        connectionStateMonitor?.disable()
+        connectionStateMonitor = null
+        super.onPause()
+    }
+
+    override fun onPositive() {
+        runOnUiThread {
+            isNetworkEnable = true
+            eventsVm.checkNotSyncedEvents()
+        }
+    }
+
+    override fun onNegative() {
+        runOnUiThread {
+            isNetworkEnable = false
+        }
+    }
+
     // private val binding by viewBinding(ActivityMainBinding::bind)
     override fun setView() {
         eventsVm.setEventsMock()
-        eventsVm.getEventList()
         bluetoothAdapter = getBluetoothManager().adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
@@ -196,6 +228,21 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatImageView>(R.id.close_cert_view).setOnClickListener {
             findViewById<ConstraintLayout>(R.id.cert_view).hide()
         }
+
+        findViewById<AppCompatTextView>(R.id.logout).setOnClickListener {
+            showDialogWithOkNoButton(title = getString(R.string.logout), message = getString(R.string.logout_ask),
+                listenerOk =  View.OnClickListener {
+                    logout()
+                }, listenerNo = {})
+        }
+    }
+
+    private fun logout(){
+        sp.edit()
+            .putString(SHARED_PREFERENCES_CURRENT_USER_ID, "")
+            .apply()
+        startActivity(LoginActivity.newInstance(this@MainActivity))
+        this.finish()
     }
 
     private fun setUpInsertEventViews(){
@@ -234,11 +281,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         findViewById<AppCompatButton>(R.id.save).setOnClickListener {
             var event = Event(
-                null,
+                "",
                 EventInsertType.statusChange.type,
                 insertEvent,
-                date = insertEventDate?.formatToServerDateDefaults(),
-                time = insertEventDate?.formatToServerTimeDefaults(),
+                date = insertEventDate?.formatToServerDateDefaults()?:"",
+                time = insertEventDate?.formatToServerTimeDefaults()?:"",
                 Location(-10.12345f, 48.23432f),
                 shippingDocumentNumber = "test",
                 totalEngineHours = 20,
@@ -248,7 +295,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
                 dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                 driverLocationDescription = "chicago, IL",
-                dutyStatus = "OFF_DUTY")
+                dutyStatus = "OFF_DUTY",
+                certification = null)
               eventsVm.insertEvent(event)
         }
     }
@@ -257,6 +305,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         eventsVm.eventLiveData.observe(this, {
             findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
             eventsVm.getEventList()
+        })
+
+        eventsVm.eventDBLiveData.observe(this, {
+            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
+            eventsVm.getEventList(true)
         })
 
         eventsVm.eventCertLiveData.observe(this, {
@@ -306,7 +359,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         findViewById<AppCompatButton>(R.id.confirm_cert).setOnClickListener {
             for (date in certAdapter.dateList){
                 var event = Event(
-                    null,
+                    "",
                     EventInsertType.certificate.type,
                     EventInsertCode.FirstCertification.code,
                     date = Date().formatToServerDateDefaults(),
@@ -320,7 +373,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                     malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
                     dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
                     driverLocationDescription = "chicago, IL",
-                    dutyStatus = "OFF_DUTY")
+                    dutyStatus = "OFF_DUTY",
+                    certification = null)
                 eventsVm.certifyEvent(date, event)
             }
         }

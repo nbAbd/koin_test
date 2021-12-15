@@ -27,8 +27,9 @@ class OkHttpInterceptor : Interceptor, KoinComponent {
             }
 
             val response = proceed(request.build())
+            val res = response.peekBody(Long.MAX_VALUE)
             Log.e("request", "Request: ${request.build()}")
-            Log.e("request", "Request response: ${response}")
+            Log.e("request", "Request response: ${res.string()}")
             response
         }
     }

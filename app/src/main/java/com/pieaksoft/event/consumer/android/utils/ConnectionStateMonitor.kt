@@ -35,11 +35,13 @@ class ConnectionStateMonitor(
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
         onNetworkAvailableCallbacks.onPositive()
+        Storage.isNetworkEnable = true
     }
 
     override fun onLost(network: Network) {
         super.onLost(network)
         onNetworkAvailableCallbacks.onNegative()
+        Storage.isNetworkEnable = false
     }
 
     /**
