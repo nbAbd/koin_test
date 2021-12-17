@@ -4,7 +4,6 @@
     tools:ignore="MenuTitle">
     <item
         android:id="@+id/coDriverFragment"
-        android:iconTint="@color/bottom_nav_item_color"
         android:icon="@drawable/ic_driver_comp" />
 
     <item
