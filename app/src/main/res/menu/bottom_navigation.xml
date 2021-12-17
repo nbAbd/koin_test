@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MenuTitle">
     <item
         android:id="@+id/coDriverFragment"
-        android:icon="@drawable/ic_driver_comp"
-        android:title="ic_driver_comp" />
+        android:iconTint="@color/bottom_nav_item_color"
+        android:icon="@drawable/ic_driver_comp" />
 
     <item
         android:id="@+id/breakInFragment"
-        android:icon="@drawable/ic_sleep_comp"
-        android:title="sleep_comp"/>
+        android:icon="@drawable/ic_sleep_comp" />
     <item
         android:id="@+id/categoryListFragment"
         android:title="" />
 
     <item
         android:id="@+id/drivingFragment"
-        android:icon="@drawable/ic_wheel_comp"
-        android:title="wheel_comp"/>
-
+        android:icon="@drawable/ic_wheel_comp" />
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_truck_comp"
-        android:title="main" />
+        android:icon="@drawable/ic_truck_comp" />
 </menu>

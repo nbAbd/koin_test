@@ -154,8 +154,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.setupWithNavController(navController)
-
+        bottomNavigationView.apply {
+            setupWithNavController(navController)
+            itemIconTintList = null
+        }
 
         val bottomMenuView = bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
         val view = bottomMenuView.getChildAt(2)

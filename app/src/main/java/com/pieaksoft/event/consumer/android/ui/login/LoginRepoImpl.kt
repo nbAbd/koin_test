@@ -12,7 +12,7 @@ class LoginRepoImpl(private val serviceApi: ServiceApi): LoginRepo {
             val body: MutableMap<String, String> = mutableMapOf()
             body["email"] = email
             body["password"] = password
-            val response = serviceApi.login("application/json", body)
+            val response = serviceApi.login(body = body)
             Success(response)
         } catch (e: Exception) {
             Failure(e)

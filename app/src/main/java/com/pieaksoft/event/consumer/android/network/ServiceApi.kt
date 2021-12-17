@@ -6,9 +6,9 @@ import com.pieaksoft.event.consumer.android.model.ProfileModel
 import retrofit2.http.*
 
 interface ServiceApi {
+    @Headers("Content-Type: application/json")
     @POST("/api/public/login")
-    suspend fun login(@Header("Content-Type") content: String,
-                      @Body body: Map<String, String>): AuthModel
+    suspend fun login(@Body body: Map<String, String>): AuthModel
 
 
     @Headers("isAuthorizable: false")

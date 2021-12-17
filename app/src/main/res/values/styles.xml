@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="CustomEditTextView">
 
     </style>
@@ -35,5 +36,13 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="OutlinedClickableTextView_15" parent="Widget.AppCompat.TextView">
+        <item name="android:foreground">?android:selectableItemBackground</item>
+        <item name="android:textColor">@color/indigo_200</item>
+        <item name="android:background">@drawable/button_bg_with_gradient_stroke</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
     </style>
 </resources>

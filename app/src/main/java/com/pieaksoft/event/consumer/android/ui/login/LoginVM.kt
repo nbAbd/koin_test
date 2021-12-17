@@ -51,6 +51,5 @@ class LoginVM(val app: Application, private val loginRepo: LoginRepo): BaseVM(ap
                 }
             }
         }
-
     }
 }
