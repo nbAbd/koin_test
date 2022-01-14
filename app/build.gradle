@@ -28,6 +28,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += "-Xopt-in=org.koin.core.component.KoinApiExtension"
     }
 
     buildFeatures {
@@ -90,12 +91,9 @@ dependencies {
 
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
 
-    //Text drawable
-    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-    def koin_version = "2.0.1"
-    implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-android-viewmodel:$koin_version"
+    def koin_version = "2.2.3"
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-android-viewmodel:$koin_version"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'

@@ -12,18 +12,19 @@ import com.pieaksoft.event.consumer.android.utils.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import org.koin.android.ext.android.inject
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseViewModel(context: Application) : AndroidViewModel(context), CoroutineScope, KoinComponent {
+abstract class BaseViewModel(context: Application) : AndroidViewModel(context), CoroutineScope,
+    KoinComponent {
     val appContext: Context by inject()
     val sp: SharedPreferences by inject()
 
     internal val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
-    internal val _progress = MutableLiveData<Boolean>()
+    private val _progress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = _progress
 
     private val job = Job()
@@ -36,7 +37,7 @@ abstract class BaseViewModel(context: Application) : AndroidViewModel(context), 
     }
 
     fun showProgress() {
-        if(isNetworkAvailable){
+        if (isNetworkAvailable) {
             _progress.postValue(true)
         }
     }
