@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/drawable/ic_login_background.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/drawable/ic_notification.xml" value="0.609375" />
         <entry key="app/src/main/res/drawable/ic_off.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_off_disabled.xml" value="0.2726495726495726" />
         <entry key="app/src/main/res/drawable/ic_on.xml" value="0.4984375" />
         <entry key="app/src/main/res/drawable/ic_selected_tab_indicator.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_shape.xml" value="0.165" />
