@@ -136,7 +136,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         eventList.value = events
         eventListByDate.value = Storage.eventListGroupByDate
         eventListRequiresCertification.value =
-            Storage.eventList.filter { !it.certifyDate.isNullOrEmpty() }
+            Storage.eventList.filter { it.certifyDate != null && it.certifyDate!!.isEmpty() }
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {

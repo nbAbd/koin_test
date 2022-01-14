@@ -87,16 +87,16 @@ class RecordsCertificationFragment :
             }
         })
 
-        viewModel.certifiedEvent.observe(this, { event ->
-            // viewModel.getEventList()
-            //  findNavController().popBackStack()
-
-        })
-
         viewModel.certifiedDate.observe(this) { date ->
-            val refList = certificationAdapter.list.filter { it != date }
-            if (refList.isEmpty()) findNavController().popBackStack()
-            else certificationAdapter.update(ArrayList(refList))
+            certificationAdapter.list.filter { it != date }.also { events ->
+                if (events.isEmpty()) findNavController().popBackStack()
+                else certificationAdapter.update(ArrayList(events))
+            }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.getEventList()
     }
 }
