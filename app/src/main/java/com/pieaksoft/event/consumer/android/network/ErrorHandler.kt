@@ -1,7 +1,6 @@
 package com.pieaksoft.event.consumer.android.network
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -17,16 +16,15 @@ object ErrorHandler {
     fun getErrorMessage(e: Throwable, context: Context): String {
         var errorText = ""
         if (e is HttpException) {
-            val error = e
-            if (error.response() != null) {
-                if (error.response()!!.code() < 500) {
+            if (e.response() != null) {
+                if (e.response()!!.code() < 500) {
                     try {
                         val message = Gson().fromJson(
-                            error.response()?.errorBody()?.string(),
+                            e.response()?.errorBody()?.string(),
                             Message::class.java
                         )
 
-                        var errorStr = message.message ?: ""
+                        val errorStr = message.message ?: ""
 
                         errorText = errorStr
                         if (errorText.isEmpty()) errorText =

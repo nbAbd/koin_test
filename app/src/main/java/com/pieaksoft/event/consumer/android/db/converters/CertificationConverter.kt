@@ -12,6 +12,6 @@ class CertificationConverter {
 
     @TypeConverter
     fun toCertification(data: String?): Certification? {
-        return Gson().fromJson(data, Certification::class.java) as Certification?
+        return Gson().fromJson(data, Certification::class.java)
     }
 }

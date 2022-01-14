@@ -25,9 +25,7 @@ class MyGanttAdapter(
     }
 
     override fun inflateFirstBody(): DefaultCellViewGroup {
-        val defaultCellViewGroup = DefaultCellViewGroup(context, myGantItemList)
-
-        return defaultCellViewGroup
+        return DefaultCellViewGroup(context, myGantItemList)
     }
 
     override fun inflateBody(): BarCellViewGroup {

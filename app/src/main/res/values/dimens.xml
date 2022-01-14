@@ -6,7 +6,6 @@
     <dimen name="list_item_spacing_half">8dp</dimen>
     <dimen name="text_drawable_avatar_size">28sp</dimen>
 
-
     <dimen name="textViewSizeHeader1">24sp</dimen>
 
     <dimen name="textViewSizeBody1">16sp</dimen>
@@ -25,6 +24,5 @@
     <dimen name="_35dp">35dp</dimen>
     <dimen name="_30dp">30dp</dimen>
     <dimen name="_25dp">25dp</dimen>
-
-
+    <dimen name="text_margin">16dp</dimen>
 </resources>

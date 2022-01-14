@@ -5,7 +5,6 @@
     <item
         android:id="@+id/coDriverFragment"
         android:icon="@drawable/ic_driver_comp" />
-
     <item
         android:id="@+id/breakInFragment"
         android:icon="@drawable/ic_sleep_comp" />

@@ -6,5 +6,4 @@ class GantItemPoint(
     var pointEnd: String = "",
     var x: Int = 0,
     var y: Int = 0
-) {
-}
+)

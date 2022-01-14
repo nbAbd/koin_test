@@ -1,15 +1,14 @@
 package com.pieaksoft.event.consumer.android.ui.home
 
+import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import com.pieaksoft.event.consumer.android.R
 
-class HomeFragment: BaseFragment(R.layout.fragment_home) {
-    override fun setViews() {
-
+class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+    init {
+        requiresActionBar = false
     }
 
-    override fun bindVM() {
-
+    override fun setupView() {
     }
 
 }

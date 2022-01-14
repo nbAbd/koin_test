@@ -4,4 +4,4 @@ import java.io.Serializable
 
 data class AuthModel(
     val jwtToken: String
-): Serializable
+) : Serializable

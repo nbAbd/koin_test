@@ -7,7 +7,7 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.utils.switchSelectStopIcon
 
-class EventCertificationAdapter(): BaseAdapter<String>(R.layout.item_cert) {
+class EventCertificationAdapter : BaseAdapter<String>(R.layout.item_cert) {
 
     val dateList = mutableListOf<String>()
 

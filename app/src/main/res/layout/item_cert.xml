@@ -8,7 +8,6 @@
         android:id="@+id/radio_btn"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="8dp"
@@ -17,22 +16,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_radio_off" />
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/cert_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/radio_btn"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.pieaksoft.event.consumer.android.views.CustomSeparator
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:backgroundTint="@color/separator"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

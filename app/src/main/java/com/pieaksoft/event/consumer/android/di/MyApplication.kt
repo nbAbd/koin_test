@@ -21,7 +21,7 @@ class MyApplication : Application() {
 //        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         koinAppDeclaration = {
             androidContext(this@MyApplication)
-            modules(listOf(RetrofitModule, AppModule))
+            modules(listOf(NetworkModule, AppModule))
         }
         Fresco.initialize(applicationContext)
         startKoin(koinAppDeclaration ?: return)

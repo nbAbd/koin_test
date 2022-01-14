@@ -7,18 +7,15 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter<T>(
-        @LayoutRes val layoutId: Int,
-        private var listener: ItemClickListener<T>? = null
+    @LayoutRes val layoutId: Int,
+    private var listener: ItemClickListener<T>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var list: List<T> = listOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var list: ArrayList<T> = arrayListOf()
 
-    constructor(@LayoutRes layoutId: Int, list: List<T>, listener: ItemClickListener<T>? = null) : this(layoutId, listener) {
+    fun update(list: ArrayList<T>) {
         this.list = list
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -45,10 +42,6 @@ abstract class BaseAdapter<T>(
         this.listener = listener
     }
 
-    interface ClickListener {
-        fun onClick(position: Int)
-    }
-
     interface ItemClickListener<T> {
         fun onClick(position: Int, item: T)
     }
@@ -56,5 +49,4 @@ abstract class BaseAdapter<T>(
     open fun onClick(position: Int, item: T) {
         listener?.onClick(position, item)
     }
-
 }

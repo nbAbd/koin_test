@@ -37,6 +37,6 @@ class MyGantItem {
 //    }
 
     override fun toString(): String {
-        return "is Error = "+ isError +" title = "+ title+" pointList = "+pointList
+        return "is Error = $isError title = $title pointList = $pointList"
     }
 }

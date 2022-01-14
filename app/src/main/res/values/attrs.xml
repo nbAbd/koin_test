@@ -2,26 +2,26 @@
 <resources>
 
     <declare-styleable name="CustomEditTextView">
-        <attr name="icon"/>
-        <attr name="android:text" format="string"/>
-        <attr name="android:hint" format="string"/>
-        <attr name="title_value" format="string"/>
+        <attr name="icon" />
+        <attr name="android:text" format="string" />
+        <attr name="android:hint" format="string" />
+        <attr name="title_value" format="string" />
     </declare-styleable>
 
     <declare-styleable name="SeparatorView">
-        <attr name="color"/>
-        <attr name="alpha"/>
+        <attr name="color" />
+        <attr name="alpha" />
     </declare-styleable>
 
     <declare-styleable name="DriverCardView">
-        <attr name="image" format="string"/>
-        <attr name="name" format="string"/>
+        <attr name="image" format="string" />
+        <attr name="name" format="string" />
     </declare-styleable>
 
     <declare-styleable name="CustomEditTextWithTitle">
-        <attr name="title" format="string"/>
-        <attr name="text_all_caps" format="boolean"/>
-        <attr name="hint" format="string"/>
-        <attr name="edit_icon" format="string"/>
+        <attr name="title" format="string" />
+        <attr name="text_all_caps" format="boolean" />
+        <attr name="hint" format="string" />
+        <attr name="edit_icon" format="string" />
     </declare-styleable>
 </resources>

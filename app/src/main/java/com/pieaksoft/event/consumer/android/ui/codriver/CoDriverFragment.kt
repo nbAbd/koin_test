@@ -1,31 +1,35 @@
 package com.pieaksoft.event.consumer.android.ui.codriver
 
 import android.content.Intent
+import android.os.Bundle
+import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
-import com.pieaksoft.event.consumer.android.ui.login.LoginVM
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
+import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
+import com.pieaksoft.event.consumer.android.ui.login.LoginViewModel
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
-    private val binding by viewBinding(FragmentCoDriverBinding::bind)
-    private val profileVM: ProfileVM by viewModel()
-    private val loginVM: LoginVM by viewModel()
+class CoDriverFragment : BaseFragment<FragmentCoDriverBinding>() {
+    private val profileViewModel: ProfileViewModel by viewModel()
+    private val loginViewModel: LoginViewModel by viewModel()
 
     private var loginValue: String? = null
     private var passwordValue: String? = null
 
-    override fun setViews() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindViewModel()
+    }
+
+    override fun setupView() {
         getDriversInfo()
 
         with(binding) {
@@ -57,7 +61,7 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
 
 
             loginBtn.setOnClickListener {
-                loginVM.login(loginValue ?: "", passwordValue ?: "", true)
+                loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
             }
 
             cancelBtn.setOnClickListener {
@@ -67,50 +71,52 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
         }
     }
 
-    override fun bindVM() {
-        profileVM.driver1.observe(this, {
+    private fun bindViewModel() {
+        profileViewModel.driver1.observe(this, {
             launch {
                 binding.driver1.setDriverInfo(it)
             }
         })
-        profileVM.driver2.observe(this, {
+        profileViewModel.driver2.observe(this, {
             launch {
                 binding.driver2.setDriverInfo(it, false)
                 binding.driver2.setEmpty(false)
                 binding.driver2.setOnClickListener {
-                    Dialogs.showSwapDriversDialog(requireActivity(), object : Dialogs.SwapDriversListener{
-                        override fun onSwapDriversClick() {
-                            profileVM.swapDrivers()
-                        }
-                    })
+                    Dialogs.showSwapDriversDialog(
+                        requireActivity(),
+                        object : Dialogs.SwapDriversListener {
+                            override fun onSwapDriversClick() {
+                                profileViewModel.swapDrivers()
+                            }
+                        })
                 }
             }
         })
 
-        profileVM.needUpdateObservable.observe(this, {
+        profileViewModel.needUpdateObservable.observe(this, {
             getDriversInfo()
             LocalBroadcastManager
                 .getInstance(requireContext())
                 .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))
         })
 
-        profileVM.error.observe(this, { message ->
+        profileViewModel.error.observe(this, { message ->
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, requireContext()))
             }
         })
 
-        loginVM.progress.observe(this, {
+        loginViewModel.progress.observe(this, {
             (activity as BaseActivity).setProgressVisible(it)
         })
 
-        loginVM.error.observe(this, { message ->
+        loginViewModel.error.observe(this, { message ->
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, requireContext()))
             }
         })
 
-        loginVM.isSuccessLogin.observe(this, { success ->
+        loginViewModel.isSuccessLogin.observe(this, { success ->
             if (success) {
                 launch {
                     binding.loginContainer.hide()
@@ -121,10 +127,10 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
         })
     }
 
-    private fun getDriversInfo(){
-        profileVM.getProfile()
+    private fun getDriversInfo() {
+        profileViewModel.getProfile()
         if (isCooDriverExist()) {
-            profileVM.getProfile(true)
+            profileViewModel.getProfile(true)
         }
     }
 
@@ -133,6 +139,6 @@ class CoDriverFragment : BaseFragment(R.layout.fragment_co_driver) {
     }
 
     private fun isCooDriverExist(): Boolean {
-        return sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
+        return sharedPrefs.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
     }
 }

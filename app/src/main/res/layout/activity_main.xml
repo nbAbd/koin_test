@@ -4,19 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/main_background_color"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="false"
+    tools:context=".ui.MainActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/certification_need_warning"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:background="@color/red"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/certification_need"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:textAllCaps="true" />
+
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/layout_appbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/certification_need_warning"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="1"
+        app:layout_goneMarginTop="16dp" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/main_background_color"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_goneMarginTop="0dp"
+        app:navGraph="@navigation/nav_graph_main" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -24,386 +60,12 @@
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:background="@color/blue_grey_900"
+        app:itemBackground="@drawable/bottom_nav_tab_background"
         app:itemIconSize="32dp"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:labelVisibilityMode="unlabeled"
-        app:itemBackground="@drawable/bottom_nav_tab_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/top_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_bg_with_gradient_stroke"
-        android:clickable="false"
-        android:focusable="false"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
-
-        <androidx.constraintlayout.helper.widget.Flow
-            android:id="@+id/flow"
-            android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:orientation="horizontal"
-            app:constraint_referenced_ids="log, dot_inspect, rules"
-            app:flow_horizontalAlign="center"
-            app:flow_horizontalBias="0"
-            app:flow_horizontalGap="16dp"
-            app:flow_maxElementsWrap="3"
-            app:flow_verticalAlign="center"
-            app:flow_wrapMode="aligned"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_menu" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/log"
-            style="@style/OutlinedClickableTextView_15"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:drawableStart="@drawable/ic_log"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="24dp"
-            android:text="@string/log" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dot_inspect"
-            style="@style/OutlinedClickableTextView_15"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:drawableStart="@drawable/ic_document"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="24dp"
-            android:text="@string/dot_inspect" />
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/rules"
-            style="@style/OutlinedClickableTextView_15"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:drawableStart="@drawable/ic_rules"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="24dp"
-            android:text="@string/rules" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/menu_opened"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/menu">
-
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="100dp">
-
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/menu_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="28dp"
-                        android:text="@string/menu"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/sub_menu"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/menu_sub_bkg"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/menu_title"
-                        app:layout_constraintWidth_percent="0.4">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/canada_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_canada" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/canada_rules"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/canada_rules"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/canada_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/canada_image"
-                            app:layout_constraintTop_toTopOf="@+id/canada_image" />
-
-
-                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                            android:id="@+id/separator"
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintStart_toStartOf="@+id/canada_rules"
-                            app:layout_constraintTop_toBottomOf="@+id/canada_image" />
-
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/md_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/separator"
-                            app:srcCompat="@drawable/ic_control" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/md"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/md"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/md_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/md_image"
-                            app:layout_constraintTop_toTopOf="@+id/md_image" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/sub_menu2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/menu_sub_bkg"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sub_menu"
-                        app:layout_constraintWidth_percent="0.4">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/dvir_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_dvir" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/dvir"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/dvir"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/dvir_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/dvir_image"
-                            app:layout_constraintTop_toTopOf="@+id/dvir_image" />
-
-
-                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                            android:id="@+id/separator2"
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintStart_toStartOf="@+id/dvir"
-                            app:layout_constraintTop_toBottomOf="@+id/dvir_image" />
-
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/truck_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/separator2"
-                            app:srcCompat="@drawable/ic_control" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/truck_settings"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/md"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/truck_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/truck_image"
-                            app:layout_constraintTop_toTopOf="@+id/truck_image" />
-
-                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                            android:id="@+id/separator3"
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintStart_toStartOf="@+id/truck_settings"
-                            app:layout_constraintTop_toBottomOf="@+id/truck_image" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/settings_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/separator3"
-                            app:srcCompat="@drawable/ic_settings" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/settings"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/settings"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/settings_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/settings_image"
-                            app:layout_constraintTop_toTopOf="@+id/settings_image" />
-
-                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                            android:id="@+id/separator4"
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintStart_toStartOf="@+id/settings"
-                            app:layout_constraintTop_toBottomOf="@+id/settings_image" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/faq_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/separator4"
-                            app:srcCompat="@drawable/ic_faq" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/faq"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/faq"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/faq_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/faq_image"
-                            app:layout_constraintTop_toTopOf="@+id/faq_image" />
-
-                        <com.pieaksoft.event.consumer.android.views.CustomSeparator
-                            android:id="@+id/separator5"
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            app:layout_constraintStart_toStartOf="@+id/faq"
-                            app:layout_constraintTop_toBottomOf="@+id/faq_image" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/logout_image"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/separator5"
-                            app:srcCompat="@drawable/ic_logout" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/logout"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/logout"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/logout_image"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/logout_image"
-                            app:layout_constraintTop_toTopOf="@+id/logout_image" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/certification_need_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/certification_need"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <include layout="@layout/log_view" />
-
-    <include layout="@layout/insert_event_view" />
-
     <include layout="@layout/insert_event_view2" />
-
-    <include layout="@layout/certificate_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

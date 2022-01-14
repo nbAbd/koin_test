@@ -11,6 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.db.AppDataBase
 import com.pieaksoft.event.consumer.android.utils.*
@@ -41,15 +42,14 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
         }
     }
 
-    var snackbar: CustomSnackbar? = null
     var connectionStateMonitor: ConnectionStateMonitor? = null
-    var viewGroup: ViewGroup? = null
 
     abstract fun setView()
     abstract fun bindVM()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(idRes)
         setView()
         bindVM()
@@ -61,14 +61,6 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
     }
 
     override fun onNegative() {
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     fun setProgressVisible(visible: Boolean) {
@@ -87,44 +79,12 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
         }
     }
 
-//    fun updateAppDialog(text: String) {
-//        launch {
-//            if (isUIAvailable()) {
-//                val alert = AlertDialog.Builder(this@BaseActivity).create()
-//                alert.setTitle(getString(R.string.need_update_title))
-//                alert.setMessage(text)
-//                alert.setCancelable(false)
-//                alert.setButton(
-//                    AlertDialog.BUTTON_POSITIVE,
-//                    getString(R.string.need_update_confirm)
-//                ) { _, _ ->
-//                    try {
-//                        startActivity(
-//                            Intent(
-//                                Intent.ACTION_VIEW,
-//                                Uri.parse("market://details?id=com.peaksoft.e_commerce")
-//                            )
-//                        )
-//                        finish()
-//                    } catch (e: ActivityNotFoundException) {
-//                        startActivity(
-//                            Intent(
-//                                Intent.ACTION_VIEW,
-//                                Uri.parse("https://play.google.com/store/apps/details?id=com.peaksoft.e_commerce")
-//                            )
-//                        )
-//                        finish()
-//                    }
-//                }
-//                alert.show()
-//            }
-//        }
-//    }
-//
-    fun showDialogWithOkNoButton(title: String, message: String,
-                                 @StringRes positiveStringRes: Int = R.string.yes,
-                                 @StringRes negativeStringRes: Int = R.string.no,
-                                 listenerOk: View.OnClickListener?, listenerNo: View.OnClickListener?) {
+    fun showDialogWithOkNoButton(
+        title: String, message: String,
+        @StringRes positiveStringRes: Int = R.string.yes,
+        @StringRes negativeStringRes: Int = R.string.no,
+        listenerOk: View.OnClickListener?, listenerNo: View.OnClickListener?
+    ) {
         launch {
             if (!isUIAvailable()) {
                 return@launch
@@ -134,15 +94,28 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
             alert.setTitle(title)
             alert.setMessage(message)
             alert.setCancelable(false)
-            alert.setButton(AlertDialog.BUTTON_POSITIVE, this@BaseActivity.getText(positiveStringRes)) { _, _ ->
+            alert.setButton(
+                AlertDialog.BUTTON_POSITIVE,
+                this@BaseActivity.getText(positiveStringRes)
+            ) { _, _ ->
                 listenerOk?.onClick(null)
                 alert.dismiss()
             }
-            alert.setButton(AlertDialog.BUTTON_NEGATIVE, this@BaseActivity.getText(negativeStringRes)) { _, _ ->
+            alert.setButton(
+                AlertDialog.BUTTON_NEGATIVE,
+                this@BaseActivity.getText(negativeStringRes)
+            ) { _, _ ->
                 listenerNo?.onClick(null)
                 alert.dismiss()
             }
             alert.show()
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
         }
     }
 }

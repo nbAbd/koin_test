@@ -13,10 +13,9 @@
     <color name="item_color_active">#FFFFFFFF</color>
     <color name="item_color_inactive">#9BAEC8</color>
     <color name="main_background_color">#06070A</color>
+    <color name="mirage">#161923</color>
     <color name="orange">#E5AF0A</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
+
     <color name="red">#D7112A</color>
     <color name="red_800">#BB0118</color>
     <color name="separator">#282C37</color>
@@ -24,4 +23,15 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="tory_blue">#2050AF</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="mountain_fig">#3A3D48</color>
+    <color name="flying_fish_blue">#0045CF</color>
+    <color name="permission_dialog_bg_color">#99000000</color>
+
+    <!-- toast-->
+    <color name="toast_red">#EF3F3F</color>
+    <color name="toast_green">@color/green2</color>
+    <color name="toast_yellow">#F2C94C</color>
+    <color name="toast_blue">#0045CF</color>
 </resources>

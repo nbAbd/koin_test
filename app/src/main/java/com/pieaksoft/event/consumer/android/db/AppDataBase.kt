@@ -13,8 +13,11 @@ import com.pieaksoft.event.consumer.android.model.Event
     version = 1
 )
 
-@TypeConverters(CertificationConverter::class, CertificationListConverter::class, LocationConverter::class)
-abstract class AppDataBase: RoomDatabase() {
-
-    abstract fun getAppDao(): AppDoa
+@TypeConverters(
+    CertificationConverter::class,
+    CertificationListConverter::class,
+    LocationConverter::class
+)
+abstract class AppDataBase : RoomDatabase() {
+    abstract fun getAppDao(): AppDao
 }
