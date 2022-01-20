@@ -201,7 +201,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     override fun bindViewModel() {
         eventViewModel.eventListRequiresCertification.observe(this, { events ->
-            when (!events.isNullOrEmpty()) {
+            when (events.isNotEmpty()) {
                 true -> showCertificationNeedView()
                 else -> hideCertificationNeedView()
             }

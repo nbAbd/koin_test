@@ -66,6 +66,4 @@
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation" />
-
-    <include layout="@layout/insert_event_view2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -91,19 +91,4 @@
         app:launchSingleTop="true"
         app:popEnterAnim="@anim/slide_in_up"
         app:popExitAnim="@anim/slide_in_down" />
-
-    <!--InsertEventFragment-->
-    <fragment
-        android:id="@+id/insertEventFragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment"
-        tools:layout="@layout/fragment_insert_event" />
-
-    <action
-        android:id="@+id/action_show_insert_event"
-        app:destination="@id/insertEventFragment"
-        app:enterAnim="@anim/slide_in_up"
-        app:exitAnim="@anim/slide_in_down"
-        app:launchSingleTop="true"
-        app:popEnterAnim="@anim/slide_in_up"
-        app:popExitAnim="@anim/slide_in_down" />
 </navigation>

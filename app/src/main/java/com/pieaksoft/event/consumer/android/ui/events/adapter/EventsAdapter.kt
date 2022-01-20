@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.events
+package com.pieaksoft.event.consumer.android.ui.events.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
