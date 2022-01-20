@@ -29,7 +29,10 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
                 R.styleable.FloatingTitleEditText,
                 defStyle,
                 defStyle
-            ).run { initProperties(this); recycle() }
+            ).run {
+                initProperties(this)
+                recycle()
+            }
         }
     }
 
