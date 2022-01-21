@@ -1,7 +1,6 @@
-package com.pieaksoft.event.consumer.android.ui.events
+package com.pieaksoft.event.consumer.android.ui.events.adapter
 
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.GantItemPoint
-import com.pieaksoft.event.consumer.android.utils.getGantColor
 import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.toColorInt
@@ -27,7 +25,7 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
                 itemView.findViewById<View>(R.id.line_body).show()
                 if (event.title != "empty") {
                     var startTimeSet = false
-                    if (event.pointStart.isNullOrBlank()) {
+                    if (event.pointStart.isBlank()) {
                         itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =
                             100
                     } else {

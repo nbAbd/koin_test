@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/bg_custom_toast.xml" value="0.475" />
         <entry key="app/src/main/res/drawable/bg_fragment_rounded_top_corners.xml" value="0.50859375" />
+        <entry key="app/src/main/res/drawable/bg_insert_event.xml" value="0.490625" />
         <entry key="app/src/main/res/drawable/border_button_blue.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/drawable/border_button_gradient.xml" value="0.3390625" />
         <entry key="app/src/main/res/drawable/border_button_gradient_background.xml" value="0.3390625" />
@@ -51,6 +52,7 @@
         <entry key="app/src/main/res/drawable/ic_wheel_comp.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_wheel_comp_selected.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_wheel_comp_unselected.xml" value="0.254296875" />
+        <entry key="app/src/main/res/drawable/icon_back_left.xml" value="0.490625" />
         <entry key="app/src/main/res/drawable/menu_bkg.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/menu_item_bg_bottom.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/menu_item_bg_middle.xml" value="0.254296875" />
@@ -64,7 +66,7 @@
         <entry key="app/src/main/res/drawable/round_progress_bar.xml" value="0.2153846153846154" />
         <entry key="app/src/main/res/drawable/selector_text_color.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_fullscreen.xml" value="0.2193627450980392" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20035479666504658" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.21871752305213557" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />
@@ -73,7 +75,7 @@
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/custom_toast_view.xml" value="0.375" />
         <entry key="app/src/main/res/layout/default_view_item.xml" value="0.14402173913043478" />
-        <entry key="app/src/main/res/layout/dialog_insert_event.xml" value="0.12291666666666666" />
+        <entry key="app/src/main/res/layout/dialog_insert_event.xml" value="0.75" />
         <entry key="app/src/main/res/layout/dialog_permission_rationale.xml" value="0.26153846153846155" />
         <entry key="app/src/main/res/layout/dialog_permissions.xml" value="0.6098003629764065" />
         <entry key="app/src/main/res/layout/dialog_range_picker.xml" value="0.3810117868717796" />
@@ -85,7 +87,10 @@
         <entry key="app/src/main/res/layout/fragment_empty_menu.xml" value="0.33313106796116504" />
         <entry key="app/src/main/res/layout/fragment_fullscreen.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_insert_event.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_insert_event.xml" value="0.625" />
+        <entry key="app/src/main/res/layout/fragment_insert_event_first.xml" value="0.46640625" />
+        <entry key="app/src/main/res/layout/fragment_insert_event_pager.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/fragment_insert_event_second.xml" value="0.55" />
         <entry key="app/src/main/res/layout/fragment_log.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_md.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.1" />
@@ -93,10 +98,10 @@
         <entry key="app/src/main/res/layout/gant_time_view.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/insert_event_dialog.xml" value="0.223731884057971" />
         <entry key="app/src/main/res/layout/insert_event_view.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/insert_event_view2.xml" value="0.21195652173913043" />
+        <entry key="app/src/main/res/layout/insert_event_view2.xml" value="1.0879588829616127" />
         <entry key="app/src/main/res/layout/item_cert.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/item_edit_text.xml" value="0.21195652173913043" />
+        <entry key="app/src/main/res/layout/item_edit_text.xml" value="0.5123809523809524" />
         <entry key="app/src/main/res/layout/item_event.xml" value="0.165" />
         <entry key="app/src/main/res/layout/item_gant_first_cell.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/layout/item_row.xml" value="0.16510416666666666" />

@@ -2,6 +2,7 @@ package com.pieaksoft.event.consumer.android.events
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
@@ -14,36 +15,37 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableList
-import kotlin.collections.emptyList
-import kotlin.collections.filter
-import kotlin.collections.forEach
-import kotlin.collections.forEachIndexed
-import kotlin.collections.groupBy
-import kotlin.collections.isNullOrEmpty
-import kotlin.collections.mutableListOf
+import java.util.*
 import kotlin.collections.set
-import kotlin.collections.toMutableMap
-import kotlin.collections.toSortedMap
 
 class EventViewModel(app: Application, private val repository: EventsRepository) :
     BaseViewModel(app) {
     companion object {
         const val TAG = "EventViewModel ->"
         const val STATUS_CERTIFIED = "CERTIFIED"
-        const val DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd"
-        const val TIME_FORMAT_HH_MM = "HH:mm"
+        const val DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd"
+        const val TIME_FORMAT_HH_mm = "HH:mm"
     }
 
-    val event = MutableLiveData<Event>()
-    val localEvent = MutableLiveData<Event>()
-    val certifiedEvent = MutableLiveData<Event>()
-    val certifiedDate = MutableLiveData<String>()
+    val certifiedDate = MutableLiveData<String?>()
     val eventList = MutableLiveData<List<Event>>()
     val eventListByDate = MutableLiveData<Map<String, List<Event>>>()
     val eventListRequiresCertification = MutableLiveData<List<Event>>()
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Insert event
+    ///////////////////////////////////////////////////////////////////////////
+    private val _eventInsertCode = MutableLiveData<EventInsertCode?>()
+    val eventInsertCode: LiveData<EventInsertCode?> = _eventInsertCode
+
+    private val _eventInsertDate = MutableLiveData<Date?>()
+    val eventInsertDate: LiveData<Date?> = _eventInsertDate
+
+    private val _event = MutableLiveData<Event?>(null)
+    val event: LiveData<Event?> = _event
+
+    private val _localEvent = MutableLiveData<Event?>(null)
+    val localEvent: LiveData<Event?> = _localEvent
 
     fun insertEvent(e: Event) {
         showProgress()
@@ -54,7 +56,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 hideProgress()
 
                 when (result) {
-                    is Success -> result.data.let { event.value = it }
+                    is Success -> result.data.let { _event.value = it }
                     is Failure -> _error.value = result.error
                 }
             } else {
@@ -62,7 +64,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 withContext(Dispatchers.IO) { repository.insertEventToDB(event = e) }
 
                 hideProgress()
-                localEvent.value = e
+                _localEvent.value = e
             }
         }
     }
@@ -83,16 +85,19 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         event.certification = Certification(date = date, status = STATUS_CERTIFIED)
         showProgress()
         launch {
-            val result = withContext(Dispatchers.IO) { repository.certifyEvent(event = event) }
+            if (isNetworkAvailable) {
+                val result = withContext(Dispatchers.IO) { repository.certifyEvent(event = event) }
 
-            hideProgress()
+                hideProgress()
 
-            when (result) {
-                is Success -> result.data.let {
-                    certifiedEvent.value = it
-                    certifiedDate.value = date
+                when (result) {
+                    is Success -> result.data.let {
+                        certifiedDate.value = date
+                    }
+                    is Failure -> _error.value = result.error
                 }
-                is Failure -> _error.value = result.error
+            } else {
+                _error.value = Exception("Check internet connection")
             }
         }
     }
@@ -136,7 +141,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         eventList.value = events
         eventListByDate.value = Storage.eventListGroupByDate
         eventListRequiresCertification.value =
-            Storage.eventList.filter { !it.certifyDate.isNullOrEmpty() }
+            Storage.eventList.filter { it.certifyDate != null && it.certifyDate!!.isEmpty() }
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
@@ -150,11 +155,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             Log.e(TAG, "test date before parse = " + event.date)
             val startDate = LocalDate.parse(
                 event.date, DateTimeFormatter.ofPattern(
-                    DATE_FORMAT_YYYY_MM_DD
+                    DATE_FORMAT_yyyy_MM_dd
                 )
             )
             val endDate =
-                LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD))
+                LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             val dbd = ChronoUnit.DAYS.between(startDate, endDate).toInt()
             if (dbd == 0) {
                 calculateList.add(event)
@@ -163,32 +168,32 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 calculateList.add(mEvent)
                 for (i in 1..dbd) {
                     val date = startDate.plusDays(i.toLong())
-                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD))
-                    val endDate = startDate.plusDays(i.toLong())
-                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD))
-                    val mEvent = event.copy(
+                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+                    val _endDate = startDate.plusDays(i.toLong())
+                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+                    val copiedEvent = event.copy(
                         date = date,
-                        endDate = endDate,
+                        endDate = _endDate,
                         time = "00:00",
                         endTime = "25:00"
                     )
                     if (i == dbd) {
                         if (index < Storage.eventList.size - 1) {
-                            mEvent.endDate = Storage.eventList[index + 1].date
-                            mEvent.endTime = Storage.eventList[index + 1].time
+                            copiedEvent.endDate = Storage.eventList[index + 1].date
+                            copiedEvent.endTime = Storage.eventList[index + 1].time
                         } else {
-                            mEvent.endDate =
+                            copiedEvent.endDate =
                                 LocalDate.now().format(
                                     DateTimeFormatter.ofPattern(
-                                        DATE_FORMAT_YYYY_MM_DD
+                                        DATE_FORMAT_yyyy_MM_dd
                                     )
                                 )
-                            mEvent.endTime =
+                            copiedEvent.endTime =
                                 LocalTime.now()
-                                    .format(DateTimeFormatter.ofPattern(TIME_FORMAT_HH_MM))
+                                    .format(DateTimeFormatter.ofPattern(TIME_FORMAT_HH_mm))
                         }
                     }
-                    calculateList.add(mEvent)
+                    calculateList.add(copiedEvent)
                 }
             }
         }
@@ -207,14 +212,14 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         Storage.eventListMock.add(
             currentDay.format(
                 DateTimeFormatter.ofPattern(
-                    DATE_FORMAT_YYYY_MM_DD
+                    DATE_FORMAT_yyyy_MM_dd
                 )
             )
         )
         for (i in 1..7) {
             val date =
                 currentDay.minusDays(i.toLong())
-                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD))
+                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             Storage.eventListMock.add(date)
         }
     }
@@ -226,12 +231,30 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 event.endTime = Storage.eventList[index + 1].time
             } else {
                 event.endDate =
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD))
+                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
                 event.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
             }
 
             event.calculateDuration()
             Log.e(TAG, "test duration = " + hmsTimeFormatter(event.durationInMillis))
         }
+    }
+
+    fun setEventInsertCode(code: EventInsertCode) {
+        _eventInsertCode.value = code
+    }
+
+    fun setEventInsertDate(date: Date) {
+        _eventInsertDate.value = date
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // В случии повторного открытия страницы insert должны сбросить значение
+    ///////////////////////////////////////////////////////////////////////////
+    fun resetInserting() {
+        _event.value = null
+        _localEvent.value = null
+        _eventInsertCode.value = null
+        _eventInsertDate.value = null
     }
 }

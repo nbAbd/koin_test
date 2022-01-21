@@ -13,8 +13,10 @@ import com.pieaksoft.event.consumer.android.model.Location
 import com.pieaksoft.event.consumer.android.ui.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
+import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
+import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,6 +46,10 @@ class RecordsCertificationFragment :
             dutyStatus = "OFF_DUTY",
             certification = null
         )
+    }
+
+    init {
+        viewModel.certifiedDate.value = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,16 +93,22 @@ class RecordsCertificationFragment :
             }
         })
 
-        viewModel.certifiedEvent.observe(this, { event ->
-            // viewModel.getEventList()
-            //  findNavController().popBackStack()
-
-        })
-
         viewModel.certifiedDate.observe(this) { date ->
-            val refList = certificationAdapter.list.filter { it != date }
-            if (refList.isEmpty()) findNavController().popBackStack()
-            else certificationAdapter.update(ArrayList(refList))
+            date?.let {
+                certificationAdapter.list.filter { it != date }.also { events ->
+                    if (events.isEmpty()) findNavController().popBackStack()
+                    else certificationAdapter.update(ArrayList(events))
+                }
+            }
         }
+
+        viewModel.error.observe(this, {
+            toast(it.message ?: "")
+        })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.getEventList()
     }
 }

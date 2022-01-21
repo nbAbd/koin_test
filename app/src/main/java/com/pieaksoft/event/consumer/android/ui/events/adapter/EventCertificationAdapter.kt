@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.events
+package com.pieaksoft.event.consumer.android.ui.events.adapter
 
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView

@@ -43,7 +43,7 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events_list"
+                android:id="@+id/events_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
@@ -61,8 +61,8 @@
                 android:background="@drawable/ic_back_left"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/insert_btn"
-                app:layout_constraintStart_toStartOf="@+id/events_list"
-                app:layout_constraintTop_toBottomOf="@+id/events_list" />
+                app:layout_constraintStart_toStartOf="@+id/events_recyclerview"
+                app:layout_constraintTop_toBottomOf="@+id/events_recyclerview" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -84,7 +84,7 @@
                 android:background="@drawable/ic_back_right_black"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/back_btn"
-                app:layout_constraintEnd_toEndOf="@+id/events_list"
+                app:layout_constraintEnd_toEndOf="@+id/events_recyclerview"
                 app:layout_constraintTop_toTopOf="@+id/back_btn" />
 
 

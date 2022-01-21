@@ -4,6 +4,8 @@ import android.app.ProgressDialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.pieaksoft.event.consumer.android.R
@@ -19,6 +21,10 @@ abstract class BaseActivityNew<VB : ViewBinding>(val bindingFactory: (LayoutInfl
 
     private val pd: ProgressDialog by lazy {
         ProgressDialog(this).apply {
+            window?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            )
             setMessage(context.getString(R.string.loading))
             setCancelable(false)
         }

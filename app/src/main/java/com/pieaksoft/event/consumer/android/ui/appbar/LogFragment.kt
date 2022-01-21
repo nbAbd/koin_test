@@ -1,20 +1,17 @@
 package com.pieaksoft.event.consumer.android.ui.appbar
 
 import android.util.Log
+import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
-import com.pieaksoft.event.consumer.android.databinding.InsertEventView2Binding
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.EventInsertCode
-import com.pieaksoft.event.consumer.android.model.EventInsertType
-import com.pieaksoft.event.consumer.android.model.Location
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
-import com.pieaksoft.event.consumer.android.ui.events.EventsAdapter
+import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
+import com.pieaksoft.event.consumer.android.ui.events.InsertEventPagerDialog
+import com.pieaksoft.event.consumer.android.ui.events.adapter.EventsAdapter
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
@@ -26,8 +23,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private val eventsAdapter by lazy { EventsAdapter() }
     private var sliderPosition: Int = 0
-    private var insertEvent: String = ""
-    private var insertEventDate: Date? = null
 
 
     override fun setupView() {
@@ -37,28 +32,14 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             }
 
             insertBtn.setOnClickListener {
-                Dialogs.showInsertEventDialog(requireActivity(), object : Dialogs.EventInsertClick {
-                    override fun onEventClick(event: EventInsertCode) {
-                        insertEvent = event.code
-                        Dialogs.showDateTimeSelector(
-                            requireContext(),
-                            object : Dialogs.DateSelectListener {
-                                override fun onDateSelect(date: Date) {
-                                    insertEventDate = date
-                                    findNavController().navigate(R.id.action_show_insert_event)
-                                }
-                            })
-                    }
-                })
-
+                showInsertEventDialog()
             }
         }
         setupRecyclerview()
     }
 
     private fun setupRecyclerview() {
-        // eventList -> rename
-        binding.eventsList.apply {
+        binding.eventsRecyclerview.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = eventsAdapter
@@ -99,48 +80,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             ?.formatToServerDateDefaults2() ?: ""
     }
 
-    // pager koiush kerek
-    private fun save() {
-        val insertEvent2Binding = InsertEventView2Binding.inflate(layoutInflater)
-        insertEvent2Binding.save.setOnClickListener {
-            val event = Event(
-                "",
-                EventInsertType.statusChange.type,
-                insertEvent,
-                date = insertEventDate?.formatToServerDateDefaults() ?: "",
-                time = insertEventDate?.formatToServerTimeDefaults() ?: "",
-                Location(-10.12345f, 48.23432f),
-                shippingDocumentNumber = "test",
-                totalEngineHours = 20,
-                totalEngineMiles = 450,
-                eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
-                eventRecordStatus = "ACTIVE",
-                malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-                dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
-                driverLocationDescription = "chicago, IL",
-                dutyStatus = "OFF_DUTY",
-                certification = null
-            )
-            viewModel.insertEvent(event)
-        }
-    }
-
     override fun observe() {
-        /*eventsViewModel.eventLiveData.observe(this, {
-          findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
-          eventsViewModel.getEventList()
-      })*/
-
-        /*eventsViewModel.eventDBLiveData.observe(this, {
-            findViewById<ConstraintLayout>(R.id.insert_event_view2).hide()
-            eventsViewModel.getEventList(true)
-        })*/
-
-        /*eventsViewModel.eventCertLiveData.observe(this, {
-            findViewById<ConstraintLayout>(R.id.cert_view).hide()
-            eventsViewModel.getEventList()
-        })*/
-
         viewModel.eventList.observe(this, {
             setEvents()
         })
@@ -150,12 +90,42 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         })
 
         viewModel.progress.observe(this, {
-            //setProgressVisible(it)
+            // setProgressVisible(it)
         })
 
         viewModel.error.observe(this, {
             val error = ErrorHandler.getErrorMessage(it, requireContext())
             Log.e("test_logerrror", "test insert error response = $error")
         })
+    }
+
+    private fun showInsertEventDialog() {
+        val dialog = InsertEventDialog { dialog, eventCode ->
+            viewModel.setEventInsertCode(code = eventCode)
+            dialog.dismiss()
+            selectDate()
+        }
+        dialog.dialog?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        )
+
+        dialog.show(childFragmentManager, InsertEventDialog::class.java.name)
+    }
+
+    private fun selectDate() {
+        Dialogs.showDateTimeSelector(
+            requireContext(),
+            object : Dialogs.DateSelectListener {
+                override fun onDateSelect(date: Date) {
+                    viewModel.setEventInsertDate(date = date)
+                    showInsertEventPagerDialog()
+                }
+            })
+    }
+
+    private fun showInsertEventPagerDialog() {
+        val dialog = InsertEventPagerDialog()
+        dialog.show(childFragmentManager, InsertEventPagerDialog::class.java.name)
     }
 }

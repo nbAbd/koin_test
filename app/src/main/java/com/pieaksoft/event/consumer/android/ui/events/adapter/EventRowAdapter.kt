@@ -1,6 +1,5 @@
-package com.pieaksoft.event.consumer.android.ui.events
+package com.pieaksoft.event.consumer.android.ui.events.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.GantItemPoint
 import com.pieaksoft.event.consumer.android.model.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.getGantColor
-import com.pieaksoft.event.consumer.android.utils.toColorInt
 
 class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterViewHolder>() {
 
