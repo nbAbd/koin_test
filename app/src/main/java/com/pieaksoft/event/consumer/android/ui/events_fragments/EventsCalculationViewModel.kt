@@ -204,12 +204,9 @@ class EventsCalculationViewModel(val app: Application) : BaseViewModel(app) {
     }
 
     private fun sendResetCycle() {
-       // var event = Event()
+        // var event = Event()
 //        event.eventType = . CYCLE_RESET
 //        event.eventCode = . CYCLE_RESET
 //        viewModel.postEvent(event: event)
     }
-
-
-
 }

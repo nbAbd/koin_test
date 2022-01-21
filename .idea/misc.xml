@@ -67,7 +67,7 @@
         <entry key="app/src/main/res/drawable/selector_text_color.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_fullscreen.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.625" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.20035479666504658" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.63" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.21871752305213557" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/certificate_view.xml" value="0.375" />
@@ -86,7 +86,7 @@
         <entry key="app/src/main/res/layout/fragment_dot_inspect.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_empty_menu.xml" value="0.33313106796116504" />
         <entry key="app/src/main/res/layout/fragment_fullscreen.xml" value="0.2193627450980392" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_insert_event.xml" value="0.625" />
         <entry key="app/src/main/res/layout/fragment_insert_event_first.xml" value="0.46640625" />
         <entry key="app/src/main/res/layout/fragment_insert_event_pager.xml" value="0.375" />

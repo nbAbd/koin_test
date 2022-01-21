@@ -48,10 +48,6 @@ class RecordsCertificationFragment :
         )
     }
 
-    init {
-        viewModel.certifiedDate.value = null
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
@@ -110,5 +106,10 @@ class RecordsCertificationFragment :
     override fun onStop() {
         super.onStop()
         viewModel.getEventList()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.certifiedDate.value = null
     }
 }

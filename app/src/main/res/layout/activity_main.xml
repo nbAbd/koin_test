@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/main_background_color"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
