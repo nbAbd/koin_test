@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:animateLayoutChanges="true"
+    android:animationCache="true"
+    android:background="@color/black"
+    app:layout_scrollFlags="noScroll">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/top_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/button_bg_with_gradient_stroke"
+        android:clickable="false"
+        android:focusable="false"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="16dp"
+        app:layout_goneMarginTop="16dp"
+        tools:ignore="MissingConstraints">
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            app:constraint_referenced_ids="log, dot_inspect, rules"
+            app:flow_horizontalAlign="center"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="16dp"
+            app:flow_maxElementsWrap="3"
+            app:flow_verticalAlign="center"
+            app:flow_wrapMode="aligned"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_menu" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/log"
+            style="@style/OutlinedClickableTextView_15"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:drawableStart="@drawable/ic_log"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/log" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dot_inspect"
+            style="@style/OutlinedClickableTextView_15"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:drawableStart="@drawable/ic_document"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/dot_inspect" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/rules"
+            style="@style/OutlinedClickableTextView_15"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:drawableStart="@drawable/ic_rules"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/rules" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.Toolbar>

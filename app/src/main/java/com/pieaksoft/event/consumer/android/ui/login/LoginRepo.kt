@@ -5,5 +5,4 @@ import com.pieaksoft.event.consumer.android.model.Result
 
 interface LoginRepo {
        suspend fun login(email: String, password: String): Result<AuthModel, Exception>
-
 }

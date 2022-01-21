@@ -23,7 +23,7 @@ object Dialogs {
     fun showInsertEventDialog(activity: Activity, listener: EventInsertClick) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false);
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_insert_event)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.findViewById<AppCompatButton>(R.id.event_off_btn).setOnClickListener {
@@ -51,7 +51,7 @@ object Dialogs {
     fun showSwapDriversDialog(activity: Activity, listener: SwapDriversListener) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false);
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_swap_drivers)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -79,7 +79,7 @@ object Dialogs {
     ) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false);
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_range_picker)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.findViewById<TimeRangePicker>(R.id.picker)

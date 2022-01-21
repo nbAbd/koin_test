@@ -32,7 +32,7 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
                             100
                     } else {
                         val minutes =
-                            event.pointStart.split(":")?.toTypedArray()?.getOrNull(1)?.toInt() ?: 0
+                            event.pointStart.split(":").toTypedArray().getOrNull(1)?.toInt() ?: 0
                         val lastMin = 60 - minutes
                         val progress = (lastMin.toDouble() / 60) * 100
 
@@ -48,7 +48,7 @@ class EventCellAdapter : RecyclerView.Adapter<EventCellAdapter.BaseViewHolder>()
                                 100
                         } else {
                             val minutes =
-                                event.pointEnd.split(":")?.toTypedArray()?.getOrNull(1)?.toInt()
+                                event.pointEnd.split(":").toTypedArray().getOrNull(1)?.toInt()
                                     ?: 0
                             val progress = (minutes.toDouble() / 60) * 100
                             itemView.findViewById<ContentLoadingProgressBar>(R.id.line_body)?.progress =

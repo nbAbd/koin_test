@@ -2,36 +2,37 @@ package com.pieaksoft.event.consumer.android.ui.login
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.pieaksoft.event.consumer.android.MainActivity
-import com.pieaksoft.event.consumer.android.R
+import android.os.Bundle
+import androidx.core.widget.doAfterTextChanged
 import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
-import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileVM
+import com.pieaksoft.event.consumer.android.ui.MainActivity
+import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.newIntent
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class LoginActivity : BaseActivity(R.layout.activity_login) {
-    private val loginVM: LoginVM by viewModel()
-    private val profileVM: ProfileVM by viewModel()
-    private val binding by viewBinding(ActivityLoginBinding::bind)
+class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
+    private val loginViewModel: LoginViewModel by viewModel()
+    private val profileViewModel: ProfileViewModel by viewModel()
 
     private var loginValue: String? = null
     private var passwordValue: String? = null
 
-    override fun setView() {
-        if(profileVM.isAuth()){
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupView()
+    }
+
+    override fun setupView() {
+        if (profileViewModel.isAuth()) {
             startActivity(MainActivity.newInstance(this@LoginActivity))
         }
 
         with(binding) {
-            loginName.addTextChangedListener {
+            loginName.doAfterTextChanged {
                 if (it?.length == 0) {
                     loginValue = null
                     loginBtn.isEnabled = isEnableButton()
@@ -41,7 +42,7 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
                 }
             }
 
-            password.addTextChangedListener {
+            password.doAfterTextChanged {
                 if (it?.length == 0) {
                     passwordValue = null
                     loginBtn.isEnabled = isEnableButton()
@@ -56,19 +57,19 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
             }
 
             loginBtn.setOnClickListener {
-                loginVM.login(loginValue?:"", passwordValue?:"")
+                loginViewModel.login(loginValue ?: "", passwordValue ?: "")
             }
         }
     }
 
-    override fun bindVM() {
-        loginVM.isSuccessLogin.observe(this, { success ->
+    override fun bindViewModel() {
+        loginViewModel.isSuccessLogin.observe(this, { success ->
             if (success) {
                 startActivity(MainActivity.newInstance(this@LoginActivity))
             }
 
         })
-        loginVM.error.observe(this, Observer { message ->
+        loginViewModel.error.observe(this, { message ->
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, this))
             }

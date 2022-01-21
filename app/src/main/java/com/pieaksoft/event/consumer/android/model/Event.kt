@@ -1,7 +1,5 @@
 package com.pieaksoft.event.consumer.android.model
 
-import android.util.Log
-import androidx.room.AutoMigration
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters

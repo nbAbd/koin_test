@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/coDriverFragment">
+
+    <fragment
+        android:id="@+id/coDriverFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.codriver.CoDriverFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_co_driver" />
+
+    <fragment
+        android:id="@+id/breakInFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_co_driver" />
+
+    <fragment
+        android:id="@+id/drivingFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_co_driver" />
+
+    <!--Truck fragment-->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <!--MenuFragment-->
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuFragment"
+        android:label="menu_fragment"
+        tools:layout="@layout/fragment_menu" />
+
+    <action
+        android:id="@+id/action_show_menu"
+        app:destination="@id/menuFragment"
+        app:enterAnim="@anim/anim_in"
+        app:exitAnim="@anim/anim_out"
+        app:launchSingleTop="true" />
+
+    <!--LogFragment-->
+    <fragment
+        android:id="@+id/logFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.LogFragment"
+        android:label="Log"
+        tools:layout="@layout/fragment_log" />
+
+    <action
+        android:id="@+id/action_show_log"
+        app:destination="@id/logFragment"
+        app:enterAnim="@anim/slide_in_up"
+        app:exitAnim="@anim/slide_in_down"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/slide_in_up"
+        app:popExitAnim="@anim/slide_in_down" />
+
+    <!--DOTFragment-->
+    <fragment
+        android:id="@+id/dotInspectFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.DOTInspectFragment"
+        android:label="DOT Inspect"
+        tools:layout="@layout/fragment_dot_inspect" />
+    <action
+        android:id="@+id/action_show_dot_inspect"
+        app:destination="@id/dotInspectFragment"
+        app:enterAnim="@anim/slide_in_up"
+        app:exitAnim="@anim/slide_in_down"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/slide_in_up"
+        app:popExitAnim="@anim/slide_in_down" />
+
+    <!--RulesFragment-->
+
+    <!-- RecordsCertificationFragment-->
+    <fragment
+        android:id="@+id/recordsCertificationFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.events.RecordsCertificationFragment"
+        tools:layout="@layout/fragment_records_certification" />
+
+    <action
+        android:id="@+id/action_show_records_certification"
+        app:destination="@id/recordsCertificationFragment"
+        app:enterAnim="@anim/slide_in_up"
+        app:exitAnim="@anim/slide_in_down"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/slide_in_up"
+        app:popExitAnim="@anim/slide_in_down" />
+
+    <!--InsertEventFragment-->
+    <fragment
+        android:id="@+id/insertEventFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment"
+        tools:layout="@layout/fragment_insert_event" />
+
+    <action
+        android:id="@+id/action_show_insert_event"
+        app:destination="@id/insertEventFragment"
+        app:enterAnim="@anim/slide_in_up"
+        app:exitAnim="@anim/slide_in_down"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/slide_in_up"
+        app:popExitAnim="@anim/slide_in_down" />
+</navigation>

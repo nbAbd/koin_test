@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CustomEditTextView">
-
-    </style>
 
     <style name="ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">#fff</item>
@@ -33,7 +30,130 @@
 
     <style name="ThemeDialog" parent="android:Theme.Light">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/permission_dialog_bg_color</item>
         <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="OutlinedClickableTextView_15" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/indigo_200</item>
+        <item name="android:background">@drawable/button_bg_with_gradient_stroke</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="MenuItem.MaterialButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:padding">12dp</item>
+        <item name="iconPadding">16dp</item>
+        <item name="iconTint">@null</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:textAppearance">@style/MenuItemTextAppearance</item>
+        <item name="enforceTextAppearance">@style/MenuItemTextAppearance</item>
+        <item name="backgroundTint">@color/selector_menu_item</item>
+    </style>
+
+    <style name="MenuItemTextAppearance" parent="@style/TextAppearance.MaterialComponents.Button">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="MenuMaterialButton.ShapeAppearance.Top" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">14dp</item>
+        <item name="cornerSizeTopRight">14dp</item>
+    </style>
+
+    <style name="MenuMaterialButton.ShapeAppearance.Bottom" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">14dp</item>
+        <item name="cornerSizeBottomRight">14dp</item>
+    </style>
+
+
+    <style name="BluetoothOnOffButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/selector_on_off_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:colorButtonNormal">@color/grey_opacity</item>
+        <item name="colorOnPrimary">@color/selector_on_off_text</item>
+        <item name="colorOnSecondary">@color/selector_on_off_text</item>
+        <item name="android:textAppearance">@style/OnOffTextAppearance</item>
+        <item name="enforceTextAppearance">@style/OnOffTextAppearance</item>
+    </style>
+
+    <style name="OnOffTextAppearance" parent="@style/TextAppearance.MaterialComponents.Button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/selector_on_off_text</item>
+    </style>
+
+    <style name="BluetoothOnOffShapeAppearanceRight" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+    </style>
+
+    <style name="BluetoothOnOffShapeAppearanceLeft" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+    </style>
+
+    <style name="PermissionDialogButton.Disallowed" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/mountain_fig</item>
+        <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="shapeAppearanceOverlay">@style/PermissionDialogButton.ShapeAppearance</item>
+        <item name="android:textAppearance">@style/PermissionDialogButton.TextAppearance</item>
+        <item name="enforceTextAppearance">@style/PermissionDialogButton.TextAppearance</item>
+    </style>
+
+    <!--Permission dialog button-->
+    <style name="PermissionDialogButton.Allowed" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="backgroundTint">@color/flying_fish_blue</item>
+        <item name="shapeAppearance">@style/PermissionDialogButton.ShapeAppearance</item>
+        <item name="android:textAppearance">@style/PermissionDialogButton.TextAppearance</item>
+        <item name="enforceTextAppearance">@style/PermissionDialogButton.TextAppearance</item>
+    </style>
+
+    <style name="PermissionDialogButton.TextAppearance" parent="@style/TextAppearance.MaterialComponents.Button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="PermissionDialogButton.ShapeAppearance" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_25dp</item>
     </style>
 </resources>

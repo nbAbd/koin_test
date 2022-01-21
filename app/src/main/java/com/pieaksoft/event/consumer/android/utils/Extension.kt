@@ -3,13 +3,16 @@ package com.pieaksoft.event.consumer.android.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.provider.Settings
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -48,6 +51,10 @@ fun Fragment.toast(text: String) {
 
 fun AppCompatActivity.toast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+}
+
+fun AppCompatActivity.showCustomToast(message: String, withLength: Int = Toast.LENGTH_SHORT) {
+
 }
 
 
@@ -418,9 +425,11 @@ fun String.getGantColor(): String {
 fun RecyclerView.attachSnapHelperWithListener(
     snapHelper: SnapHelper,
     behavior: SnapOnScrollListener.Behavior = SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
-    onSnapPositionChangeListener: OnSnapPositionChangeListener) {
+    onSnapPositionChangeListener: OnSnapPositionChangeListener
+) {
     snapHelper.attachToRecyclerView(this)
-    val snapOnScrollListener = SnapOnScrollListener(snapHelper, behavior, onSnapPositionChangeListener)
+    val snapOnScrollListener =
+        SnapOnScrollListener(snapHelper, behavior, onSnapPositionChangeListener)
     addOnScrollListener(snapOnScrollListener)
 }
 
@@ -449,6 +458,27 @@ fun Context.isNetworkAvailable(): Boolean {
             else -> false
         }
     }
+}
+
+fun Context.enableNotifications() {
+    Intent().apply {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                putExtra("app_package", packageName)
+                putExtra("app_uid", applicationInfo?.uid)
+            }
+            else -> {
+                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                addCategory(Intent.CATEGORY_DEFAULT)
+                data = Uri.parse("package:$packageName")
+            }
+        }
+    }.also { startActivity(it) }
 }
 
 fun ImageView.switchSelectStopIcon(select: Boolean) {
