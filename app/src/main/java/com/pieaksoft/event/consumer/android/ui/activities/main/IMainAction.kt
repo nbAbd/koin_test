@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui
+package com.pieaksoft.event.consumer.android.ui.activities.main
 
 interface IMainAction {
     fun showActionBar()

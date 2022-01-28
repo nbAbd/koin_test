@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/empty_menu_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.EmptyFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.EmptyFragment"
         android:label="Empty fragment"
         tools:layout="@layout/fragment_empty_menu" />
 
     <fragment
-        android:id="@+id/canada_rules_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.CanadaRulesFragment"
-        android:label="Canada rules"
-        tools:layout="@layout/fragment_canada_rules" />
+        android:id="@+id/usa_rules_fragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.UsaRulesFragment"
+        android:label="USA Rules"
+        tools:layout="@layout/fragment_usa_rules" />
 
     <fragment
         android:id="@+id/md_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.MDFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.MDFragment"
         android:label="MD fragment"
         tools:layout="@layout/fragment_md" />
 </navigation>

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:background="@color/main_background_color"
     android:fitsSystemWindows="true"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.activities.main.MainActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/certification_need_warning"

@@ -10,7 +10,7 @@ import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.EventInsertCode
 import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.Location
-import com.pieaksoft.event.consumer.android.ui.IMainAction
+import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter

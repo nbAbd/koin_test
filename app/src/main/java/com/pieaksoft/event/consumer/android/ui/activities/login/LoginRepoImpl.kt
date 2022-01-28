@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.login
+package com.pieaksoft.event.consumer.android.ui.activities.login
 
 import com.pieaksoft.event.consumer.android.model.AuthModel
 import com.pieaksoft.event.consumer.android.model.Failure

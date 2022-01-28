@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.login
+package com.pieaksoft.event.consumer.android.ui.activities.login
 
 import android.content.Context
 import android.content.Intent
@@ -6,13 +6,14 @@ import android.os.Bundle
 import androidx.core.widget.doAfterTextChanged
 import com.pieaksoft.event.consumer.android.databinding.ActivityLoginBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
-import com.pieaksoft.event.consumer.android.ui.MainActivity
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
+import com.pieaksoft.event.consumer.android.ui.activities.registration.RegistrationActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
+import com.pieaksoft.event.consumer.android.utils.hideKeyboard
 import com.pieaksoft.event.consumer.android.utils.newIntent
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.viewModel
-
 
 class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
     private val loginViewModel: LoginViewModel by viewModel()
@@ -53,10 +54,12 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
             }
 
             registerBtn.setOnClickListener {
+                hideKeyboard()
                 startActivity(RegistrationActivity.newInstance(this@LoginActivity))
             }
 
             loginBtn.setOnClickListener {
+                hideKeyboard()
                 loginViewModel.login(loginValue ?: "", passwordValue ?: "")
             }
         }
@@ -87,5 +90,4 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
             }
         }
     }
-
 }

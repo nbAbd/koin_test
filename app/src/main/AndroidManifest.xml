@@ -31,7 +31,7 @@
         android:theme="@style/Theme.ELD"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.pieaksoft.event.consumer.android.ui.login.LoginActivity"
+            android:name="com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize">
@@ -42,9 +42,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activities.main.MainActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-        <activity android:name=".ui.login.RegistrationActivity" />
+        <activity android:name="com.pieaksoft.event.consumer.android.ui.activities.registration.RegistrationActivity" />
     </application>
 </manifest>

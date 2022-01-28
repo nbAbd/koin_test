@@ -120,8 +120,21 @@
     <string name="usdot_number">USDOT Number</string>
     <string name="usdot_number_hint">USDOT Number here</string>
     <string name="yes">Yes</string>
+    <string name="usa_rules">USA Rules</string>
+    <string name="list_of_events">List of events</string>
+    <string name="failed">FALSE</string>
+    <string name="passed">OK</string>
+    <string name="read_guide">Read guide</string>
+    <string name="data_transfer">Data transfer</string>
+    <string name="transfer_method">Transfer method</string>
+    <string name="type_comment_here">Type comment here</string>
+    <string name="send">Send</string>
     <string-array name="countries">
         <item>Canada</item>
         <item>United states</item>
+    </string-array>
+    <string-array name="transfer_methods">
+        <item>Web Service (FMCSA)</item>
+        <item>Email to FMCSA</item>
     </string-array>
 </resources>

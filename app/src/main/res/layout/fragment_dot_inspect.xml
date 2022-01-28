@@ -4,20 +4,133 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background_color"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="24dp">
+    android:fitsSystemWindows="true"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="24dp"
+    tools:context=".ui.appbar.LogFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/log_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/co_driver_bkg"
-        tools:context=".ui.appbar.DOTInspectFragment">
+        android:background="@drawable/bg_usa_rules_corners_14"
+        android:backgroundTint="@color/blue_grey_900">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:text="@string/large_text"
-            android:textColor="@color/white" />
-    </androidx.core.widget.NestedScrollView>
+            android:layout_margin="32dp"
+            android:text="@string/data_transfer"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="28dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:minWidth="24dp"
+            android:minHeight="24dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_close"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="32dp"
+            android:background="@drawable/bg_usa_rules_corners_14"
+            android:backgroundTint="@color/data_transfer_background_color"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.pieaksoft.event.consumer.android.views.DropdownSpinnerWithTitle
+                    android:id="@+id/transfer_method"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="32dp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    app:layout_constraintWidth_percent=".4852"
+                    app:title="@string/transfer_method" />
+
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    app:hint="@string/type_comment_here"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/transfer_method"
+                    app:layout_constraintWidth_default="percent"
+                    app:layout_constraintWidth_percent=".4852"
+                    app:minimumHeight="150dp"
+                    app:title="@string/comment_title" />
+
+                <Space
+                    android:id="@+id/spacer"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toTopOf="@id/send_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/comment" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/send_btn"
+                    style="@style/InsertEventButton_Blue"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/send"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spacer"
+                    app:layout_constraintWidth_percent=".25" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancel_btn"
+                    style="@style/InsertEventButton_Blue"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:enabled="false"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/cancel"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toEndOf="@id/send_btn"
+                    app:layout_constraintTop_toTopOf="@id/send_btn"
+                    app:layout_constraintWidth_percent=".25" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

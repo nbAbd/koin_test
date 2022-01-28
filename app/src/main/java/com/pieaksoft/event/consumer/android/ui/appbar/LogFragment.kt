@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
 import com.pieaksoft.event.consumer.android.ui.events.InsertEventPagerDialog
@@ -34,6 +35,10 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             insertBtn.setOnClickListener {
                 showInsertEventDialog()
             }
+
+            nextBtn.setOnClickListener { openNext() }
+
+            prevBtn.setOnClickListener { goBack() }
         }
         setupRecyclerview()
     }
@@ -50,6 +55,8 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                     override fun onSnapPositionChange(position: Int) {
                         sliderPosition = position
                         launch {
+                            binding.nextBtn.isEnabled = position != eventsAdapter.list.size.minus(1)
+                            binding.prevBtn.isEnabled = position != 0
                             binding.dateText.text =
                                 eventsAdapter.list.keys.elementAt(position).getDateFromString()
                                     .formatToServerDateDefaults2()
@@ -90,13 +97,23 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         })
 
         viewModel.progress.observe(this, {
-            // setProgressVisible(it)
+            (requireActivity() as MainActivity).setProgressVisible(it)
         })
 
         viewModel.error.observe(this, {
             val error = ErrorHandler.getErrorMessage(it, requireContext())
             Log.e("test_logerrror", "test insert error response = $error")
         })
+    }
+
+    private fun openNext() {
+        if (sliderPosition == eventsAdapter.list.size.minus(1)) return
+        binding.eventsRecyclerview.smoothScrollToPosition(sliderPosition.plus(1))
+    }
+
+    private fun goBack() {
+        if (sliderPosition == 0) return
+        binding.eventsRecyclerview.smoothScrollToPosition(sliderPosition.minus(1))
     }
 
     private fun showInsertEventDialog() {

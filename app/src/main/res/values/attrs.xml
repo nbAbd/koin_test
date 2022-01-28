@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="title" format="string|reference" />
+    <attr name="minimumHeight" format="dimension|reference" />
+
     <declare-styleable name="FloatingTitleEditText">
         <attr name="hint" format="string|reference" />
         <attr name="android:drawableEnd" />
-        <attr name="title" format="string|reference" />
-        <attr name="minimumHeight" format="dimension|reference" />
+        <attr name="title" />
+        <attr name="minimumHeight" />
         <attr name="maxElements" format="integer" />
         <attr name="commentField" format="boolean" />
+        <attr name="editable" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SeparatorView">
@@ -18,4 +22,10 @@
         <attr name="image" format="string" />
         <attr name="name" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="DropdownSpinnerWithTitle">
+        <attr name="title" />
+        <attr name="minimumHeight" />
+    </declare-styleable>
+
 </resources>

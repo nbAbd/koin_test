@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android.network
 import com.pieaksoft.event.consumer.android.model.AuthModel
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.ProfileModel
+import com.pieaksoft.event.consumer.android.model.Report
 import retrofit2.http.*
 
 interface ServiceApi {
@@ -24,4 +25,6 @@ interface ServiceApi {
     @GET("api/event")
     suspend fun getEventList(): List<Event>
 
+    @POST("api/report")
+    suspend fun sendReport(@Body report: Report)
 }

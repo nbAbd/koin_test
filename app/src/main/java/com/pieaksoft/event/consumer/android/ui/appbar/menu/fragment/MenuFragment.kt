@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.appbar.menu
+package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -12,11 +12,11 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.pieaksoft.event.consumer.android.ui.MainActivity
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMenuBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import com.pieaksoft.event.consumer.android.ui.login.LoginActivity
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.hide
 
@@ -41,11 +41,8 @@ class MenuFragment : BaseFragment<FragmentMenuBinding>() {
             btnClose.setOnClickListener { findNavController().popBackStack() }
             toggleGroupTop.addOnButtonCheckedListener(menuGroupSelectedListener)
             toggleGroupBottom.addOnButtonCheckedListener(menuGroupSelectedListener)
-            itemCanadaRules.addOnCheckedChangeListener(menuItemCheckListener)
+            itemUsaRules.addOnCheckedChangeListener(menuItemCheckListener)
             itemMd.addOnCheckedChangeListener(menuItemCheckListener)
-            itemDriverVehicleInspectionReport.addOnCheckedChangeListener(menuItemCheckListener)
-            itemTruckSettings.addOnCheckedChangeListener(menuItemCheckListener)
-            itemSettings.addOnCheckedChangeListener(menuItemCheckListener)
             itemFaq.addOnCheckedChangeListener(menuItemCheckListener)
             itemLogout.addOnCheckedChangeListener(menuItemCheckListener)
         }
@@ -67,11 +64,8 @@ class MenuFragment : BaseFragment<FragmentMenuBinding>() {
 
     private val menuItemCheckListener = MaterialButton.OnCheckedChangeListener { button, isCheck ->
         when (button.id) {
-            R.id.item_canada_rules -> navController.navigate(R.id.canada_rules_fragment)
+            R.id.item_usa_rules -> navController.navigate(R.id.usa_rules_fragment)
             R.id.item_md -> navController.navigate(R.id.md_fragment)
-            R.id.item_driver_vehicle_inspection_report -> Unit
-            R.id.item_truck_settings -> Unit
-            R.id.item_settings -> Unit
             R.id.item_faq -> Unit
             R.id.item_logout -> if (isCheck) showLogoutDialog()
         }

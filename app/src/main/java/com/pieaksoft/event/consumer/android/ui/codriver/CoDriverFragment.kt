@@ -9,7 +9,7 @@ import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import com.pieaksoft.event.consumer.android.ui.login.LoginViewModel
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
