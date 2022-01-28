@@ -37,6 +37,8 @@
         <entry key="app/src/main/res/drawable/ic_driver_comp_selected.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_driver_comp_unselected.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_dvir.xml" value="0.254296875" />
+        <entry key="app/src/main/res/drawable/ic_eld_large.xml" value="0.4984375" />
+        <entry key="app/src/main/res/drawable/ic_line_web.xml" value="0.4984375" />
         <entry key="app/src/main/res/drawable/ic_login_background.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/drawable/ic_notification.xml" value="0.609375" />
         <entry key="app/src/main/res/drawable/ic_off.xml" value="0.1" />
@@ -49,6 +51,8 @@
         <entry key="app/src/main/res/drawable/ic_sleep_comp.xml" value="0.19897435897435897" />
         <entry key="app/src/main/res/drawable/ic_sleep_comp_selected.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_sleep_comp_unselected.xml" value="0.254296875" />
+        <entry key="app/src/main/res/drawable/ic_splash_screen.xml" value="0.4984375" />
+        <entry key="app/src/main/res/drawable/ic_transparent.xml" value="0.4984375" />
         <entry key="app/src/main/res/drawable/ic_truck_comp.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_truck_comp_selected.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_truck_comp_unselected.xml" value="0.254296875" />
@@ -125,6 +129,8 @@
         <entry key="app/src/main/res/layout/text_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/top_bar_layout.xml" value="0.5" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.5" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4984375" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4984375" />
       </map>
     </option>
   </component>

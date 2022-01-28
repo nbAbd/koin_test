@@ -9,7 +9,6 @@ import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.activities.registration.RegistrationActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.hideKeyboard
 import com.pieaksoft.event.consumer.android.utils.newIntent
 import com.pieaksoft.event.consumer.android.utils.toast
@@ -17,7 +16,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
     private val loginViewModel: LoginViewModel by viewModel()
-    private val profileViewModel: ProfileViewModel by viewModel()
 
     private var loginValue: String? = null
     private var passwordValue: String? = null
@@ -28,10 +26,6 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
     }
 
     override fun setupView() {
-        if (profileViewModel.isAuth()) {
-            startActivity(MainActivity.newInstance(this@LoginActivity))
-        }
-
         with(binding) {
             loginName.doAfterTextChanged {
                 if (it?.length == 0) {
@@ -77,6 +71,10 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
                 toast(ErrorHandler.getErrorMessage(it, this))
             }
         })
+
+        loginViewModel.progress.observe(this, {
+            setProgressVisible(it)
+        })
     }
 
     private fun isEnableButton(): Boolean {
@@ -85,9 +83,7 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
 
     companion object {
         fun newInstance(context: Context): Intent {
-            return newIntent<LoginActivity>(context).apply {
-
-            }
+            return newIntent<LoginActivity>(context)
         }
     }
 }

@@ -15,6 +15,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Window
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isGone
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -80,6 +81,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         setupView()
         setupBottomNavigationView()
