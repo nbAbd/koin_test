@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui
+package com.pieaksoft.event.consumer.android.ui.activities.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -102,6 +102,10 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             } else {
                 navController.navigate(R.id.action_show_dot_inspect)
             }
+        }
+
+        rules.setOnClickListener {
+            navController.navigate(R.id.rulesFragment)
         }
     }
 

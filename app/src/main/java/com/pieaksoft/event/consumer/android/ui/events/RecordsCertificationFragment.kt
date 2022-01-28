@@ -10,7 +10,7 @@ import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.EventInsertCode
 import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.Location
-import com.pieaksoft.event.consumer.android.ui.IMainAction
+import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter
@@ -46,10 +46,6 @@ class RecordsCertificationFragment :
             dutyStatus = "OFF_DUTY",
             certification = null
         )
-    }
-
-    init {
-        viewModel.certifiedDate.value = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,5 +106,10 @@ class RecordsCertificationFragment :
     override fun onStop() {
         super.onStop()
         viewModel.getEventList()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.certifiedDate.value = null
     }
 }

@@ -16,22 +16,20 @@ class EventsCalculationFragment :
         requiresActionBar = true
     }
 
-    private val eventsCalculationViewModel: EventsCalculationViewModel by viewModel()
+    override val viewModel: EventsCalculationViewModel by viewModel()
 
     override fun setupView() {
-        eventsCalculationViewModel.calculateEvents()
+        viewModel.calculateEvents()
         if (Storage.eventList.isNotEmpty()) {
-            eventsCalculationViewModel.startCountDrivingEvent()
-            eventsCalculationViewModel.startCountOnEvent()
-            eventsCalculationViewModel.startCountDutyCycleEvent()
-            eventsCalculationViewModel.startCountDrivingLimit()
+            viewModel.startCountDrivingEvent()
+            viewModel.startCountOnEvent()
+            viewModel.startCountDutyCycleEvent()
+            viewModel.startCountDrivingLimit()
         }
     }
 
-    override val viewModel: EventsCalculationViewModel by viewModel()
-
     override fun observe() {
-        eventsCalculationViewModel.drivingEventLiveData.observe(this, {
+        viewModel.drivingEventLiveData.observe(this, {
             if (it < 0) {
                 binding.breakProgressBar.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
@@ -44,7 +42,7 @@ class EventsCalculationFragment :
                 ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100)
         })
 
-        eventsCalculationViewModel.onEventLiveData.observe(this, {
+        viewModel.onEventLiveData.observe(this, {
             if (it < 0) {
                 Toast.makeText(
                     requireContext(),
@@ -63,7 +61,7 @@ class EventsCalculationFragment :
             binding.onValue.text = hmsTimeFormatter(it)
         })
 
-        eventsCalculationViewModel.dutyCycleEventLiveData.observe(this, {
+        viewModel.dutyCycleEventLiveData.observe(this, {
             if (it < 0) {
                 Toast.makeText(
                     requireContext(),
@@ -85,11 +83,11 @@ class EventsCalculationFragment :
             binding.dutyCycle.text = hmsTimeFormatter(it)
         })
 
-        eventsCalculationViewModel.drivingLimitLiveData.observe(this, {
+        viewModel.drivingLimitLiveData.observe(this, {
             binding.drivingLimit.text = hmsTimeFormatter2(it)
         })
 
-        eventsCalculationViewModel.onEventWarningLiveData.observe(this, {
+        viewModel.onEventWarningLiveData.observe(this, {
             Toast.makeText(
                 requireContext(),
                 "Warning!\n You continously onduty more 14 hour",
@@ -97,7 +95,7 @@ class EventsCalculationFragment :
             ).show()
         })
 
-        eventsCalculationViewModel.dutyCycleEventLiveData.observe(this, {
+        viewModel.dutyCycleEventLiveData.observe(this, {
             Toast.makeText(
                 requireContext(),
                 "Warning!\n You onduty more 70 hour",

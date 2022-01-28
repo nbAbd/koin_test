@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background_color"
-    android:fillViewport="true"
     android:paddingHorizontal="16dp"
     android:paddingTop="24dp"
     tools:context=".ui.appbar.LogFragment">
@@ -15,93 +14,123 @@
         android:layout_height="match_parent"
         android:background="@drawable/co_driver_bkg">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/log_container"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/log_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/log"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_title" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/log"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/prev_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackgroundBorderless"
+            android:enabled="false"
+            android:minWidth="24dp"
+            android:minHeight="24dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_back_left"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="@color/selector_back_button"
+            app:layout_constraintBottom_toBottomOf="@id/date_text"
+            app:layout_constraintStart_toStartOf="@id/insert_btn"
+            app:layout_constraintTop_toTopOf="@id/date_text" />
 
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/close_log"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_close" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toTopOf="@+id/back_btn"
-                app:layout_constraintTop_toBottomOf="@+id/log_title" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/back_btn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/ic_back_left"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/insert_btn"
-                app:layout_constraintStart_toStartOf="@+id/events_recyclerview"
-                app:layout_constraintTop_toBottomOf="@+id/events_recyclerview" />
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/next_btn"
-                app:layout_constraintStart_toEndOf="@+id/back_btn"
-                app:layout_constraintTop_toTopOf="@+id/back_btn" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/next_btn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="26dp"
-                android:background="@drawable/ic_back_right_black"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@+id/back_btn"
-                app:layout_constraintEnd_toEndOf="@+id/events_recyclerview"
-                app:layout_constraintTop_toTopOf="@+id/back_btn" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="42dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:minWidth="24dp"
+            android:minHeight="24dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_back_right_black"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="@color/selector_back_button"
+            app:layout_constraintBottom_toBottomOf="@id/date_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date_text" />
 
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/insert_btn"
-                android:layout_width="154dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/round_order_button"
-                android:text="@string/insert_event"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/back_btn"
-                app:layout_constraintTop_toTopOf="@+id/back_btn" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_30dp"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/insert_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="20.02.22" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/insert_btn"
+            style="@style/InsertEventButton_Blue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/insert_event"
+            android:textColor="@color/white"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent=".25" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/list_of_events_btn"
+            style="@style/InsertEventButton_Blue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/list_of_events"
+            android:textColor="@color/white"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/insert_btn"
+            app:layout_constraintWidth_percent=".25" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

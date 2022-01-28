@@ -7,9 +7,9 @@ import com.pieaksoft.event.consumer.android.events.EventsRepository
 import com.pieaksoft.event.consumer.android.events.EventsRepositoryImpl
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationViewModel
-import com.pieaksoft.event.consumer.android.ui.login.LoginRepo
-import com.pieaksoft.event.consumer.android.ui.login.LoginRepoImpl
-import com.pieaksoft.event.consumer.android.ui.login.LoginViewModel
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepo
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepoImpl
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepo
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepoImpl
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel

@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.login
+package com.pieaksoft.event.consumer.android.ui.activities.registration
 
 import android.content.Context
 import android.content.Intent

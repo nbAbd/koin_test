@@ -135,6 +135,25 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         }
     }
 
+    fun sendReport(report: Report, callback: () -> Unit) {
+        showProgress()
+        launch {
+            if (isNetworkAvailable) {
+                val result = withContext(Dispatchers.IO) { repository.sendReport(report = report) }
+                hideProgress()
+                when (result) {
+                    is Success -> {
+                        Log.e(TAG, "sendReport: ${result.data}")
+                        callback.invoke()
+                    }
+                    is Failure -> {
+                        _error.value = result.error
+                    }
+                }
+            }
+        }
+    }
+
     private fun handleEvents(events: List<Event>) {
         Storage.eventList = events.filter { it.eventType == EventInsertType.statusChange.type }
         Storage.eventListGroupByDate = calculateEvents()

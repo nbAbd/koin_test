@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.login
+package com.pieaksoft.event.consumer.android.ui.activities.login
 
 import android.app.Application
 import androidx.lifecycle.LiveData
