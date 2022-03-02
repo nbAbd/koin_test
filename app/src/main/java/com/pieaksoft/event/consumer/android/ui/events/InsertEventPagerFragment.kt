@@ -1,7 +1,9 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
@@ -9,7 +11,8 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventPagerBinding
 import com.pieaksoft.event.consumer.android.ui.events.adapter.InsertEventPagerAdapter
 
-class InsertEventPagerDialog : DialogFragment(), InsertEventListener {
+class InsertEventPagerDialog(private val dismissCallBack: () -> Unit) : DialogFragment(),
+    InsertEventListener {
     private val pagerAdapter by lazy { InsertEventPagerAdapter(this, this) }
     private var _binding: FragmentInsertEventPagerBinding? = null
     private val binding get() = _binding!!
@@ -45,11 +48,19 @@ class InsertEventPagerDialog : DialogFragment(), InsertEventListener {
         setupView()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupView() = with(binding) {
+        container.setOnTouchListener { v, event ->
+            if (event?.action == MotionEvent.ACTION_DOWN) {
+                dialog?.dismiss()
+            }
+            true
+        }
         viewPager.adapter = pagerAdapter
     }
 
     override fun onDestroyView() {
+        dismissCallBack.invoke()
         super.onDestroyView()
         _binding = null
     }

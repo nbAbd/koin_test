@@ -8,6 +8,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
 
 @Entity
 data class Event(
@@ -50,4 +51,22 @@ data class Event(
         val endDateTime = LocalDateTime.parse(endDateTimeString, formatter)
         durationInMillis = startDateTime.until(endDateTime, ChronoUnit.MILLIS)
     }
+}
+
+fun Event.formatDuration(): String {
+    return String.format(
+        "%02dh %02dm %02ds",
+        TimeUnit.MILLISECONDS.toHours(durationInMillis),
+        TimeUnit.MILLISECONDS.toMinutes(durationInMillis) -
+                TimeUnit.HOURS.toMinutes(
+                    TimeUnit.MILLISECONDS.toHours(
+                        durationInMillis
+                    )
+                ),
+        TimeUnit.MILLISECONDS.toSeconds(durationInMillis) - TimeUnit.MINUTES.toSeconds(
+            TimeUnit.MILLISECONDS.toMinutes(
+                durationInMillis
+            )
+        )
+    )
 }

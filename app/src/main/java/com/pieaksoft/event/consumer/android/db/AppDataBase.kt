@@ -6,18 +6,27 @@ import androidx.room.TypeConverters
 import com.pieaksoft.event.consumer.android.db.converters.CertificationConverter
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
 import com.pieaksoft.event.consumer.android.db.converters.LocationConverter
+import com.pieaksoft.event.consumer.android.db.dao.AppDao
+import com.pieaksoft.event.consumer.android.db.dao.ProfileDao
 import com.pieaksoft.event.consumer.android.model.Event
+import com.pieaksoft.event.consumer.android.model.profile.*
 
 @Database(
-    entities = [Event::class],
+    entities = [
+        Event::class,
+        Profile::class
+    ],
     version = 1
 )
 
 @TypeConverters(
     CertificationConverter::class,
     CertificationListConverter::class,
-    LocationConverter::class
+    LocationConverter::class,
+    Converters::class
 )
 abstract class AppDataBase : RoomDatabase() {
     abstract fun getAppDao(): AppDao
+
+    abstract fun getProfileDao(): ProfileDao
 }

@@ -129,6 +129,11 @@
     <string name="transfer_method">Transfer method</string>
     <string name="type_comment_here">Type comment here</string>
     <string name="send">Send</string>
+    <string name="sb">Sb</string>
+    <string name="edit">Edit</string>
+    <string name="drive">Drive</string>
+    <string name="only_drivers_can_login">Only drivers can login</string>
+
     <string-array name="countries">
         <item>Canada</item>
         <item>United states</item>

@@ -1,14 +1,17 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventSecondBinding
+import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.Event
 import com.pieaksoft.event.consumer.android.model.EventInsertType
 import com.pieaksoft.event.consumer.android.model.Location
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class InsertEventSecondFragment :
     BaseMVVMFragment<FragmentInsertEventSecondBinding, EventViewModel>() {
@@ -39,6 +42,12 @@ class InsertEventSecondFragment :
 
     override val viewModel: EventViewModel by sharedViewModel()
 
+    private val profileViewModel: ProfileViewModel by viewModel()
+
+    private val timezone: Timezone? by lazy {
+        Timezone.findByValue(timezone = profileViewModel.getUserTimezone() ?: "")
+    }
+
     override fun setupView() = with(binding) {
         btnBack.setOnClickListener { pagerListener.onBack() }
         save.setOnClickListener { insertEvent() }
@@ -50,8 +59,8 @@ class InsertEventSecondFragment :
         })
 
         viewModel.eventInsertDate.observe(viewLifecycleOwner, {
-            eventModel.date = it?.formatToServerDateDefaults() ?: ""
-            eventModel.time = it?.formatToServerTimeDefaults() ?: ""
+            eventModel.date = it?.formatToServerDateDefaults(timezone) ?: ""
+            eventModel.time = it?.formatToServerTimeDefaults(timezone) ?: ""
         })
 
 

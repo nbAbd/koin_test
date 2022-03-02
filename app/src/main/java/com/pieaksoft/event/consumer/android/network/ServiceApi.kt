@@ -2,7 +2,7 @@ package com.pieaksoft.event.consumer.android.network
 
 import com.pieaksoft.event.consumer.android.model.AuthModel
 import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.ProfileModel
+import com.pieaksoft.event.consumer.android.model.profile.Profile
 import com.pieaksoft.event.consumer.android.model.Report
 import retrofit2.http.*
 
@@ -14,7 +14,7 @@ interface ServiceApi {
 
     @Headers("isAuthorizable: false")
     @GET("/api/me")
-    suspend fun getProfile(@Header("Authorization") token: String): ProfileModel
+    suspend fun getProfile(@Header("Authorization") token: String): Profile
 
     @POST("api/event")
     suspend fun insertEvent(@Body body: Event): Event

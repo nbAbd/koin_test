@@ -61,10 +61,11 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
 
     override fun bindViewModel() {
         loginViewModel.isSuccessLogin.observe(this, { success ->
-            if (success) {
-                startActivity(MainActivity.newInstance(this@LoginActivity))
+            val (isSuccess, errorMessage) = success
+            when {
+                isSuccess -> startActivity(MainActivity.newInstance(this@LoginActivity))
+                errorMessage != null -> toast(getString(errorMessage))
             }
-
         })
         loginViewModel.error.observe(this, { message ->
             message?.let {
@@ -77,9 +78,7 @@ class LoginActivity : BaseActivityNew<ActivityLoginBinding>(ActivityLoginBinding
         })
     }
 
-    private fun isEnableButton(): Boolean {
-        return loginValue != null && passwordValue != null
-    }
+    private fun isEnableButton() = loginValue != null && passwordValue != null
 
     companion object {
         fun newInstance(context: Context): Intent {

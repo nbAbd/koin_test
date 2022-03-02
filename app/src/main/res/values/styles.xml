@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/white</item>
         <item name="boxStrokeWidth">1dp</item>
@@ -188,5 +189,10 @@
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="backgroundTint">@color/selector_button_blue</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Button.50" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

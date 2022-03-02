@@ -158,7 +158,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         Storage.eventList = events.filter { it.eventType == EventInsertType.statusChange.type }
         Storage.eventListGroupByDate = calculateEvents()
         eventList.value = events
-        eventListByDate.value = Storage.eventListGroupByDate
+        eventListByDate.value = calculateEvents()
         eventListRequiresCertification.value =
             Storage.eventList.filter { it.certifyDate != null && it.certifyDate!!.isEmpty() }
     }

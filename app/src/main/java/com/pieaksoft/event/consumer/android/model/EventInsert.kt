@@ -10,5 +10,11 @@ enum class EventInsertCode(val code: String) {
     Sleep("DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH"),
     Driving("DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING"),
     On("DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING"),
-    FirstCertification("DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD"),
+    FirstCertification("DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD");
+
+    companion object {
+        private val DEFAULT = Off
+        fun getByCode(code: String): EventInsertCode =
+            values().find { it.code.contentEquals(code) } ?: DEFAULT
+    }
 }

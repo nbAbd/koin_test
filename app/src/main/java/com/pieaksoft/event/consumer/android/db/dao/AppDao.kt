@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.db
+package com.pieaksoft.event.consumer.android.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -12,15 +12,17 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMenuBinding
-import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
+import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.hide
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
-class MenuFragment : BaseFragment<FragmentMenuBinding>() {
+class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
     companion object {
         private const val TOOLBAR_HIDE_ANIMATION_DURATION = 400L
     }
@@ -28,6 +30,8 @@ class MenuFragment : BaseFragment<FragmentMenuBinding>() {
     init {
         requiresBottomNavigation = false
     }
+
+    override val viewModel: ProfileViewModel by sharedViewModel()
 
     private lateinit var navController: NavController
 
@@ -120,4 +124,6 @@ class MenuFragment : BaseFragment<FragmentMenuBinding>() {
         )
         alertDialog.show()
     }
+
+    override fun observe() = Unit
 }

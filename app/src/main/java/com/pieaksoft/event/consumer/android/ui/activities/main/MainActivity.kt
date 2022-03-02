@@ -27,7 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ActivityMainBinding
-import com.pieaksoft.event.consumer.android.databinding.CustomOnOffButtonBinding
+import com.pieaksoft.event.consumer.android.databinding.CustomOnOffLayoutBinding
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
@@ -147,20 +147,12 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         val view = bottomMenuView.getChildAt(2)
         val itemView = view as BottomNavigationItemView
 
-        val toggleGroup = CustomOnOffButtonBinding.inflate(
+        val toggleGroup = CustomOnOffLayoutBinding.inflate(
             LayoutInflater.from(this@MainActivity),
             bottomMenuView,
             false
         )
         itemView.addView(toggleGroup.root)
-
-        toggleGroup.toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-            when (checkedId) {
-                R.id.buttonOff -> turnOffBluetooth()
-                R.id.buttonOn -> turnOnBluetooth()
-            }
-        }
     }
 
     private fun turnOffBluetooth() {

@@ -62,6 +62,7 @@
         android:background="@color/blue_grey_900"
         app:itemBackground="@drawable/bottom_nav_tab_background"
         app:itemIconSize="32dp"
+        app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"

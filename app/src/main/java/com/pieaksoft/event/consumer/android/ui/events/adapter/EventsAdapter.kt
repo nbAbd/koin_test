@@ -17,6 +17,11 @@ import com.pieaksoft.event.consumer.android.utils.getCode
 class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder>() {
 
     var list: Map<String, List<Event>> = emptyMap()
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
     val viewPool = RecyclerView.RecycledViewPool()
 
     inner class EventsAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

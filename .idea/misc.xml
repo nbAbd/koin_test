@@ -73,6 +73,7 @@
         <entry key="app/src/main/res/drawable/round_order_button.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/drawable/round_progress_bar.xml" value="0.2153846153846154" />
         <entry key="app/src/main/res/drawable/selector_text_color.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/transparent_spacing_drawable.xml" value="0.6296875" />
         <entry key="app/src/main/res/layout/activity_fullscreen.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20035479666504658" />
@@ -81,6 +82,7 @@
         <entry key="app/src/main/res/layout/certificate_view.xml" value="0.375" />
         <entry key="app/src/main/res/layout/custom_floating_title_edittext.xml" value="0.47421875" />
         <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/custom_on_off_layout.xml" value="0.60546875" />
         <entry key="app/src/main/res/layout/custom_snackbar.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/custom_spinner_with_title.xml" value="0.55" />
         <entry key="app/src/main/res/layout/custom_toast_view.xml" value="0.375" />
@@ -101,7 +103,7 @@
         <entry key="app/src/main/res/layout/fragment_insert_event_first.xml" value="0.46640625" />
         <entry key="app/src/main/res/layout/fragment_insert_event_pager.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_insert_event_second.xml" value="0.55" />
-        <entry key="app/src/main/res/layout/fragment_log.xml" value="0.5956072351421189" />
+        <entry key="app/src/main/res/layout/fragment_log.xml" value="0.592944369063772" />
         <entry key="app/src/main/res/layout/fragment_md.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.55" />
         <entry key="app/src/main/res/layout/fragment_records_certification.xml" value="0.25" />
@@ -117,6 +119,8 @@
         <entry key="app/src/main/res/layout/item_driver.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_edit_text.xml" value="0.5123809523809524" />
         <entry key="app/src/main/res/layout/item_event.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/item_event_list.xml" value="0.58203125" />
+        <entry key="app/src/main/res/layout/item_event_list_header.xml" value="1.0" />
         <entry key="app/src/main/res/layout/item_gant_first_cell.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/layout/item_row.xml" value="0.16510416666666666" />
         <entry key="app/src/main/res/layout/item_usa_rules.xml" value="0.625" />

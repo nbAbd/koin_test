@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background_color"
+    android:fillViewport="true"
     android:paddingHorizontal="16dp"
     android:paddingTop="24dp"
     tools:context=".ui.appbar.LogFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/log_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +37,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_close" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/events_recyclerview"
             android:layout_width="match_parent"
@@ -46,16 +47,14 @@
             android:layout_marginBottom="24dp"
             app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/log_title" />
+            app:layout_constraintTop_toBottomOf="@id/log_title" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/prev_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
-            android:enabled="false"
             android:minWidth="24dp"
             android:minHeight="24dp"
             android:padding="0dp"
@@ -73,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="42dp"
             android:background="?selectableItemBackgroundBorderless"
+            android:enabled="false"
             android:minWidth="24dp"
             android:minHeight="24dp"
             android:padding="0dp"
@@ -89,13 +89,15 @@
             android:id="@+id/date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="@dimen/_30dp"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/insert_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/events_recyclerview"
+            app:layout_goneMarginTop="20dp"
             tools:text="20.02.22" />
 
 
@@ -111,8 +113,8 @@
             android:text="@string/insert_event"
             android:textColor="@color/white"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_text"
             app:layout_constraintWidth_percent=".25" />
 
         <com.google.android.material.button.MaterialButton
@@ -121,16 +123,29 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_50dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="20dp"
             android:fontFamily="sans-serif"
             android:text="@string/list_of_events"
             android:textColor="@color/white"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/insert_btn"
             app:layout_constraintStart_toEndOf="@id/insert_btn"
+            app:layout_constraintTop_toTopOf="@id/insert_btn"
             app:layout_constraintWidth_percent=".25" />
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginVertical="32dp"
+            android:background="@drawable/border_driver_item"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintTop_toBottomOf="@id/insert_btn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
