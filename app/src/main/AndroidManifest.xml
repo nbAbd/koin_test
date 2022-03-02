@@ -31,9 +31,10 @@
         android:theme="@style/Theme.ELD"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.pieaksoft.event.consumer.android.ui.login.LoginActivity"
+            android:name=".ui.activities.splash.RoutingActivity"
             android:exported="true"
             android:screenOrientation="landscape"
+            android:theme="@style/Theme.ELD.SplashScreen"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,10 +43,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.login.RegistrationActivity" />
+        <activity
+            android:name=".ui.activities.main.MainActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <activity android:name="com.pieaksoft.event.consumer.android.ui.activities.registration.RegistrationActivity" />
     </application>
-
 </manifest>

@@ -109,6 +109,7 @@ fun Activity.hideSystemUI() {
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_LOW_PROFILE or
                 // Do not let system steal touches for showing the navigation bar
                 View.SYSTEM_UI_FLAG_IMMERSIVE
                         // Hide the nav bar and status bar

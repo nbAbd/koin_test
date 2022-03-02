@@ -7,11 +7,11 @@ import com.pieaksoft.event.consumer.android.events.EventsRepository
 import com.pieaksoft.event.consumer.android.events.EventsRepositoryImpl
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationViewModel
-import com.pieaksoft.event.consumer.android.ui.login.LoginRepo
-import com.pieaksoft.event.consumer.android.ui.login.LoginRepoImpl
-import com.pieaksoft.event.consumer.android.ui.login.LoginViewModel
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepo
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepoImpl
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepo
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepoImpl
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepository
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepositoryImpl
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_NAME
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +30,7 @@ val AppModule = module {
         ).build()
     }
     single<LoginRepo> { LoginRepoImpl(get()) }
-    single<ProfileRepo> { ProfileRepoImpl(get()) }
+    single<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
     single<EventsRepository> { EventsRepositoryImpl(get(), get()) }
 
     viewModel { LoginViewModel(get(), get()) }

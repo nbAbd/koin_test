@@ -35,23 +35,23 @@
             app:srcCompat="@drawable/ic_close" />
 
         <com.pieaksoft.event.consumer.android.views.DriverCardView
-            android:id="@+id/driver1"
+            android:id="@+id/primary_driver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:name="Test"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/driver2"
+            app:layout_constraintEnd_toStartOf="@+id/additional_driver"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/team_driving" />
 
 
         <com.pieaksoft.event.consumer.android.views.DriverCardView
-            android:id="@+id/driver2"
+            android:id="@+id/additional_driver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/driver1"
+            app:layout_constraintStart_toEndOf="@+id/primary_driver"
             app:layout_constraintTop_toBottomOf="@+id/team_driving" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

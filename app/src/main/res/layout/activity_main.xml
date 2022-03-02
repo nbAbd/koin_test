@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/main_background_color"
-    android:fitsSystemWindows="false"
-    tools:context=".ui.MainActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activities.main.MainActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/certification_need_warning"
@@ -62,10 +62,9 @@
         android:background="@color/blue_grey_900"
         app:itemBackground="@drawable/bottom_nav_tab_background"
         app:itemIconSize="32dp"
+        app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation" />
-
-    <include layout="@layout/insert_event_view2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,12 +70,12 @@
                     app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_canada_rules"
+                        android:id="@+id/item_usa_rules"
                         style="@style/MenuItem.MaterialButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/canada_rules"
-                        app:icon="@drawable/ic_canada"
+                        android:text="@string/usa_rules"
+                        app:icon="@drawable/ic_usa"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Top" />
 
                     <com.google.android.material.button.MaterialButton
@@ -98,34 +98,7 @@
                     android:orientation="vertical"
                     android:showDividers="middle"
                     app:selectionRequired="true"
-                    app:singleSelection="true"
-                    tools:checkedButton="@id/item_driver_vehicle_inspection_report">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_driver_vehicle_inspection_report"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dvir"
-                        app:icon="@drawable/ic_dvir"
-                        app:shapeAppearanceOverlay="@style/MenuMaterialButton.ShapeAppearance.Top" />
-
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_truck_settings"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/truck_settings"
-                        app:icon="@drawable/ic_truck" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_settings"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings"
-                        app:icon="@drawable/ic_settings" />
+                    app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_faq"
@@ -133,7 +106,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/faq"
-                        app:icon="@drawable/ic_faq" />
+                        app:icon="@drawable/ic_faq"
+                        app:shapeAppearanceOverlay="@style/MenuMaterialButton.ShapeAppearance.Top" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_logout"
@@ -157,6 +131,8 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="24dp"
             android:paddingTop="28dp"
             app:defaultNavHost="false"
             app:layout_constraintBottom_toBottomOf="parent"

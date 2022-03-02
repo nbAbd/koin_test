@@ -1,16 +1,32 @@
 package com.pieaksoft.event.consumer.android.utils
 
+import android.annotation.SuppressLint
+import com.pieaksoft.event.consumer.android.enums.Timezone
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-fun Date.formatToServerDateDefaults(): String{
-    val sdf= SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+@SuppressLint("SimpleDateFormat")
+fun Date.formatToServerDateDefaults(timezone: Timezone? = null): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    timezone?.let {
+        when (it) {
+            Timezone.UTC -> sdf.toUTC()
+            else -> Unit
+        }
+    }
     return sdf.format(this)
 }
 
-fun Date.formatToServerTimeDefaults(): String{
-    val sdf= SimpleDateFormat("HH:mm", Locale.getDefault())
+@SuppressLint("SimpleDateFormat")
+fun Date.formatToServerTimeDefaults(timezone: Timezone? = null): String {
+    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+    timezone?.let {
+        when (it) {
+            Timezone.UTC -> sdf.toUTC()
+            else -> Unit
+        }
+    }
     return sdf.format(this)
 }
 
@@ -22,33 +38,42 @@ fun Date.add(field: Int, amount: Int): Date {
     }
 }
 
-fun Date.addYears(years: Int): Date{
+fun Date.addYears(years: Int): Date {
     return add(Calendar.YEAR, years)
 }
+
 fun Date.addMonths(months: Int): Date {
     return add(Calendar.MONTH, months)
 }
-fun Date.addDays(days: Int): Date{
+
+fun Date.addDays(days: Int): Date {
     return add(Calendar.DAY_OF_MONTH, days)
 }
-fun Date.addHours(hours: Int): Date{
+
+fun Date.addHours(hours: Int): Date {
     return add(Calendar.HOUR_OF_DAY, hours)
 }
-fun Date.addMinutes(minutes: Int): Date{
+
+fun Date.addMinutes(minutes: Int): Date {
     return add(Calendar.MINUTE, minutes)
 }
-fun Date.addSeconds(seconds: Int): Date{
+
+fun Date.addSeconds(seconds: Int): Date {
     return add(Calendar.SECOND, seconds)
 }
 
-fun String.getDateFromString(): Date{
-    val dateFormat =  SimpleDateFormat("yyyy-MM-dd", Locale.US)
+fun String.getDateFromString(): Date {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     return dateFormat.parse(this)
 }
 
-fun Date.formatToServerDateDefaults2(): String{
-    val sdf= SimpleDateFormat("dd-MMM-yyyy", Locale.US)
+fun Date.formatToServerDateDefaults2(): String {
+    val sdf = SimpleDateFormat("dd-MMM-yyyy", Locale.US)
     return sdf.format(this)
 }
 
 fun getCurrentTime() = Calendar.getInstance().time.time / 1000
+
+fun SimpleDateFormat.toUTC() {
+    timeZone = TimeZone.getTimeZone("UTC")
+}

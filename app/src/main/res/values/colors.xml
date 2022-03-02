@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black">#FF000000</color>
     <color name="blue">#0045CF</color>
     <color name="blue_grey_900">#11141B</color>
@@ -34,4 +34,9 @@
     <color name="toast_green">@color/green2</color>
     <color name="toast_yellow">#F2C94C</color>
     <color name="toast_blue">#0045CF</color>
+
+    <color name="data_transfer_background_color">#171922</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#FFFFFF</color>
+    <color name="blue_indigo">#47516C</color>
+    <color name="ufo_green">#33C872</color>
 </resources>

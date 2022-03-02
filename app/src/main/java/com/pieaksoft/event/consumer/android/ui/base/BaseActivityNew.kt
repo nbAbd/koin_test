@@ -4,14 +4,13 @@ import android.app.ProgressDialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.utils.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseActivityNew<VB : ViewBinding>(val bindingFactory: (LayoutInflater) -> VB) :
@@ -19,6 +18,10 @@ abstract class BaseActivityNew<VB : ViewBinding>(val bindingFactory: (LayoutInfl
 
     private val pd: ProgressDialog by lazy {
         ProgressDialog(this).apply {
+            window?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            )
             setMessage(context.getString(R.string.loading))
             setCancelable(false)
         }
@@ -58,7 +61,10 @@ abstract class BaseActivityNew<VB : ViewBinding>(val bindingFactory: (LayoutInfl
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if (hasFocus) {
-            hideSystemUI()
+            lifecycleScope.launch {
+                delay(1000L)
+                hideSystemUI()
+            }
         }
         super.onWindowFocusChanged(hasFocus)
     }

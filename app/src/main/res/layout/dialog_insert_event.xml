@@ -1,83 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/transparent">
+    android:background="@null">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="50dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/menu_sub_bkg"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="32dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight="wrap_content"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".3164"
+        tools:ignore="MissingConstraints">
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="title, event_off_btn, event_sleep_btn, event_driving_btn, event_on_btn, event_cancel_btn"
+            app:flow_horizontalAlign="center"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalAlign="top"
+            app:flow_verticalGap="16dp"
+            app:flow_verticalStyle="spread_inside"
+            app:flow_wrapMode="aligned"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
             android:text="@string/insert_event"
-            android:layout_gravity="center" />
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/event_off_btn"
-            android:layout_width="154dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/off"
-            android:textColor="@color/white"
-            android:background="@drawable/round_order_button"
+            style="@style/InsertEventButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/red"
-            android:layout_gravity="center"/>
+            android:text="@string/off"
+            app:backgroundTint="@color/red" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/event_sleep_btn"
-            android:layout_width="154dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
+            style="@style/InsertEventButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/sleeper_berth"
-            android:textColor="@color/white"
-            android:background="@drawable/round_order_button"
-            android:backgroundTint="@color/blue"
-            android:layout_gravity="center"/>
+            app:backgroundTint="@color/blue" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/event_driving_btn"
-            android:layout_width="154dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
+            style="@style/InsertEventButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/driving"
-            android:textColor="@color/white"
-            android:background="@drawable/round_order_button"
-            android:backgroundTint="@color/green2"
-            android:layout_gravity="center"/>
+            app:backgroundTint="@color/green2" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/event_on_btn"
-            android:layout_width="154dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
+            style="@style/InsertEventButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/on"
-            android:textColor="@color/white"
-            android:background="@drawable/round_order_button"
-            android:backgroundTint="@color/orange"
-            android:layout_gravity="center"/>
+            app:backgroundTint="@color/orange" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/event_cancel_btn"
-            android:layout_width="154dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="16dp"
+            style="@style/InsertEventButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:textColor="@color/white"
-            android:background="@drawable/round_order_button"
-            android:backgroundTint="@color/grey2"
-            android:layout_gravity="center"/>
-
-
-    </LinearLayout>
+            app:backgroundTint="@color/grey2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

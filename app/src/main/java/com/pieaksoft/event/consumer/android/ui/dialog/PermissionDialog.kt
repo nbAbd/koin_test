@@ -23,6 +23,7 @@ import com.pieaksoft.event.consumer.android.databinding.DialogPermissionsBinding
 import com.pieaksoft.event.consumer.android.utils.LocationUtil
 import com.pieaksoft.event.consumer.android.utils.LocationUtil.isFineAndBackgroundLocationPermissionGranted
 import com.pieaksoft.event.consumer.android.utils.enableNotifications
+import com.pieaksoft.event.consumer.android.utils.hideSystemUI
 import com.pieaksoft.event.consumer.android.utils.toast
 
 class PermissionDialog : DialogFragment() {
@@ -167,11 +168,6 @@ class PermissionDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         initView()
-    }
-
-    private fun hideSystemUI() {
-        dialog?.window?.decorView?.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
 
     override fun onDestroyView() {

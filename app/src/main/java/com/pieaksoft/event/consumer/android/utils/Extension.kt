@@ -1,12 +1,17 @@
 package com.pieaksoft.event.consumer.android.utils
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -21,6 +26,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +35,8 @@ import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -487,4 +495,36 @@ fun ImageView.switchSelectStopIcon(select: Boolean) {
     } else {
         setImageResource(R.drawable.ic_radio_off)
     }
+}
+
+fun View.showWithAnimation(duration: Int = 300) {
+    if (isShown) return
+
+    isVisible = true
+    animate()
+        .translationY(0f)
+        .setDuration(duration.toLong())
+        .setListener(null)
+        .start()
+}
+
+fun View.hideWithAnimation(to: Int, duration: Int = 300) {
+    if (isGone) return
+    val translateTo = when (to) {
+        Gravity.TOP -> -(height.toFloat() + 20)
+        else -> height.toFloat() + 40
+    }
+
+    isGone = true
+
+    animate()
+        .translationY(translateTo)
+        .setDuration(duration.toLong())
+        .setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                isGone = true
+            }
+        })
+        .start()
 }
