@@ -1,11 +1,11 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventSecondBinding
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.EventInsertType
-import com.pieaksoft.event.consumer.android.model.Location
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
@@ -19,7 +19,7 @@ class InsertEventSecondFragment :
     private val eventModel: Event by lazy {
         Event(
             "",
-            eventType = EventInsertType.statusChange.type,
+            eventType = EventInsertType.DUTY_STATUS_CHANGE.type,
             coordinates = Location(latitude = -10.12345f, longitude = 48.23432f),
             shippingDocumentNumber = "test",
             totalEngineHours = 20,
@@ -45,7 +45,7 @@ class InsertEventSecondFragment :
     private val profileViewModel: ProfileViewModel by viewModel()
 
     private val timezone: Timezone? by lazy {
-        Timezone.findByValue(timezone = profileViewModel.getUserTimezone() ?: "")
+        Timezone.findByName(timezone = profileViewModel.getUserTimezone() ?: "")
     }
 
     override fun setupView() = with(binding) {

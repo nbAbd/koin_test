@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMdBinding
-import com.pieaksoft.event.consumer.android.model.DataGenerator
+import com.pieaksoft.event.consumer.android.model.md.DataGenerator
 import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.DiagnosticsAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
@@ -20,7 +20,7 @@ class MDFragment : BaseFragment<FragmentMdBinding>() {
     private val diagnosticsAdapter by lazy { DiagnosticsAdapter() }
 
     override fun setupView() {
-        diagnosticsAdapter.diagnostics = DataGenerator.getMD()
+        diagnosticsAdapter.diagnostics = DataGenerator.createMD()
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

@@ -3,13 +3,13 @@ package com.pieaksoft.event.consumer.android.di
 import android.content.Context
 import androidx.room.Room
 import com.pieaksoft.event.consumer.android.db.AppDataBase
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.events.EventsRepository
 import com.pieaksoft.event.consumer.android.events.EventsRepositoryImpl
-import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepo
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepoImpl
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
+import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationViewModel
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepository
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepositoryImpl
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
@@ -36,5 +36,5 @@ val AppModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EventViewModel(get(), get()) }
-    viewModel { EventsCalculationViewModel(get()) }
+    viewModel { EventsCalculationViewModel(get(), get()) }
 }

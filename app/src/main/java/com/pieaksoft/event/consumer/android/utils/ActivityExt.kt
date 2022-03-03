@@ -42,39 +42,6 @@ inline fun <reified T : Any> Activity.launchActivity(
 
 inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(context, T::class.java)
 
-
-//fun Context.shareApp() {
-//    val sendIntent: Intent = Intent().apply {
-//        action = Intent.ACTION_SEND
-//        putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_title))
-//        type = "text/plain"
-//    }
-//    startActivity(Intent.createChooser(sendIntent, "Send to"))
-//}
-
-
-fun Context.shareMessage(message: String) {
-    startActivity(Intent.createChooser(getShareIntent(message), "Send to"))
-}
-
-fun getShareIntent(textMessage: String): Intent {
-    return Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, textMessage)
-        type = "text/plain"
-    }
-}
-
-fun Intent.startActivity(context: Context) {
-    context.startActivity(this)
-}
-
-//fun Activity.requestLocationPermissions() {
-//    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION),
-//            Const.PERMISSIONS_REQUEST)
-//}
-
 /**
  * Hides the system bars and makes the Activity "fullscreen". If this should be the default
  * state it should be called from [Activity.onWindowFocusChanged] if hasFocus is true.

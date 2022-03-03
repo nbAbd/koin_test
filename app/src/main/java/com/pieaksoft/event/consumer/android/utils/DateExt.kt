@@ -9,24 +9,14 @@ import java.util.*
 @SuppressLint("SimpleDateFormat")
 fun Date.formatToServerDateDefaults(timezone: Timezone? = null): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    timezone?.let {
-        when (it) {
-            Timezone.UTC -> sdf.toUTC()
-            else -> Unit
-        }
-    }
+    timezone?.let { sdf.timeZone = TimeZone.getTimeZone(it.value) }
     return sdf.format(this)
 }
 
 @SuppressLint("SimpleDateFormat")
 fun Date.formatToServerTimeDefaults(timezone: Timezone? = null): String {
     val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-    timezone?.let {
-        when (it) {
-            Timezone.UTC -> sdf.toUTC()
-            else -> Unit
-        }
-    }
+    timezone?.let { sdf.timeZone = TimeZone.getTimeZone(it.value) }
     return sdf.format(this)
 }
 
@@ -64,16 +54,10 @@ fun Date.addSeconds(seconds: Int): Date {
 
 fun String.getDateFromString(): Date {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    return dateFormat.parse(this)
+    return dateFormat.parse(this)!!
 }
 
 fun Date.formatToServerDateDefaults2(): String {
     val sdf = SimpleDateFormat("dd-MMM-yyyy", Locale.US)
     return sdf.format(this)
-}
-
-fun getCurrentTime() = Calendar.getInstance().time.time / 1000
-
-fun SimpleDateFormat.toUTC() {
-    timeZone = TimeZone.getTimeZone("UTC")
 }

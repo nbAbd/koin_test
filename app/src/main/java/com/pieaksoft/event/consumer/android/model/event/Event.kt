@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.model
+package com.pieaksoft.event.consumer.android.model.event
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -30,7 +30,7 @@ data class Event(
     val driverLocationDescription: String? = "",
     val dutyStatus: String? = "",
     @TypeConverters(Certification::class)
-    var certification: Certification?,
+    var certification: Certification? = null,
     @TypeConverters(CertificationListConverter::class)
     var certifyDate: List<Certification>? = emptyList(),
     val recordOrigin: String? = "",

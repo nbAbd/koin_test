@@ -1,6 +1,7 @@
-package com.pieaksoft.event.consumer.android.model
+package com.pieaksoft.event.consumer.android.model.md
 
-import com.pieaksoft.event.consumer.android.model.MD.*
+import com.pieaksoft.event.consumer.android.model.md.MD.DiagnosticsCategory
+import com.pieaksoft.event.consumer.android.model.md.MD.DiagnosticsContent
 
 sealed class MD {
     class DiagnosticsCategory(var categoryName: String = "") : MD()
@@ -8,7 +9,7 @@ sealed class MD {
 }
 
 object DataGenerator {
-    fun getMD(): List<MD> {
+    fun createMD(): List<MD> {
         return listOf(
             DiagnosticsCategory(categoryName = "Data Diagnostics:"),
             DiagnosticsContent(content = "Power data diagnostic", isFailed = false),

@@ -1,9 +1,9 @@
 package com.pieaksoft.event.consumer.android.ui.activities.login
 
-import com.pieaksoft.event.consumer.android.model.AuthModel
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Result
 import com.pieaksoft.event.consumer.android.model.Success
+import com.pieaksoft.event.consumer.android.model.auth.AuthModel
 import com.pieaksoft.event.consumer.android.network.ServiceApi
 
 class LoginRepoImpl(private val serviceApi: ServiceApi): LoginRepo {

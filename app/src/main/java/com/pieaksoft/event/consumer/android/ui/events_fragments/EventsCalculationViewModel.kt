@@ -4,21 +4,26 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
+import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.events.EventViewModel
+import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.getCode
+import com.pieaksoft.event.consumer.android.utils.*
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 const val on_Duty_Cycle_Minutes = 4200
 const val on_Duty_Window_Minutes = 840
 const val sleeper_Beth_Minutes = 600
 const val on_Duty_Break_In_Minutes = 480
 
-class EventsCalculationViewModel(val app: Application) : BaseViewModel(app) {
-
+class EventsCalculationViewModel(val app: Application, private val eventViewModel: EventViewModel) :
+    BaseViewModel(app) {
 
     private var onDutyCycleMinutes = 4200 // per minute 70 hour
     private var onDutyWindowMinutes = 840 // per minute 14 hour
@@ -29,18 +34,18 @@ class EventsCalculationViewModel(val app: Application) : BaseViewModel(app) {
     private var needThiryMinuteBreak: Boolean = false
     private var needResetCycleDay = 9
 
-    private val _drivingEvent = SingleLiveEvent<Long>()
+    private val _drivingEvent = MutableLiveData<Long>()
     val drivingEventLiveData: LiveData<Long> = _drivingEvent
-    private val _drivingLimit = SingleLiveEvent<Long>()
+    private val _drivingLimit = MutableLiveData<Long>()
     val drivingLimitLiveData: LiveData<Long> = _drivingLimit
-    private val _onEvent = SingleLiveEvent<Long>()
+    private val _onEvent = MutableLiveData<Long>()
     val onEventLiveData: LiveData<Long> = _onEvent
-    private val _dutyCycleEvent = SingleLiveEvent<Long>()
+    private val _dutyCycleEvent = MutableLiveData<Long>()
     val dutyCycleEventLiveData: LiveData<Long> = _dutyCycleEvent
 
-    private val _onEventWarning = SingleLiveEvent<Boolean>()
+    private val _onEventWarning = MutableLiveData<Boolean>()
     val onEventWarningLiveData: LiveData<Boolean> = _onEventWarning
-    private val _dutyCycleWarning = SingleLiveEvent<Boolean>()
+    private val _dutyCycleWarning = MutableLiveData<Boolean>()
     val dutyCycleWarningLiveData: LiveData<Boolean> = _dutyCycleWarning
 
 
@@ -134,7 +139,7 @@ class EventsCalculationViewModel(val app: Application) : BaseViewModel(app) {
                     onDutyCycleMinutes -= duration.toInt()
                 }
                 event.getCode() == "SB" -> {
-                    var workingTime = if (duration > 0) duration else (-1 * duration)
+                    val workingTime = if (duration > 0) duration else (-1 * duration)
                     if ((index + 1) < reverseEvents.size && reverseEvents[index + 1].eventCode == "Off") {
                         needResetCycleMinutes -= workingTime
                     } else {
@@ -204,9 +209,12 @@ class EventsCalculationViewModel(val app: Application) : BaseViewModel(app) {
     }
 
     private fun sendResetCycle() {
-        // var event = Event()
-//        event.eventType = . CYCLE_RESET
-//        event.eventCode = . CYCLE_RESET
-//        viewModel.postEvent(event: event)
+        val event = Event()
+        val timezone = Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
+        event.date = Date().formatToServerDateDefaults(timezone = timezone)
+        event.time = Date().formatToServerTimeDefaults(timezone = timezone)
+        event.eventType = EventInsertType.CYCLE_RESET.type
+        event.eventCode = EventCode.CYCLE_RESET.code
+        eventViewModel.insertEvent(e = event)
     }
 }

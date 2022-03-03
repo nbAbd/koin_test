@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.model.GantItemPoint
+import com.pieaksoft.event.consumer.android.model.gant.GantItemPoint
 import com.pieaksoft.event.consumer.android.utils.hide
 import com.pieaksoft.event.consumer.android.utils.show
 import com.pieaksoft.event.consumer.android.utils.toColorInt

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.model.gant.MyGantItem
 import miguelbcr.ui.tableFixHeadesWrapper.TableFixHeaderAdapter
 
 class TimeCellView : FrameLayout,

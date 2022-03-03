@@ -13,7 +13,5 @@ abstract class BaseMVVMFragment<VB : ViewBinding, VM : BaseViewModel> : BaseFrag
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun setupView() {
-
-    }
+    override fun setupView() {}
 }

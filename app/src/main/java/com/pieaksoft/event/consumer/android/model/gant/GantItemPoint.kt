@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.model
+package com.pieaksoft.event.consumer.android.model.gant
 
 class GantItemPoint(
     var title: String = "",

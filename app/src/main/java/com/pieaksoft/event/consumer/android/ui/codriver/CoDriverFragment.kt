@@ -119,13 +119,9 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
                 binding.additionalDriver.setDriverInfo(it.last(), false)
                 binding.additionalDriver.setEmpty(false)
                 binding.additionalDriver.setOnClickListener {
-                    Dialogs.showSwapDriversDialog(
-                        requireActivity(),
-                        object : Dialogs.SwapDriversListener {
-                            override fun onSwapDriversClick() {
-                                viewModel.swapDrivers()
-                            }
-                        })
+                    Dialogs.showSwapDriversDialog(requireActivity()) {
+                        viewModel.swapDrivers()
+                    }
                 }
             }
         })

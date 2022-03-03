@@ -1,8 +1,8 @@
 package com.pieaksoft.event.consumer.android.events
 
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.Report
 import com.pieaksoft.event.consumer.android.model.Result
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.report.Report
 
 interface EventsRepository {
     suspend fun insertEvent(event: Event): Result<Event, Exception>

@@ -1,9 +1,9 @@
 package com.pieaksoft.event.consumer.android.network
 
-import com.pieaksoft.event.consumer.android.model.AuthModel
-import com.pieaksoft.event.consumer.android.model.Event
+import com.pieaksoft.event.consumer.android.model.auth.AuthModel
+import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.profile.Profile
-import com.pieaksoft.event.consumer.android.model.Report
+import com.pieaksoft.event.consumer.android.model.report.Report
 import retrofit2.http.*
 
 interface ServiceApi {

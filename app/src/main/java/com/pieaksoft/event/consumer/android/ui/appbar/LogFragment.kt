@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.EditEvent
-import com.pieaksoft.event.consumer.android.model.EventInsertCode
+import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.EventListAdapter
@@ -32,7 +32,6 @@ import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import java.util.*
 
 class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     init {
@@ -45,7 +44,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
-            viewModel.setEventInsertCode(code = EventInsertCode.getByCode(event.eventCode ?: ""))
+            viewModel.setEventInsertCode(code = EventCode.findByCode(event.eventCode ?: ""))
             viewModel.setEventInsertDate(date = event.certifyDate?.first()?.date?.getDateFromString()!!)
             showInsertEventPagerDialog()
         }
@@ -247,14 +246,10 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     private fun selectDate() {
-        Dialogs.showDateTimeSelector(
-            requireContext(),
-            object : Dialogs.DateSelectListener {
-                override fun onDateSelect(date: Date) {
-                    viewModel.setEventInsertDate(date = date)
-                    showInsertEventPagerDialog()
-                }
-            })
+        Dialogs.showDateTimeSelector(requireContext()) { date ->
+            viewModel.setEventInsertDate(date = date)
+            showInsertEventPagerDialog()
+        }
     }
 
     private fun showInsertEventPagerDialog() {

@@ -1,6 +1,6 @@
 package com.pieaksoft.event.consumer.android.utils
 
-import com.pieaksoft.event.consumer.android.model.Event
+import com.pieaksoft.event.consumer.android.model.event.Event
 
 object Storage {
     var eventList: List<Event> = emptyList()

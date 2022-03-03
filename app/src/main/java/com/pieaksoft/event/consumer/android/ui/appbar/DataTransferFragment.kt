@@ -8,8 +8,8 @@ import androidx.navigation.fragment.findNavController
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentDotInspectBinding
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.Report
-import com.pieaksoft.event.consumer.android.model.ReportType
+import com.pieaksoft.event.consumer.android.model.report.Report
+import com.pieaksoft.event.consumer.android.model.report.ReportType
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.sharedViewModel

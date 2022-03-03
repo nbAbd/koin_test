@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
 
+import android.annotation.SuppressLint
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ItemDiagnosticCategoryBinding
 import com.pieaksoft.event.consumer.android.databinding.ItemUsaRulesBinding
-import com.pieaksoft.event.consumer.android.model.MD
-import com.pieaksoft.event.consumer.android.model.MD.DiagnosticsCategory
-import com.pieaksoft.event.consumer.android.model.MD.DiagnosticsContent
+import com.pieaksoft.event.consumer.android.model.md.MD
+import com.pieaksoft.event.consumer.android.model.md.MD.DiagnosticsCategory
+import com.pieaksoft.event.consumer.android.model.md.MD.DiagnosticsContent
 import com.pieaksoft.event.consumer.android.views.dp
 
 class DiagnosticsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var diagnostics: List<MD> = emptyList()
+        @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()

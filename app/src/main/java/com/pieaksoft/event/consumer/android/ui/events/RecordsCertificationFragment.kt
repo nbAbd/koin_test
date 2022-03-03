@@ -5,11 +5,11 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pieaksoft.event.consumer.android.databinding.FragmentRecordsCertificationBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.EventInsertCode
-import com.pieaksoft.event.consumer.android.model.EventInsertType
-import com.pieaksoft.event.consumer.android.model.Location
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
@@ -30,8 +30,8 @@ class RecordsCertificationFragment :
     private val tempEvent: Event by lazy {
         Event(
             "",
-            EventInsertType.certificate.type,
-            EventInsertCode.FirstCertification.code,
+            EventInsertType.DRIVERS_CERTIFICATION_RE_CERTIFICATION_OF_RECORDS.type,
+            EventCode.DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD.code,
             date = Date().formatToServerDateDefaults(),
             time = Date().formatToServerTimeDefaults(),
             Location(-10.12345f, 48.23432f),
