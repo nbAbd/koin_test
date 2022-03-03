@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.model.GantItemPoint
-import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.model.gant.GantItemPoint
+import com.pieaksoft.event.consumer.android.model.gant.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.getGantColor
 
 class EventRowAdapter : RecyclerView.Adapter<EventRowAdapter.EventRowAdapterViewHolder>() {

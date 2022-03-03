@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.GantItemPoint
-import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.gant.GantItemPoint
+import com.pieaksoft.event.consumer.android.model.gant.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.Common
 import com.pieaksoft.event.consumer.android.utils.getCode
 
@@ -141,7 +141,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.EventsAdapterViewHolder
     }
 
     private val header: MutableList<String>
-        private get() {
+        get() {
             val header: MutableList<String> = ArrayList()
             for (i in 0 until Common.HEADER_COUNT) header.add(StringBuilder().append(i).toString())
             return header

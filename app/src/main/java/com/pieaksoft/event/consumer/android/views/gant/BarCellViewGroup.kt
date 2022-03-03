@@ -4,11 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.model.MyGantItem
+import com.pieaksoft.event.consumer.android.model.gant.MyGantItem
 import com.pieaksoft.event.consumer.android.utils.getGantColor
 import com.pieaksoft.event.consumer.android.utils.toColorInt
 import miguelbcr.ui.tableFixHeadesWrapper.TableFixHeaderAdapter
@@ -37,18 +34,5 @@ class BarCellViewGroup : FrameLayout,
         } else {
             line_body?.setBackgroundResource(R.drawable.dotted)
         }
-//        when {
-//            bodyList!![col] == "error" -> {
-//                line_body?.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_dark))
-//            }
-//            bodyList!![col] == "done" -> {
-//                line_body?.setBackgroundResource(R.drawable.gant_line)
-//                line_body?.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark))
-//            }
-//            else -> {
-//                line_body?.setBackgroundResource(R.drawable.dotted)
-//            }
-//        }
-
     }
 }

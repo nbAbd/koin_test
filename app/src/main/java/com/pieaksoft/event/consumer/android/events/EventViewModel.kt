@@ -4,7 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
+import com.pieaksoft.event.consumer.android.model.Failure
+import com.pieaksoft.event.consumer.android.model.Success
+import com.pieaksoft.event.consumer.android.model.event.Certification
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.Storage
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
@@ -16,7 +22,6 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.collections.set
 
 class EventViewModel(app: Application, private val repository: EventsRepository) :
     BaseViewModel(app) {
@@ -35,8 +40,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     ///////////////////////////////////////////////////////////////////////////
     // Insert event
     ///////////////////////////////////////////////////////////////////////////
-    private val _eventInsertCode = MutableLiveData<EventInsertCode?>()
-    val eventInsertCode: LiveData<EventInsertCode?> = _eventInsertCode
+    private val _eventInsertCode = MutableLiveData<EventCode?>()
+    val eventInsertCode: LiveData<EventCode?> = _eventInsertCode
 
     private val _eventInsertDate = MutableLiveData<Date?>()
     val eventInsertDate: LiveData<Date?> = _eventInsertDate
@@ -155,7 +160,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        Storage.eventList = events.filter { it.eventType == EventInsertType.statusChange.type }
+        Storage.eventList =
+            events.filter { it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type }
         Storage.eventListGroupByDate = calculateEvents()
         eventList.value = events
         eventListByDate.value = calculateEvents()
@@ -259,7 +265,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         }
     }
 
-    fun setEventInsertCode(code: EventInsertCode) {
+    fun setEventInsertCode(code: EventCode) {
         _eventInsertCode.value = code
     }
 

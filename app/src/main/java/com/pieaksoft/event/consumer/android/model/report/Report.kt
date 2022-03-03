@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.model
+package com.pieaksoft.event.consumer.android.model.report
 
 data class Report(
     var reportType: ReportType = ReportType.WEB_SERVICE,

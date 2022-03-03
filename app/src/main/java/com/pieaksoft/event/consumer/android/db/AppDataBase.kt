@@ -8,8 +8,9 @@ import com.pieaksoft.event.consumer.android.db.converters.CertificationListConve
 import com.pieaksoft.event.consumer.android.db.converters.LocationConverter
 import com.pieaksoft.event.consumer.android.db.dao.AppDao
 import com.pieaksoft.event.consumer.android.db.dao.ProfileDao
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.profile.*
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.profile.Converters
+import com.pieaksoft.event.consumer.android.model.profile.Profile
 
 @Database(
     entities = [

@@ -2,7 +2,7 @@ package com.pieaksoft.event.consumer.android.db.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.pieaksoft.event.consumer.android.model.Certification
+import com.pieaksoft.event.consumer.android.model.event.Certification
 
 class CertificationConverter {
     @TypeConverter

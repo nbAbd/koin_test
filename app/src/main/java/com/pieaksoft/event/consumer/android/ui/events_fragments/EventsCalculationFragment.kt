@@ -4,11 +4,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
-import com.pieaksoft.event.consumer.android.utils.Storage
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class EventsCalculationFragment :
     BaseMVVMFragment<FragmentHomeBinding, EventsCalculationViewModel>() {
@@ -16,16 +16,15 @@ class EventsCalculationFragment :
         requiresActionBar = true
     }
 
-    override val viewModel: EventsCalculationViewModel by viewModel()
+    override val viewModel: EventsCalculationViewModel by sharedViewModel()
+    private val eventViewModel: EventViewModel by sharedViewModel()
 
-    override fun setupView() {
+    override fun setupView() {}
+
+    override fun onResume() {
+        super.onResume()
+        eventViewModel.getEventList()
         viewModel.calculateEvents()
-        if (Storage.eventList.isNotEmpty()) {
-            viewModel.startCountDrivingEvent()
-            viewModel.startCountOnEvent()
-            viewModel.startCountDutyCycleEvent()
-            viewModel.startCountDrivingLimit()
-        }
     }
 
     override fun observe() {
@@ -46,7 +45,7 @@ class EventsCalculationFragment :
             if (it < 0) {
                 Toast.makeText(
                     requireContext(),
-                    "Warning!\n You continously onduty more 14 hour",
+                    "Warning!\n You continuously on duty more 14 hour",
                     Toast.LENGTH_SHORT
                 ).show()
                 binding.progressBar2.progressBarColor =
@@ -65,7 +64,7 @@ class EventsCalculationFragment :
             if (it < 0) {
                 Toast.makeText(
                     requireContext(),
-                    "Warning!\n You onduty more 70 hour",
+                    "Warning!\n You on duty more 70 hour",
                     Toast.LENGTH_SHORT
                 ).show()
                 binding.progressBar3.progressBarColor =
@@ -90,7 +89,7 @@ class EventsCalculationFragment :
         viewModel.onEventWarningLiveData.observe(this, {
             Toast.makeText(
                 requireContext(),
-                "Warning!\n You continously onduty more 14 hour",
+                "Warning!\n You continuously on duty more 14 hour",
                 Toast.LENGTH_SHORT
             ).show()
         })
@@ -98,9 +97,19 @@ class EventsCalculationFragment :
         viewModel.dutyCycleEventLiveData.observe(this, {
             Toast.makeText(
                 requireContext(),
-                "Warning!\n You onduty more 70 hour",
+                "Warning!\n You on duty more 70 hour",
                 Toast.LENGTH_SHORT
             ).show()
+        })
+
+        // observe event changes
+        eventViewModel.eventList.observe(this, {
+            if (it.isNotEmpty()) {
+                viewModel.startCountDrivingEvent()
+                viewModel.startCountOnEvent()
+                viewModel.startCountDutyCycleEvent()
+                viewModel.startCountDrivingLimit()
+            }
         })
     }
 }

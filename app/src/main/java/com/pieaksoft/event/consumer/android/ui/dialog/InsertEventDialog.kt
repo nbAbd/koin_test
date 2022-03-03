@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.DialogInsertEventBinding
-import com.pieaksoft.event.consumer.android.model.EventInsertCode
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.utils.hideSystemUI
 
-class InsertEventDialog(private val action: (InsertEventDialog, EventInsertCode) -> Unit) :
+class InsertEventDialog(private val action: (InsertEventDialog, EventCode) -> Unit) :
     DialogFragment() {
     private var _binding: DialogInsertEventBinding? = null
     private val binding get() = _binding!!
@@ -61,10 +61,22 @@ class InsertEventDialog(private val action: (InsertEventDialog, EventInsertCode)
 
     private val eventButtonListener = View.OnClickListener {
         when (it.id) {
-            R.id.event_off_btn -> action.invoke(this, EventInsertCode.Off)
-            R.id.event_on_btn -> action.invoke(this, EventInsertCode.On)
-            R.id.event_sleep_btn -> action.invoke(this, EventInsertCode.Sleep)
-            R.id.event_driving_btn -> action.invoke(this, EventInsertCode.Driving)
+            R.id.event_off_btn -> action.invoke(
+                this,
+                EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
+            )
+            R.id.event_on_btn -> action.invoke(
+                this,
+                EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
+            )
+            R.id.event_sleep_btn -> action.invoke(
+                this,
+                EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
+            )
+            R.id.event_driving_btn -> action.invoke(
+                this,
+                EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
+            )
             R.id.event_cancel_btn -> dialog?.dismiss()
         }
     }

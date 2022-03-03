@@ -2,7 +2,7 @@ package com.pieaksoft.event.consumer.android.db.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.pieaksoft.event.consumer.android.model.Certification
+import com.pieaksoft.event.consumer.android.model.event.Certification
 
 class CertificationListConverter {
     @TypeConverter
@@ -11,7 +11,7 @@ class CertificationListConverter {
     }
 
     @TypeConverter
-    fun toCertifications(data: String): List<Certification>? {
+    fun toCertifications(data: String): List<Certification> {
         val objects =
             Gson().fromJson(data, Array<Certification>::class.java) as Array<Certification>
         return objects.toList()

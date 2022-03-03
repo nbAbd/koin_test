@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListBinding
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListHeaderBinding
-import com.pieaksoft.event.consumer.android.model.EditEvent
-import com.pieaksoft.event.consumer.android.model.Event
-import com.pieaksoft.event.consumer.android.model.EventInsertCode
-import com.pieaksoft.event.consumer.android.model.formatDuration
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
+import com.pieaksoft.event.consumer.android.model.event.formatDuration
 
 class EventListAdapter(private val editCallback: (Event) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -104,7 +104,7 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
                 }
             }
 
-            EventTypeAppearance.getByCode(event.eventCode ?: "").appearance.apply {
+            EventTypeAppearance.appearanceBy(event.eventCode ?: "").appearance.apply {
                 eventType.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(root.context, first))
                 eventType.text = root.context.getString(second)
@@ -148,9 +148,15 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
 
         companion object {
             private val DEFAULT = OFF
-            fun getByCode(code: String) =
-                values().find { it.name == EventInsertCode.getByCode(code).name.uppercase() }
-                    ?: DEFAULT
+            fun appearanceBy(code: String): EventTypeAppearance {
+                return when (EventCode.findByCode(code)) {
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> OFF
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> SLEEP
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> DRIVING
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> ON
+                    else -> DEFAULT
+                }
+            }
         }
     }
 }

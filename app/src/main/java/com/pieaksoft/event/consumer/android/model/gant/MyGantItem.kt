@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.model
+package com.pieaksoft.event.consumer.android.model.gant
 
 import android.graphics.Point
 

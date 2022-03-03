@@ -1,7 +1,11 @@
 package com.pieaksoft.event.consumer.android.events
 
 import com.pieaksoft.event.consumer.android.db.AppDataBase
-import com.pieaksoft.event.consumer.android.model.*
+import com.pieaksoft.event.consumer.android.model.Failure
+import com.pieaksoft.event.consumer.android.model.Result
+import com.pieaksoft.event.consumer.android.model.Success
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.network.ServiceApi
 
 class EventsRepositoryImpl(private val serviceApi: ServiceApi, val db: AppDataBase) :
