@@ -25,21 +25,8 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
 //            }
 //        }
 //    }
-//
-//    override fun bindViewModel() {
-//    }
-//
-//
-//    companion object {
-//        private const val ANIMATION_DURATION = 200L
-//
-//        fun newInstance(context: Context): Intent {
-//            return newIntent<SignatureActivity>(context).apply {
-//            }
-//        }
-//    }
     override fun setupView() {
         TODO("Not yet implemented")
+        binding.signaturePad
     }
-
 }

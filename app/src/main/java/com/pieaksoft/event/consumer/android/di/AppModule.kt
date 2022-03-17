@@ -10,6 +10,9 @@ import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepo
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginRepoImpl
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.events_fragments.EventCalculationViewModel
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuRepository
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuRepositoryImpl
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuViewModel
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepository
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepositoryImpl
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
@@ -31,10 +34,12 @@ val AppModule = module {
     }
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
+    single<MenuRepository> { MenuRepositoryImpl(get(), get()) }
     single<EventsRepository> { EventsRepositoryImpl(get(), get()) }
 
     viewModel { LoginViewModel(get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EventViewModel(get(), get()) }
     viewModel { EventCalculationViewModel(get()) }
+    viewModel { MenuViewModel(get(),get()) }
 }

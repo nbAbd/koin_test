@@ -4,6 +4,9 @@ import com.pieaksoft.event.consumer.android.model.auth.AuthModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.profile.Profile
 import com.pieaksoft.event.consumer.android.model.report.Report
+import okhttp3.MultipartBody
+import okhttp3.Response
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface ServiceApi {
@@ -27,4 +30,10 @@ interface ServiceApi {
 
     @POST("api/report")
     suspend fun sendReport(@Body report: Report)
+
+    @POST("api/upload")
+    suspend fun uploadSignature(@Part file:MultipartBody.Part):MultipartBody.Part
+
+    @GET("api/download")
+    suspend fun downloadSignature(@Query("userId") userId: String):MultipartBody.Part
 }

@@ -133,6 +133,8 @@
     <string name="edit">Edit</string>
     <string name="drive">Drive</string>
     <string name="only_drivers_can_login">Only drivers can login</string>
+    <string name="clear_pad">Clear Pad</string>
+    <string name="save_signature">Save Signature</string>
 
     <string-array name="countries">
         <item>Canada</item>

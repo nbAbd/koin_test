@@ -3,8 +3,11 @@ package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
+import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +18,18 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
 
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
+
+    private lateinit var navController: NavController
+
     private val settingData: List<String> by lazy {
         listOf(
             "Signature"
         )
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupNavController()
     }
 
     private val settingsAdapter: SettingsAdapter by lazy { SettingsAdapter { v -> onClickItem(v) } }
@@ -59,9 +70,15 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         }
     }
 
+    private fun setupNavController() = with(binding) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+    }
+
     private fun onClickItem(itemName: String) {
-//        when (itemName) {
-//            "Signature" -> startActivity(SignatureActivity.newInstance(requireContext()))
-//        }
+        when (itemName) {
+            "Signature" -> navController.navigate(R.id.signatureFragment)
+        }
     }
 }
