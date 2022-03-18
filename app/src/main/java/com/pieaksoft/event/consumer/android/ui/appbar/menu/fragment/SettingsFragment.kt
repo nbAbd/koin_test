@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentSettingsBinding
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.SettingsAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
@@ -21,9 +22,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
 
     private lateinit var navController: NavController
 
-    private val settingData: List<String> by lazy {
+    val settingData: List<SettingsAdapter.SettingItem> by lazy {
         listOf(
-            "Signature"
+            SettingsAdapter.SettingItem.SIGNATURE
         )
     }
 
@@ -32,7 +33,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         setupNavController()
     }
 
-    private val settingsAdapter: SettingsAdapter by lazy { SettingsAdapter { v -> onClickItem(v) } }
+    private val settingsAdapter: SettingsAdapter by lazy {
+        SettingsAdapter { value -> onClickItem(value) }
+    }
 
     init {
         requiresBottomNavigation = false
@@ -51,10 +54,16 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 ) {
                     val itemPosition = parent.getChildAdapterPosition(view)
                     // hide divider for the last child
-                    if (itemPosition == state.itemCount.minus(1)) {
-                        outRect.setEmpty()
-                    } else {
-                        super.getItemOffsets(outRect, view, parent, state)
+                    when {
+                        settingData.size == 1 -> {
+                            super.getItemOffsets(outRect, view, parent, state)
+                        }
+                        itemPosition == state.itemCount.minus(1) -> {
+                            outRect.setEmpty()
+                        }
+                        else -> {
+                            super.getItemOffsets(outRect, view, parent, state)
+                        }
                     }
                 }
             }.also {
@@ -64,21 +73,20 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                         R.color.white
                     ), PorterDuff.Mode.SRC_IN
                 )
+                addItemDecoration(it)
             }
-            addItemDecoration(decoration)
             adapter = settingsAdapter
         }
     }
 
     private fun setupNavController() = with(binding) {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+        val navCont = (activity as MainActivity).navController
+        navController = navCont
     }
 
-    private fun onClickItem(itemName: String) {
-        when (itemName) {
-            "Signature" -> navController.navigate(R.id.signatureFragment)
+    private fun onClickItem(item: SettingsAdapter.SettingItem) {
+        when (item) {
+            SettingsAdapter.SettingItem.SIGNATURE -> navController.navigate(R.id.signatureFragment)
         }
     }
 }

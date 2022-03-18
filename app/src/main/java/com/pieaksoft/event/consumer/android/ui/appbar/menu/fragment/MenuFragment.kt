@@ -49,6 +49,7 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
             itemMd.addOnCheckedChangeListener(menuItemCheckListener)
             itemFaq.addOnCheckedChangeListener(menuItemCheckListener)
             itemLogout.addOnCheckedChangeListener(menuItemCheckListener)
+            itemSettings.addOnCheckedChangeListener(menuItemCheckListener)
         }
     }
 
@@ -70,8 +71,9 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
         when (button.id) {
             R.id.item_usa_rules -> navController.navigate(R.id.usa_rules_fragment)
             R.id.item_md -> navController.navigate(R.id.md_fragment)
-            R.id.item_faq -> Unit
+            R.id.item_faq -> navController.navigate(R.id.empty_menu_fragment)
             R.id.item_logout -> if (isCheck) showLogoutDialog()
+            R.id.item_settings -> navController.navigate(R.id.settingsFragment)
         }
     }
 

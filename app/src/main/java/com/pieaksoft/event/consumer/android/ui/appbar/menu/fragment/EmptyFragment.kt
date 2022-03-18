@@ -4,6 +4,9 @@ import com.pieaksoft.event.consumer.android.databinding.FragmentEmptyMenuBinding
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
 class EmptyFragment : BaseFragment<FragmentEmptyMenuBinding>() {
+    init {
+        requiresBottomNavigation=false
+    }
     override fun setupView() {
 
     }

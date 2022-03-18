@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.network
 
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable
 import com.pieaksoft.event.consumer.android.model.auth.AuthModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.profile.Profile
@@ -31,9 +32,10 @@ interface ServiceApi {
     @POST("api/report")
     suspend fun sendReport(@Body report: Report)
 
+    @Multipart
     @POST("api/upload")
-    suspend fun uploadSignature(@Part file:MultipartBody.Part):MultipartBody.Part
+    suspend fun uploadSignature(@Part file:MultipartBody.Part):ResponseBody
 
     @GET("api/download")
-    suspend fun downloadSignature(@Query("userId") userId: String):MultipartBody.Part
+    suspend fun downloadSignature(@Header("Authorization") token: String):ResponseBody
 }

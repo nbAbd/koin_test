@@ -135,6 +135,7 @@
     <string name="only_drivers_can_login">Only drivers can login</string>
     <string name="clear_pad">Clear Pad</string>
     <string name="save_signature">Save Signature</string>
+    <string name="settings">Settings</string>
 
     <string-array name="countries">
         <item>Canada</item>

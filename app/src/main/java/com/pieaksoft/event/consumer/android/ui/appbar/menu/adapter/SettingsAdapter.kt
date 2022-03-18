@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.databinding.ItemSettingBinding
 
-class SettingsAdapter(private val onClick: (itemName: String) -> Unit) :
+class SettingsAdapter(val onClick: (item: SettingItem) -> Unit) :
     RecyclerView.Adapter<SettingsAdapter.ItemSettingViewHolder>() {
-    var list = emptyList<String>()
+    var list = emptyList<SettingItem>()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -26,7 +26,7 @@ class SettingsAdapter(private val onClick: (itemName: String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ItemSettingViewHolder, position: Int) {
-        holder.onBind(list[position], onClick)
+        holder.onBind(list[position])
     }
 
     override fun getItemCount(): Int = list.size
@@ -34,12 +34,28 @@ class SettingsAdapter(private val onClick: (itemName: String) -> Unit) :
     inner class ItemSettingViewHolder(val binding: ItemSettingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun onBind(setting: String, onClick: (itemName: String) -> Unit) {
+        fun onBind(setting: SettingItem) {
             binding.apply {
-                settingLabel.text = setting
+                settingLabel.text = setting.value
             }
             binding.root.setOnClickListener {
-                onClick(binding.settingLabel.text.toString())
+                onClick(setting)
+            }
+        }
+    }
+
+    enum class SettingItem {
+        SIGNATURE {
+            override val value: String
+                get() = "Signature"
+        };
+
+        abstract val value: String
+
+        companion object {
+            private val DEFAULT = SIGNATURE
+            fun getByValue(value: String): SettingItem {
+                return values().find { it.value == value } ?: DEFAULT
             }
         }
     }
