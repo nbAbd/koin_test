@@ -39,11 +39,7 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
 
         launch {
             if (isNetworkAvailable) {
-                val result = withContext(Dispatchers.IO) { repository.uploadSignature(file = body) }
-
-                hideProgress()
-
-                when (result) {
+                when (val result = withContext(Dispatchers.IO) { repository.uploadSignature(file = body) }) {
                     is Success -> isUploaded.value = true
                     is Failure -> _error.value = result.error
                 }
@@ -52,13 +48,10 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
     }
 
     fun downloadSignature(token: String) {
-
         launch {
             if (isNetworkAvailable) {
                 val result =
                     withContext(Dispatchers.IO) { repository.downloadSignature(token) }
-
-                hideProgress()
 
                 when (result) {
                     is Success -> result.data.let {
@@ -90,5 +83,4 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
         }
         return file
     }
-
 }

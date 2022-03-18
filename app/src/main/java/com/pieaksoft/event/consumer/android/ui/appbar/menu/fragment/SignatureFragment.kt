@@ -1,11 +1,11 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
 
-import android.graphics.Bitmap
-import android.os.Bundle
-import android.util.Log
-import android.view.View
+import android.app.ProgressDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.navigation.NavController
 import com.pieaksoft.event.consumer.android.databinding.FragmentSignatureBinding
+import com.pieaksoft.event.consumer.android.databinding.ProgressBarBinding
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuViewModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
@@ -14,37 +14,41 @@ import com.pieaksoft.event.consumer.android.utils.get
 import com.pieaksoft.event.consumer.android.utils.visible
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
+
 class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
     init {
         requiresBottomNavigation = false
     }
 
+    private lateinit var proDialog: ProgressDialog
+
     private lateinit var navController: NavController
 
     private val menuViewModel: MenuViewModel by sharedViewModel()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupNavController()
-    }
-
     override fun setupView() {
+        setupPD()
+        setupNavController()
+        menuViewModel.apply {
+            downloadSignature(
+                sharedPrefs.get(SHARED_PREFERENCES_CURRENT_USER_ID, "")
+            )
 
-        menuViewModel.downloadSignature(
-            sharedPrefs.get(SHARED_PREFERENCES_CURRENT_USER_ID, "")
-        )
+            proDialog.show()
 
-        menuViewModel.isUploaded.observe(this) {
-            if (it) navController.navigateUp()
-        }
+            isUploaded.observe(this@SignatureFragment) {
+                if (it) {
+                    navController.navigateUp()
+                    proDialog.hide()
+                }
+            }
 
-        menuViewModel.signature.observe(this) {
-            if (it != null) {
+            signature.observe(this@SignatureFragment) {
+                proDialog.hide()
                 binding.signaturePad.signatureBitmap = it
                 binding.signaturePad.isEnabled = false
-            } else {
-                binding.btnClear.visible(true)
-                binding.btnSave.visible(true)
+                binding.btnClear.visible(false)
+                binding.btnSave.visible(false)
             }
         }
 
@@ -52,6 +56,7 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
             btnSave.setOnClickListener {
                 if (!signaturePad.isEmpty) {
                     menuViewModel.uploadSignature(signaturePad.signatureBitmap)
+                    proDialog.show()
                 }
             }
             btnClear.setOnClickListener {
@@ -66,5 +71,11 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
     private fun setupNavController() = with(binding) {
         val navCont = (activity as MainActivity).navController
         navController = navCont
+    }
+
+    private fun setupPD() {
+        proDialog = ProgressDialog.show(context, null, null, false, false)
+        proDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        proDialog.setContentView(ProgressBarBinding.inflate(layoutInflater).root)
     }
 }
