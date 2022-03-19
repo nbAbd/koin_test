@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
+import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,8 +25,8 @@ import java.io.*
 class MenuViewModel(val app: Application, private val repository: MenuRepository) :
     BaseViewModel(app) {
 
-    private val _signature = MutableLiveData<Bitmap>()
-    val signature: LiveData<Bitmap> = _signature
+    private val _signature = SingleLiveEvent<Bitmap?>()
+    val signature: LiveData<Bitmap?> = _signature
 
     val isUploaded: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -39,7 +40,8 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
 
         launch {
             if (isNetworkAvailable) {
-                when (val result = withContext(Dispatchers.IO) { repository.uploadSignature(file = body) }) {
+                when (val result =
+                    withContext(Dispatchers.IO) { repository.uploadSignature(file = body) }) {
                     is Success -> isUploaded.value = true
                     is Failure -> _error.value = result.error
                 }
@@ -57,7 +59,10 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
                     is Success -> result.data.let {
                         _signature.value = BitmapFactory.decodeStream(it.byteStream())
                     }
-                    is Failure -> _error.value = result.error
+                    is Failure -> {
+                        _error.value = result.error
+                        _signature.value = null
+                    }
                 }
             }
         }

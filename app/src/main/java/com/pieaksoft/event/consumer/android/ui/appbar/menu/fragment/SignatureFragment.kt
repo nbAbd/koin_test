@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import androidx.navigation.NavController
 import com.pieaksoft.event.consumer.android.databinding.FragmentSignatureBinding
 import com.pieaksoft.event.consumer.android.databinding.ProgressBarBinding
@@ -40,15 +41,17 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
                 if (it) {
                     navController.navigateUp()
                     proDialog.hide()
+                    menuViewModel.isUploaded.value = false
+                    menuViewModel.signature.removeObservers(this@SignatureFragment)
                 }
             }
 
             signature.observe(this@SignatureFragment) {
+                if (it != null) {
+                    binding.signaturePad.signatureBitmap = it
+                    disableViews()
+                }
                 proDialog.hide()
-                binding.signaturePad.signatureBitmap = it
-                binding.signaturePad.isEnabled = false
-                binding.btnClear.visible(false)
-                binding.btnSave.visible(false)
             }
         }
 
@@ -77,5 +80,11 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
         proDialog = ProgressDialog.show(context, null, null, false, false)
         proDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         proDialog.setContentView(ProgressBarBinding.inflate(layoutInflater).root)
+    }
+
+    private fun disableViews() {
+        binding.signaturePad.isEnabled = false
+        binding.btnClear.visible(false)
+        binding.btnSave.visible(false)
     }
 }
