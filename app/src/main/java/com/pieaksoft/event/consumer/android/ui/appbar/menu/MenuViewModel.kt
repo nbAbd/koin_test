@@ -43,7 +43,10 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
                 when (val result =
                     withContext(Dispatchers.IO) { repository.uploadSignature(file = body) }) {
                     is Success -> isUploaded.value = true
-                    is Failure -> _error.value = result.error
+                    is Failure -> {
+                        _error.value = result.error
+                        isUploaded.value = false
+                    }
                 }
             }
         }
