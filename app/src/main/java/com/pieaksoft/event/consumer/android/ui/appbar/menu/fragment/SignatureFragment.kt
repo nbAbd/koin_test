@@ -41,8 +41,6 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
                 if (it) {
                     navController.navigateUp()
                     proDialog.hide()
-                    menuViewModel.isUploaded.value = false
-                    menuViewModel.signature.removeObservers(this@SignatureFragment)
                 }
             }
 

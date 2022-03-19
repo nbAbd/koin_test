@@ -28,7 +28,7 @@ class MenuViewModel(val app: Application, private val repository: MenuRepository
     private val _signature = SingleLiveEvent<Bitmap?>()
     val signature: LiveData<Bitmap?> = _signature
 
-    val isUploaded: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUploaded: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     fun uploadSignature(signatureBitmap: Bitmap) {
 
