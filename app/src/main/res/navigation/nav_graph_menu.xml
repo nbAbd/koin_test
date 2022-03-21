@@ -22,4 +22,10 @@
         android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.MDFragment"
         android:label="MD fragment"
         tools:layout="@layout/fragment_md" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

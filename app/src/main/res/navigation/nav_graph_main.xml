@@ -106,4 +106,9 @@
         app:launchSingleTop="true"
         app:popEnterAnim="@anim/slide_in_up"
         app:popExitAnim="@anim/slide_in_down" />
+    <fragment
+        android:id="@+id/signatureFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.SignatureFragment"
+        android:label="fragment_signature"
+        tools:layout="@layout/fragment_signature" />
 </navigation>
