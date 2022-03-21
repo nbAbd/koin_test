@@ -35,7 +35,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
 
-    private lateinit var navController: NavController
+    lateinit var navController: NavController
 
     private val eventViewModel: EventViewModel by viewModel()
 

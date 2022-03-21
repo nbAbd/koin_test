@@ -3,8 +3,8 @@ package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import androidx.navigation.NavController
+import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentSignatureBinding
 import com.pieaksoft.event.consumer.android.databinding.ProgressBarBinding
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
@@ -61,6 +61,7 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
                 }
             }
             btnClear.setOnClickListener {
+                binding.signaturePad.isEnabled = true
                 signaturePad.clear()
             }
             btnExit.setOnClickListener {
@@ -82,7 +83,6 @@ class SignatureFragment : BaseFragment<FragmentSignatureBinding>() {
 
     private fun disableViews() {
         binding.signaturePad.isEnabled = false
-        binding.btnClear.visible(false)
-        binding.btnSave.visible(false)
+        binding.btnClear.text = resources.getString(R.string.change_signature)
     }
 }
