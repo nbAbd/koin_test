@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/breakInFragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationFragment"
+        android:name="com.pieaksoft.event.consumer.android.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_co_driver" />
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/drivingFragment"

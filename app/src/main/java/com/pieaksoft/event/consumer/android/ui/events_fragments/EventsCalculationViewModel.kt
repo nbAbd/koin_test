@@ -1,8 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.enums.EventCode
@@ -47,51 +45,6 @@ class EventsCalculationViewModel(val app: Application, private val eventViewMode
     val onEventWarningLiveData: LiveData<Boolean> = _onEventWarning
     private val _dutyCycleWarning = MutableLiveData<Boolean>()
     val dutyCycleWarningLiveData: LiveData<Boolean> = _dutyCycleWarning
-
-
-    private var drivingTimer = Handler(Looper.getMainLooper())
-    private val driverCountTask: Runnable by lazy {
-        kotlinx.coroutines.Runnable {
-            val remainMillis = (onDutyBreakInMinutes) * 60 * 1000
-            _drivingEvent.postValue(remainMillis.toLong())
-            drivingTimer.removeCallbacks(driverCountTask)
-            drivingTimer.postDelayed(driverCountTask, 60000)
-            onDutyBreakInMinutes -= 1
-        }
-    }
-
-    private var onTimer = Handler(Looper.getMainLooper())
-    private val onCountTask: Runnable by lazy {
-        kotlinx.coroutines.Runnable {
-            val remainMillis = (onDutyWindowMinutes) * 60 * 1000
-            _onEvent.postValue(remainMillis.toLong())
-            onTimer.removeCallbacks(onCountTask)
-            onTimer.postDelayed(onCountTask, 60000)
-            onDutyWindowMinutes -= 1
-        }
-    }
-
-    private var dutyCycleTimer = Handler(Looper.getMainLooper())
-    private val dutyCycleCountTask: Runnable by lazy {
-        kotlinx.coroutines.Runnable {
-            val remainMillis = (onDutyCycleMinutes) * 60 * 1000
-            _dutyCycleEvent.postValue(remainMillis.toLong())
-            dutyCycleTimer.removeCallbacks(dutyCycleCountTask)
-            dutyCycleTimer.postDelayed(dutyCycleCountTask, 60000)
-            onDutyCycleMinutes -= 1
-        }
-    }
-
-    private var drivingLimitTimer = Handler(Looper.getMainLooper())
-    private val drivingLimitCountTask: Runnable by lazy {
-        kotlinx.coroutines.Runnable {
-            val remainMillis = (drivingDutyMinutes) * 60 * 1000
-            _dutyCycleEvent.postValue(remainMillis.toLong())
-            drivingLimitTimer.removeCallbacks(drivingLimitCountTask)
-            drivingLimitTimer.postDelayed(drivingLimitCountTask, 60000)
-            drivingDutyMinutes -= 1
-        }
-    }
 
     fun calculateEvents() {
         val reverseEvents = Storage.eventList.reversed()
@@ -156,12 +109,12 @@ class EventsCalculationViewModel(val app: Application, private val eventViewMode
 
             if (onDutyCycleMinutes <= 0) {
                 _dutyCycleWarning.postValue(true)
-                //  showMessage(title: "Warning", messageBody: "You onduty more 70 hour", statusColor: .warning)
+                //  showMessage(title: "Warning", messageBody: "You on duty more 70 hour", statusColor: .warning)
             }
 
             if (onDutyWindowMinutes <= 0) {
                 _onEventWarning.postValue(true)
-                //  showMessage(title: "Warning", messageBody: "You continously onduty more 14 hour", statusColor: .warning)
+                //  showMessage(title: "Warning", messageBody: "You continuously on duty more 14 hour", statusColor: .warning)
             }
         }
 
@@ -171,22 +124,26 @@ class EventsCalculationViewModel(val app: Application, private val eventViewMode
         _drivingLimit.postValue(drivingDutyMinutes.toLong() * 60 * 1000)
     }
 
-    fun startCountDrivingEvent() {
-        drivingTimer.postDelayed(driverCountTask, 60000)
+
+    // 8
+    fun startCountDrivingEvent(onDutyBreakInMillis: Long) {
+        _drivingEvent.postValue(onDutyBreakInMillis)
     }
 
-    fun startCountOnEvent() {
-        onTimer.postDelayed(onCountTask, 60000)
+    // 14
+    fun startCountOnEvent(onDutyWindowMinutes: Long) {
+        _onEvent.postValue(onDutyWindowMinutes)
     }
 
-    fun startCountDutyCycleEvent() {
-        dutyCycleTimer.postDelayed(dutyCycleCountTask, 60000)
+    // 70
+    fun startCountDutyCycleEvent(onDutyCycleMinutes: Long) {
+        _dutyCycleEvent.postValue(onDutyCycleMinutes)
     }
 
-    fun startCountDrivingLimit() {
-        drivingLimitTimer.postDelayed(drivingLimitCountTask, 60000)
+    // 11
+    fun startCountDrivingLimit(drivingDutyMinutes: Long) {
+        _drivingLimit.postValue(drivingDutyMinutes)
     }
-
 
     private fun resetMinutes() {
         onDutyCycleMinutes = 4200

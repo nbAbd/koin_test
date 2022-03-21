@@ -76,10 +76,11 @@
         <entry key="app/src/main/res/drawable/transparent_spacing_drawable.xml" value="0.6296875" />
         <entry key="app/src/main/res/layout/activity_fullscreen.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.625" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.20035479666504658" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.21871752305213557" />
         <entry key="app/src/main/res/layout/bar_view_item.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/certificate_view.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/custom_bottom_navigation_view.xml" value="0.75" />
         <entry key="app/src/main/res/layout/custom_floating_title_edittext.xml" value="0.47421875" />
         <entry key="app/src/main/res/layout/custom_on_off_button.xml" value="0.5" />
         <entry key="app/src/main/res/layout/custom_on_off_layout.xml" value="0.60546875" />
@@ -124,7 +125,7 @@
         <entry key="app/src/main/res/layout/item_gant_first_cell.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/layout/item_row.xml" value="0.16510416666666666" />
         <entry key="app/src/main/res/layout/item_usa_rules.xml" value="0.625" />
-        <entry key="app/src/main/res/layout/layout_appbar.xml" value="0.55" />
+        <entry key="app/src/main/res/layout/layout_appbar.xml" value="0.47291941875825627" />
         <entry key="app/src/main/res/layout/layout_menu.xml" value="0.453881684817296" />
         <entry key="app/src/main/res/layout/log_view.xml" value="0.375" />
         <entry key="app/src/main/res/layout/reg_company.xml" value="0.45" />

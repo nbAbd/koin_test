@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.EventInsertType
+import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
@@ -13,12 +14,15 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.Storage
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -255,9 +259,13 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 event.endDate = Storage.eventList[index + 1].date
                 event.endTime = Storage.eventList[index + 1].time
             } else {
+                val timezone =
+                    Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
+                val zoneId = ZoneId.of(timezone.value)
                 event.endDate =
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-                event.endTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+                    LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                event.endTime =
+                    LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern("HH:mm"))
             }
 
             event.calculateDuration()
