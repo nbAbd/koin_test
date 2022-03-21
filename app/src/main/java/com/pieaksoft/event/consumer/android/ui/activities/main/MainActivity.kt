@@ -2,83 +2,42 @@ package com.pieaksoft.event.consumer.android.ui.activities.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Window
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isGone
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.araujo.jordan.excuseme.ExcuseMe
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ActivityMainBinding
-import com.pieaksoft.event.consumer.android.databinding.CustomOnOffLayoutBinding
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.*
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
     IMainAction {
-    private lateinit var navController: NavController
-    private val bluetoothAdapter: BluetoothAdapter by lazy {
-        (getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
-    }
-    private val bluetoothLeScanner: BluetoothLeScanner by lazy {
-        bluetoothAdapter.bluetoothLeScanner
+
+    companion object {
+        private const val ANIMATION_DURATION = 200L
+
+        fun newInstance(context: Context) = newIntent<MainActivity>(context)
     }
 
-    private val scanSettings by lazy {
-        ScanSettings.Builder()
-            .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-            .setCallbackType(ScanSettings.CALLBACK_TYPE_FIRST_MATCH)
-            .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
-            .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-            .setReportDelay(10L)
-            .build()
-    }
+
+    private lateinit var navController: NavController
 
     private val eventViewModel: EventViewModel by viewModel()
-
-    private val scanCallback by lazy {
-        object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                val device = result?.device
-                Log.e("test_log", "test device = ${device?.name}")
-                super.onScanResult(callbackType, result)
-            }
-
-            override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-                Log.e("test_log", "test results = ${results.toString()}")
-                super.onBatchScanResults(results)
-            }
-
-            override fun onScanFailed(errorCode: Int) {
-                Log.e("test_log", "test error code = $errorCode")
-                super.onScanFailed(errorCode)
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -118,9 +77,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
 
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-        registerReceiver(bluetoothReceiver, filter)
-
         if (!ExcuseMe.doWeHavePermissionFor(
                 this,
                 *PermissionDialog.permissions.toTypedArray()
@@ -137,45 +93,29 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     private fun setupBottomNavigationView() = with(binding) {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        bottomNavigation.apply {
-            setupWithNavController(navController = navHostFragment.navController)
-            itemIconTintList = null
-        }
         navController = navHostFragment.navController
-
-        val bottomMenuView = bottomNavigation.getChildAt(0) as BottomNavigationMenuView
-        val view = bottomMenuView.getChildAt(2)
-        val itemView = view as BottomNavigationItemView
-
-        val toggleGroup = CustomOnOffLayoutBinding.inflate(
-            LayoutInflater.from(this@MainActivity),
-            bottomMenuView,
-            false
-        )
-        itemView.addView(toggleGroup.root)
+        setupWithNavController(navController = navHostFragment.navController)
     }
 
-    private fun turnOffBluetooth() {
-        if (bluetoothAdapter.isEnabled) {
-            bluetoothAdapter.disable()
-            toast("Bluetooth turned off")
+    private fun setupWithNavController(navController: NavController) {
+        val startDestination = navController.graph.startDestinationId
+        navigateTo(id = startDestination)
+        binding.bottomNavigation.root.check(startDestination)
+        binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            navigateTo(id = checkedId)
         }
     }
 
-    private fun turnOnBluetooth() {
-        if (!bluetoothAdapter.isEnabled) {
-            bluetoothAdapter.enable()
-            toast("Bluetooth turned on")
-        }
-    }
+    private fun navigateTo(id: Int) = navController.navigate(id)
 
 
     override fun onResume() {
         super.onResume()
         connectionStateMonitor.enable()
-        if (!connectionStateMonitor.hasNetworkConnection()) onNegative()
-        else onPositive()
-
+        when (connectionStateMonitor.hasNetworkConnection()) {
+            true -> onPositive()
+            else -> onNegative()
+        }
         eventViewModel.getEventList()
     }
 
@@ -219,31 +159,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         PermissionDialog().apply { show(supportFragmentManager, PermissionDialog::class.java.name) }
     }
 
-    private fun startScanBluetooth() {
-        bluetoothLeScanner.startScan(null, scanSettings, scanCallback)
-        Log.d("test_log", "scan started")
-    }
-
-    private var bluetoothReceiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            startScanBluetooth()
-            if (intent.action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                val state = intent.getIntExtra(
-                    BluetoothAdapter.EXTRA_STATE,
-                    BluetoothAdapter.ERROR
-                )
-                when (state) {
-                    BluetoothAdapter.STATE_ON -> {
-                        startScanBluetooth()
-                    }
-                    BluetoothAdapter.STATE_TURNING_ON -> {
-
-                    }
-                }
-            }
-        }
-    }
-
     //  Пока бул нени кайтарышын билбейм, карап кором бирок
     private val driverSwapReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -262,7 +177,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun showBottomNavigation() {
-        val navView = binding.bottomNavigation
+        val navView = binding.bottomNavigation.root
 
         if (navView.isShown) return
 
@@ -276,11 +191,11 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun hideBottomNavigation() {
-        val navView = binding.bottomNavigation
+        val navView = binding.bottomNavigation.root
 
         if (navView.isGone) return
 
-        binding.bottomNavigation.also {
+        binding.bottomNavigation.root.also {
             it.animate()
                 .translationY(it.height.toFloat())
                 .setDuration(ANIMATION_DURATION)
@@ -322,20 +237,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                         it.hide()
                     }
                 })
-        }
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(bluetoothReceiver)
-        super.onDestroy()
-    }
-
-    companion object {
-        private const val ANIMATION_DURATION = 200L
-
-        fun newInstance(context: Context): Intent {
-            return newIntent<MainActivity>(context).apply {
-            }
         }
     }
 }

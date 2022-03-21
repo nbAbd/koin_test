@@ -11,24 +11,35 @@ import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class EventsCalculationFragment :
-    BaseMVVMFragment<FragmentHomeBinding, EventsCalculationViewModel>() {
+    BaseMVVMFragment<FragmentHomeBinding, EventCalculationViewModel>() {
     init {
         requiresActionBar = true
     }
 
-    override val viewModel: EventsCalculationViewModel by sharedViewModel()
+    override val viewModel: EventCalculationViewModel by sharedViewModel()
     private val eventViewModel: EventViewModel by sharedViewModel()
 
-    override fun setupView() {}
+    override fun setupView() {
+
+    }
 
     override fun onResume() {
         super.onResume()
         eventViewModel.getEventList()
-        viewModel.calculateEvents()
+
+        viewModel.apply {
+            resetMillis()
+            calculate {
+                startTotalOnDutyCounter()
+                startOnDutyCounter()
+                startDrivingLimitCounter()
+                startBreakInCounter()
+            }
+        }
     }
 
     override fun observe() {
-        viewModel.drivingEventLiveData.observe(this, {
+        viewModel.onDutyBreakIn.observe(this, {
             if (it < 0) {
                 binding.breakProgressBar.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
@@ -41,13 +52,8 @@ class EventsCalculationFragment :
                 ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100)
         })
 
-        viewModel.onEventLiveData.observe(this, {
+        viewModel.onDuty.observe(this, {
             if (it < 0) {
-                Toast.makeText(
-                    requireContext(),
-                    "Warning!\n You continuously on duty more 14 hour",
-                    Toast.LENGTH_SHORT
-                ).show()
                 binding.progressBar2.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
                 binding.progressBar2.setProgressWithAnimation(100f, 1000)
@@ -57,16 +63,13 @@ class EventsCalculationFragment :
                 binding.progressBar2.progress =
                     ((it.toFloat() / 60000 / on_Duty_Window_Minutes) * 100)
             }
+
+
             binding.onValue.text = hmsTimeFormatter(it)
         })
 
-        viewModel.dutyCycleEventLiveData.observe(this, {
+        viewModel.maxOnDuty.observe(this, {
             if (it < 0) {
-                Toast.makeText(
-                    requireContext(),
-                    "Warning!\n You on duty more 70 hour",
-                    Toast.LENGTH_SHORT
-                ).show()
                 binding.progressBar3.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
                 binding.progressBar3.progressBarColor =
@@ -77,39 +80,31 @@ class EventsCalculationFragment :
                     ContextCompat.getColor(requireContext(), R.color.blue)
 
                 binding.progressBar3.progress =
-                    ((it.toFloat() / 60000 / on_Duty_Cycle_Minutes) * 100)
+                    ((it.toFloat() / 1000 / 60 / 60) * 100)
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
         })
 
-        viewModel.drivingLimitLiveData.observe(this, {
+        viewModel.onDutyDrivingLimit.observe(this, {
             binding.drivingLimit.text = hmsTimeFormatter2(it)
         })
 
-        viewModel.onEventWarningLiveData.observe(this, {
+        viewModel.onDutyExceedingTheLimitWarning.observe(this, {
             Toast.makeText(
                 requireContext(),
                 "Warning!\n You continuously on duty more 14 hour",
                 Toast.LENGTH_SHORT
             ).show()
         })
+    }
 
-        viewModel.dutyCycleEventLiveData.observe(this, {
-            Toast.makeText(
-                requireContext(),
-                "Warning!\n You on duty more 70 hour",
-                Toast.LENGTH_SHORT
-            ).show()
-        })
-
-        // observe event changes
-        eventViewModel.eventList.observe(this, {
-            if (it.isNotEmpty()) {
-                viewModel.startCountDrivingEvent()
-                viewModel.startCountOnEvent()
-                viewModel.startCountDutyCycleEvent()
-                viewModel.startCountDrivingLimit()
-            }
-        })
+    override fun onStop() {
+        super.onStop()
+        viewModel.apply {
+            cancelTotalOnDutyCounter()
+            cancelOnDutyCounter()
+            cancelDrivingLimitCounter()
+            cancelBreakInCounter()
+        }
     }
 }

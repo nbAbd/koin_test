@@ -254,7 +254,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private fun showInsertEventPagerDialog() {
         val dialog = InsertEventPagerDialog {
-            (requireActivity() as MainActivity).binding.bottomNavigation.hide()
+            (requireActivity() as MainActivity).binding.bottomNavigation.root.hide()
         }
         dialog.show(childFragmentManager, InsertEventPagerDialog::class.java.name)
     }
