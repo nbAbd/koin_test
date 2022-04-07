@@ -18,10 +18,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/drivingFragment"
+        android:id="@+id/eventCalculationFragment"
         android:name="com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_co_driver" />
+        tools:layout="@layout/fragment_event_calculation">
+        <argument
+            android:name="eventDutyStatus"
+            app:argType="com.pieaksoft.event.consumer.android.enums.EventCode" />
+    </fragment>
 
     <!--Truck fragment-->
     <fragment
