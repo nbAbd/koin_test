@@ -1,6 +1,10 @@
 package com.pieaksoft.event.consumer.android.enums
 
-enum class EventCode(val code: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class EventCode(val code: String) : Parcelable {
     DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY("DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY"),
     DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH("DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH"),
     DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING("DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING"),

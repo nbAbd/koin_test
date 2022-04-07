@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 32
@@ -51,7 +52,7 @@ android {
         }
         prod {
             dimension 'ELD'
-            buildConfigField 'String', 'Endpoint', '"https://api.shoppix.kg/"'
+            buildConfigField 'String', 'Endpoint', '"http://eventconsumer-env.eba-3decu9ft.us-east-1.elasticbeanstalk.com"'
             buildConfigField 'Integer', 'port', '80'
         }
     }

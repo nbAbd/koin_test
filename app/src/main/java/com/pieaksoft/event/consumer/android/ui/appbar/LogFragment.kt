@@ -246,7 +246,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     private fun selectDate() {
-        Dialogs.showDateTimeSelector(requireContext()) { date ->
+        Dialogs.showDateTimeSelector(requireContext(), sp = viewModel.sp) { date ->
             viewModel.setEventInsertDate(date = date)
             showInsertEventPagerDialog()
         }

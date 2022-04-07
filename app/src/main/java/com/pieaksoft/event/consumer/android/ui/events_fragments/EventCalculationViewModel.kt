@@ -294,9 +294,8 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     fun cancelTotalOnDutyCounter() = totalOnDutyCounterJob?.cancel()
 
     private fun countdownTotals() {
-        maxOnDutyMillis.minus(MINUTE).also {
-            _maxOnDuty.postValue(it)
-        }
+        maxOnDutyMillis -= MINUTE
+        _maxOnDuty.postValue(maxOnDutyMillis)
     }
 
 
@@ -314,9 +313,8 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     fun cancelOnDutyCounter() = onDutyCounterJob?.cancel()
 
     private fun countdownOnDuty() {
-        onDutyMillis.minus(MINUTE).also {
-            _onDuty.postValue(it)
-        }
+        onDutyMillis -= MINUTE
+        _onDuty.postValue(onDutyMillis)
     }
 
 
@@ -334,10 +332,8 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     fun cancelDrivingLimitCounter() = drivingLimitCounterJob?.cancel()
 
     private fun countdownDrivingLimit() {
-        onDutyDrivingLimitMillis.minus(MINUTE).also {
-            _onDutyDrivingLimit.postValue(it)
-        }
-
+        onDutyDrivingLimitMillis -= MINUTE
+        _onDutyDrivingLimit.postValue(onDutyDrivingLimitMillis)
     }
 
 
@@ -355,9 +351,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     fun cancelBreakInCounter() = breakInCounterJob?.cancel()
 
     private fun countdownBreakInMinutes() {
-        onDutyBreakInMillis.minus(MINUTE).also {
-            _onDutyBreakIn.postValue(it)
-        }
+        onDutyBreakInMillis -= MINUTE
+        _onDutyBreakIn.postValue(onDutyBreakInMillis)
     }
 }
-

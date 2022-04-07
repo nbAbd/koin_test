@@ -44,6 +44,7 @@
         <entry key="app/src/main/res/drawable/ic_off.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_off_disabled.xml" value="0.2726495726495726" />
         <entry key="app/src/main/res/drawable/ic_on.xml" value="0.4984375" />
+        <entry key="app/src/main/res/drawable/ic_on_enabled.xml" value="0.60625" />
         <entry key="app/src/main/res/drawable/ic_selected_tab_indicator.xml" value="0.254296875" />
         <entry key="app/src/main/res/drawable/ic_shape.xml" value="0.165" />
         <entry key="app/src/main/res/drawable/ic_shape_green.xml" value="0.1" />
@@ -98,6 +99,7 @@
         <entry key="app/src/main/res/layout/fragment_co_driver.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_dot_inspect.xml" value="0.36318407960199006" />
         <entry key="app/src/main/res/layout/fragment_empty_menu.xml" value="0.33313106796116504" />
+        <entry key="app/src/main/res/layout/fragment_event_calculation.xml" value="0.49125" />
         <entry key="app/src/main/res/layout/fragment_fullscreen.xml" value="0.2193627450980392" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_insert_event.xml" value="0.625" />

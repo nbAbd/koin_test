@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/driving_limit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="@string/driving_limit"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/driving_limit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:minHeight="70dp"
+            android:textColor="@color/white"
+            android:textSize="48sp"
+            app:layout_constraintBottom_toTopOf="@+id/break_progress_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driving_limit_title" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/break_progress_bar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            android:rotation="90"
+            app:cpb_background_progressbar_color="#b6bbd8"
+            app:cpb_background_progressbar_width="5dp"
+            app:cpb_progress="100"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="@color/blue"
+            app:cpb_progressbar_width="10dp"
+            app:cpb_round_border="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/progress_bar2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/break_in_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="08:00"
+            android:textColor="@color/white"
+            android:textSize="37sp"
+            app:layout_constraintBottom_toTopOf="@+id/separator"
+            app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
+            app:layout_constraintTop_toTopOf="@+id/break_progress_bar" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/gradient_separator2"
+            app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"
+            app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
+            app:layout_constraintTop_toTopOf="@+id/break_progress_bar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/break_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:text="@string/break_in"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"
+            app:layout_constraintEnd_toEndOf="@+id/break_progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/break_progress_bar"
+            app:layout_constraintTop_toBottomOf="@+id/separator" />
+
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/progress_bar2"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:rotation="90"
+            app:cpb_background_progressbar_color="#b6bbd8"
+            app:cpb_background_progressbar_width="5dp"
+            app:cpb_progress="100"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="@color/blue"
+            app:cpb_progressbar_width="10dp"
+            app:cpb_round_border="true"
+            app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"
+            app:layout_constraintEnd_toStartOf="@+id/progress_bar3"
+            app:layout_constraintStart_toEndOf="@+id/break_progress_bar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/onValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="14:00"
+            android:textColor="@color/white"
+            android:textSize="37sp"
+            app:layout_constraintBottom_toTopOf="@+id/separator2"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar2" />
+
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/gradient_separator2"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/h_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:text="@string/h_window"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+            app:layout_constraintTop_toBottomOf="@+id/separator2" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/progress_bar3"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:rotation="90"
+            app:cpb_background_progressbar_color="#b6bbd8"
+            app:cpb_background_progressbar_width="5dp"
+            app:cpb_progress="100"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="@color/blue"
+            app:cpb_progressbar_width="10dp"
+            app:cpb_round_border="true"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/progress_bar2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dutyCycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="70:00"
+            android:textColor="@color/white"
+            android:textSize="37sp"
+            app:layout_constraintBottom_toTopOf="@+id/separator3"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar3" />
+
+        <View
+            android:id="@+id/separator3"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/gradient_separator2"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar3"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/duty_cycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:text="@string/duty_cycle"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar3"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
+            app:layout_constraintTop_toBottomOf="@+id/separator3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
