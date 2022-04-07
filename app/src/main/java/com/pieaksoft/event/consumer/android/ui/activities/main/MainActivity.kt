@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.araujo.jordan.excuseme.ExcuseMe
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ActivityMainBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
@@ -30,6 +32,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     companion object {
         private const val ANIMATION_DURATION = 200L
+        private const val EVENT_DUTY_STATUS = "event_duty_status"
 
         fun newInstance(context: Context) = newIntent<MainActivity>(context)
     }
@@ -94,19 +97,90 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        setupWithNavController(navController = navHostFragment.navController)
+        binding.bottomNavigation.root.isSingleSelection = true
+        setupNavController()
     }
 
-    private fun setupWithNavController(navController: NavController) {
-        val startDestination = navController.graph.startDestinationId
-        navigateTo(id = startDestination)
-        binding.bottomNavigation.root.check(startDestination)
-        binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            navigateTo(id = checkedId)
+    private fun setupNavController() {
+        if (::navController.isInitialized) {
+            checkLastDutyStatus()
+
+            binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                var eventDutyStatus: EventCode? = null
+                when (checkedId) {
+                    R.id.coDriverFragment -> {
+                        eventViewModel.removeCurrentDutyStatus()
+                        navigateTo(id = checkedId)
+                        return@addOnButtonCheckedListener
+                    }
+
+                    R.id.homeFragment -> {
+                        eventViewModel.removeCurrentDutyStatus()
+                        navigateTo(id = checkedId)
+                        return@addOnButtonCheckedListener
+                    }
+
+                    R.id.breakInFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
+                    }
+
+                    R.id.offFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
+                    }
+
+                    R.id.onFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
+                    }
+
+                    R.id.drivingFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
+                    }
+                }
+
+                eventDutyStatus?.let { dutyStatus ->
+                    navigateTo(id = R.id.eventCalculationFragment, dutyStatus = dutyStatus)
+                }
+            }
+        }
+    }
+
+    private fun checkLastDutyStatus() {
+        // If last duty status is not null, then navigate to appropriate fragment
+        eventViewModel.getCurrentDutyStatus()?.let { dutyStatus ->
+            navigateByDutyStatus(status = dutyStatus)
+            return
+        }
+
+        // Else navigate to default start destination
+        navController.graph.startDestinationId.also {
+            navigateTo(id = it)
+            binding.bottomNavigation.root.check(it)
         }
     }
 
     private fun navigateTo(id: Int) = navController.navigate(id)
+
+    private fun navigateTo(id: Int, dutyStatus: EventCode) {
+        eventViewModel.storeCurrentDutyStatus(status = dutyStatus)
+        navController.navigate(id, bundleOf(EVENT_DUTY_STATUS to dutyStatus))
+    }
+
+    private fun navigateByDutyStatus(status: EventCode) {
+        navController.navigate(R.id.eventCalculationFragment, bundleOf(EVENT_DUTY_STATUS to status))
+        setSelectedItemByStatus(status)
+    }
+
+    private fun setSelectedItemByStatus(status: EventCode) {
+        val id = when (status) {
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> R.id.breakInFragment
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> R.id.offFragment
+            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> R.id.onFragment
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
+            else -> null
+        }
+
+        id?.let { binding.bottomNavigation.root.check(it) }
+    }
 
 
     override fun onResume() {

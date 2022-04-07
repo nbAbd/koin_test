@@ -3,39 +3,35 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.databinding.FragmentHomeBinding
+import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class EventsCalculationFragment :
-    BaseMVVMFragment<FragmentHomeBinding, EventCalculationViewModel>() {
+    BaseMVVMFragment<FragmentEventCalculationBinding, EventCalculationViewModel>() {
+
     init {
         requiresActionBar = true
     }
 
-    override val viewModel: EventCalculationViewModel by sharedViewModel()
+    override val viewModel: EventCalculationViewModel by viewModel()
     private val eventViewModel: EventViewModel by sharedViewModel()
+    private lateinit var eventStatusCode: EventCode
 
     override fun setupView() {
-
+        eventViewModel.getCurrentDutyStatus()?.let {
+            eventStatusCode = it
+        }
     }
 
     override fun onResume() {
         super.onResume()
         eventViewModel.getEventList()
-
-        viewModel.apply {
-            resetMillis()
-            calculate {
-                startTotalOnDutyCounter()
-                startOnDutyCounter()
-                startDrivingLimitCounter()
-                startBreakInCounter()
-            }
-        }
     }
 
     override fun observe() {
@@ -95,6 +91,45 @@ class EventsCalculationFragment :
                 "Warning!\n You continuously on duty more 14 hour",
                 Toast.LENGTH_SHORT
             ).show()
+        })
+
+
+        eventViewModel.eventList.observe(this, {
+            viewModel.apply {
+                resetMillis()
+                calculate {
+                    if (::eventStatusCode.isInitialized) {
+                        when (eventStatusCode) {
+                            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                                // Cancel
+                                cancelTotalOnDutyCounter()
+                                cancelOnDutyCounter()
+                                cancelDrivingLimitCounter()
+                                cancelBreakInCounter()
+
+                                // Count
+                                startTotalOnDutyCounter()
+                                startOnDutyCounter()
+                            }
+
+                            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
+                                // Cancel
+                                cancelTotalOnDutyCounter()
+                                cancelOnDutyCounter()
+                                cancelDrivingLimitCounter()
+                                cancelBreakInCounter()
+
+                                // Count
+                                startTotalOnDutyCounter()
+                                startOnDutyCounter()
+                                startDrivingLimitCounter()
+                                startBreakInCounter()
+                            }
+                            else -> Unit
+                        }
+                    }
+                }
+            }
         })
     }
 

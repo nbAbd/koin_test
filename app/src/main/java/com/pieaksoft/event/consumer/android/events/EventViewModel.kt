@@ -2,6 +2,7 @@ package com.pieaksoft.event.consumer.android.events
 
 import android.app.Application
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.enums.EventCode
@@ -13,9 +14,7 @@ import com.pieaksoft.event.consumer.android.model.event.Certification
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
-import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,6 +33,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         const val STATUS_CERTIFIED = "CERTIFIED"
         const val DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd"
         const val TIME_FORMAT_HH_mm = "HH:mm"
+
+        const val CURRENT_DUTY_STATUS = "current_duty_status"
     }
 
     val certifiedDate = MutableLiveData<String?>()
@@ -289,5 +290,33 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         _localEvent.value = null
         _eventInsertCode.value = null
         _eventInsertDate.value = null
+    }
+
+
+    /**
+     * Save last selected duty status in order to open it again when user launches app
+     * */
+    fun storeCurrentDutyStatus(status: EventCode) {
+        sp.put(CURRENT_DUTY_STATUS, status.code)
+    }
+
+    /**
+     * Last duty status of user to navigate on first app launch
+     */
+    fun getCurrentDutyStatus(): EventCode? {
+        sp.getString(CURRENT_DUTY_STATUS, null)?.let {
+            return EventCode.findByCode(it)
+        }
+        return null
+    }
+
+    /**
+     * Remove last duty status if user selected item in bottom navigation is out of duty statuses
+     */
+    fun removeCurrentDutyStatus() {
+        sp.edit {
+            remove(CURRENT_DUTY_STATUS)
+            commit()
+        }
     }
 }
