@@ -26,10 +26,10 @@ import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.EventListAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
-import com.pieaksoft.event.consumer.android.ui.events.InsertEventPagerDialog
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventsAdapter
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
+import com.pieaksoft.event.consumer.android.views.Dialogs.showInsertEventDialogFragment
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -46,7 +46,10 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         EventListAdapter { event ->
             viewModel.setEventInsertCode(code = EventCode.findByCode(event.eventCode ?: ""))
             viewModel.setEventInsertDate(date = event.certifyDate?.first()?.date?.getDateFromString()!!)
-            showInsertEventPagerDialog()
+            showInsertEventDialogFragment(
+                childFragmentManager, {},
+                EventCode.findByCode(event.eventCode ?: "")
+            )
         }
     }
 
@@ -235,7 +238,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         val dialog = InsertEventDialog { dialog, eventCode ->
             viewModel.setEventInsertCode(code = eventCode)
             dialog.dismiss()
-            selectDate()
+            selectDate(eventCode)
         }
         dialog.dialog?.window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
@@ -245,17 +248,12 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         dialog.show(childFragmentManager, InsertEventDialog::class.java.name)
     }
 
-    private fun selectDate() {
+    private fun selectDate(eventCode: EventCode) {
         Dialogs.showDateTimeSelector(requireContext(), sp = viewModel.sp) { date ->
             viewModel.setEventInsertDate(date = date)
-            showInsertEventPagerDialog()
+            showInsertEventDialogFragment(childFragmentManager, {}, eventCode)
         }
     }
 
-    private fun showInsertEventPagerDialog() {
-        val dialog = InsertEventPagerDialog {
-            (requireActivity() as MainActivity).binding.bottomNavigation.root.hide()
-        }
-        dialog.show(childFragmentManager, InsertEventPagerDialog::class.java.name)
-    }
+
 }

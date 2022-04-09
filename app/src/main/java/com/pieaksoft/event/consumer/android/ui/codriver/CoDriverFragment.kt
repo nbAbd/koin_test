@@ -3,7 +3,10 @@ package com.pieaksoft.event.consumer.android.ui.codriver
 import android.content.Intent
 import androidx.core.widget.addTextChangedListener
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
@@ -18,6 +21,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewModel>() {
     override val viewModel: ProfileViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
+    private val eventViewModel: EventViewModel by viewModel()
 
     private var loginValue: String? = null
     private var passwordValue: String? = null
@@ -60,6 +64,10 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
             cancelBtn.setOnClickListener {
                 driversContainer.show()
                 loginContainer.hide()
+            }
+
+            btnExit.setOnClickListener {
+                    (activity as MainActivity).checkLastDutyStatusByLastEvent()
             }
         }
     }

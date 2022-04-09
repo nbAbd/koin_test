@@ -24,7 +24,9 @@ import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
 import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.Storage.eventList
 import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
+import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
@@ -75,7 +77,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     override fun setupView() {
         eventViewModel.setEventsMock()
-
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
@@ -98,6 +99,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigation.root.isSingleSelection = true
+        binding.bottomNavigation.root.check(R.id.offFragment)
         setupNavController()
     }
 
@@ -106,42 +108,75 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             checkLastDutyStatus()
 
             binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                var eventDutyStatus: EventCode? = null
-                when (checkedId) {
-                    R.id.coDriverFragment -> {
-                        eventViewModel.removeCurrentDutyStatus()
-                        navigateTo(id = checkedId)
-                        return@addOnButtonCheckedListener
+                if (isChecked) {
+                    Log.e("we are two times ere", "here")
+                    var eventDutyStatus: EventCode? = null
+                    when (checkedId) {
+                        R.id.coDriverFragment -> {
+                            eventViewModel.removeCurrentDutyStatus()
+                            navigateTo(id = checkedId)
+                            return@addOnButtonCheckedListener
+                        }
+
+                        R.id.homeFragment -> {
+                            eventViewModel.removeCurrentDutyStatus()
+                            navigateTo(id = checkedId)
+                            return@addOnButtonCheckedListener
+                        }
+
+                        R.id.breakInFragment -> {
+                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
+                        }
+
+                        R.id.offFragment -> {
+                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
+                        }
+
+                        R.id.onFragment -> {
+                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
+                        }
+
+                        R.id.drivingFragment -> {
+                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
+                        }
                     }
 
-                    R.id.homeFragment -> {
-                        eventViewModel.removeCurrentDutyStatus()
-                        navigateTo(id = checkedId)
-                        return@addOnButtonCheckedListener
+                    eventDutyStatus?.let {
+                        if (checkedId != findSelectedItemByStatus(
+                                lastStatusInEventList()
+                            )
+                        ) {
+                            Dialogs.showInsertEventDialogFragment(
+                                supportFragmentManager,
+                                onCancelled = {
+                                    if (it) {
+                                        checkLastDutyStatusByLastEvent()
+                                    } else {
+                                        navigateTo(R.id.eventCalculationFragment, eventDutyStatus)
+                                    }
+                                }, eventDutyStatus
+                            )
+                        } else {
+                            navigateTo(R.id.eventCalculationFragment, eventDutyStatus)
+                        }
                     }
-
-                    R.id.breakInFragment -> {
-                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
-                    }
-
-                    R.id.offFragment -> {
-                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
-                    }
-
-                    R.id.onFragment -> {
-                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
-                    }
-
-                    R.id.drivingFragment -> {
-                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
-                    }
-                }
-
-                eventDutyStatus?.let { dutyStatus ->
-                    navigateTo(id = R.id.eventCalculationFragment, dutyStatus = dutyStatus)
                 }
             }
         }
+    }
+
+    fun checkLastDutyStatusByLastEvent() {
+        navigateByDutyStatus(lastStatusInEventList())
+    }
+
+    private fun lastStatusInEventList(): EventCode {
+        if (eventList.isNotEmpty()) {
+            val eventCode = eventList[eventList.size - 1].eventCode
+            if (eventCode != null) {
+                return EventCode.findByCode(eventCode)
+            }
+        }
+        return EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
     }
 
     private fun checkLastDutyStatus() {
@@ -171,15 +206,17 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     private fun setSelectedItemByStatus(status: EventCode) {
-        val id = when (status) {
+        findSelectedItemByStatus(status)?.let { binding.bottomNavigation.root.check(it) }
+    }
+
+    private fun findSelectedItemByStatus(status: EventCode): Int? {
+        return when (status) {
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> R.id.breakInFragment
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> R.id.offFragment
             EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> R.id.onFragment
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
             else -> null
         }
-
-        id?.let { binding.bottomNavigation.root.check(it) }
     }
 
 

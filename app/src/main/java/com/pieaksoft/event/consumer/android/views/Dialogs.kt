@@ -6,19 +6,20 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.Window
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.DialogSwapDriversBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment
 import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
 import com.pieaksoft.event.consumer.android.utils.addDays
 import java.text.SimpleDateFormat
 import java.time.*
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 object Dialogs {
@@ -70,5 +71,14 @@ object Dialogs {
             .title(context.getString(R.string.choose_date_time))
             .listener { listener(it) }
             .display()
+    }
+
+    fun showInsertEventDialogFragment(
+        fragmentManager: FragmentManager,
+        onCancelled: (IsCancelled: Boolean) -> Unit,
+        eventDutyStatus: EventCode
+    ) {
+        val dialog = InsertEventFragment(onCancelled,eventDutyStatus)
+        dialog.show(fragmentManager, InsertEventFragment::class.java.name)
     }
 }

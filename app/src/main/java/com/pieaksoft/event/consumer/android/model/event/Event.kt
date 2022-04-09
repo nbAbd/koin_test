@@ -19,7 +19,7 @@ data class Event(
     var date: String? = "",
     var time: String? = "",
     @TypeConverters(Location::class)
-    val coordinates: Location = Location(0f, 0f),
+    var coordinates: Location = Location(0f, 0f),
     val shippingDocumentNumber: String? = "",
     val totalEngineHours: Int? = 0,
     val totalEngineMiles: Int? = 0,

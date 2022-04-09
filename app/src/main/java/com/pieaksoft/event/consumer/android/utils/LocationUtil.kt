@@ -2,12 +2,17 @@ package com.pieaksoft.event.consumer.android.utils
 
 import android.Manifest
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.araujo.jordan.excuseme.ExcuseMe
+import com.google.android.gms.location.LocationServices
 
 object LocationUtil {
 
@@ -87,6 +92,39 @@ object LocationUtil {
             }
             else -> {
                 requestFineLocationPermission(action)
+            }
+        }
+    }
+
+    private fun isLocationEnabled(context: Context): Boolean {
+        val locationManager: LocationManager =
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        Log.e("locationMnager",locationManager.toString())
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    fun getCurrentLocationOnce(
+        activity: Activity,
+        context: Context,
+        onLocationAvailable: (location: Location) -> Unit
+    ) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.e("isLocation enabled",isLocationEnabled(context).toString())
+            if (isLocationEnabled(context)) {
+                fusedLocationClient.lastLocation.addOnSuccessListener {
+                    Log.e("location",it.toString())
+                    onLocationAvailable(it)
+                }
             }
         }
     }
