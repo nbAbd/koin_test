@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.araujo.jordan.excuseme.ExcuseMe
@@ -99,7 +100,6 @@ object LocationUtil {
     private fun isLocationEnabled(context: Context): Boolean {
         val locationManager: LocationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        Log.e("locationMnager",locationManager.toString())
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -119,12 +119,12 @@ object LocationUtil {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.e("isLocation enabled",isLocationEnabled(context).toString())
             if (isLocationEnabled(context)) {
                 fusedLocationClient.lastLocation.addOnSuccessListener {
-                    Log.e("location",it.toString())
                     onLocationAvailable(it)
                 }
+            } else {
+                Toast.makeText(context, "Turn on location", Toast.LENGTH_LONG).show()
             }
         }
     }

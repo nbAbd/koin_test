@@ -24,10 +24,10 @@ class EventsCalculationFragment :
 
     override val viewModel: EventCalculationViewModel by viewModel()
     private val eventViewModel: EventViewModel by sharedViewModel()
-    private var eventStatusCode: EventCode? = null
+    private lateinit var eventStatusCode: EventCode
 
     override fun setupView() {
-        eventViewModel.getCurrentDutyStatus().let {
+        eventViewModel.getCurrentDutyStatus()?.let {
             eventStatusCode = it
         }
     }
@@ -98,39 +98,38 @@ class EventsCalculationFragment :
 
 
         eventViewModel.eventList.observe(this) {
-            if (eventStatusCode == null) {
-                (activity as MainActivity).checkLastDutyStatusByLastEvent()
-            }
             viewModel.apply {
                 resetMillis()
                 calculate {
-                    when (eventStatusCode) {
-                        EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                            // Cancel
-                            cancelTotalOnDutyCounter()
-                            cancelOnDutyCounter()
-                            cancelDrivingLimitCounter()
-                            cancelBreakInCounter()
+                    if (::eventStatusCode.isInitialized) {
+                        when (eventStatusCode) {
+                            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                                // Cancel
+                                cancelTotalOnDutyCounter()
+                                cancelOnDutyCounter()
+                                cancelDrivingLimitCounter()
+                                cancelBreakInCounter()
 
-                            // Count
-                            startTotalOnDutyCounter()
-                            startOnDutyCounter()
+                                // Count
+                                startTotalOnDutyCounter()
+                                startOnDutyCounter()
+                            }
+
+                            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
+                                // Cancel
+                                cancelTotalOnDutyCounter()
+                                cancelOnDutyCounter()
+                                cancelDrivingLimitCounter()
+                                cancelBreakInCounter()
+
+                                // Count
+                                startTotalOnDutyCounter()
+                                startOnDutyCounter()
+                                startDrivingLimitCounter()
+                                startBreakInCounter()
+                            }
+                            else -> Unit
                         }
-
-                        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
-                            // Cancel
-                            cancelTotalOnDutyCounter()
-                            cancelOnDutyCounter()
-                            cancelDrivingLimitCounter()
-                            cancelBreakInCounter()
-
-                            // Count
-                            startTotalOnDutyCounter()
-                            startOnDutyCounter()
-                            startDrivingLimitCounter()
-                            startBreakInCounter()
-                        }
-                        else -> Unit
                     }
                 }
             }

@@ -137,6 +137,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:hint="@string/input_data"
+            app:commentField="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_weight="1"
             app:maxElements="60"
