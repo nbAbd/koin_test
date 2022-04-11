@@ -14,17 +14,19 @@ import com.pieaksoft.event.consumer.android.model.event.Certification
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.Storage
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.collections.set
 
 class EventViewModel(app: Application, private val repository: EventsRepository) :
     BaseViewModel(app) {
@@ -179,55 +181,74 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun calculateEvents(): Map<String, List<Event>> {
+        // set end times of events
         calculateEndTime()
-        val calculateList: MutableList<Event> = mutableListOf()
+
+        val calculatedEvents = mutableListOf<Event>()
+
         Storage.eventList.forEachIndexed { index, event ->
-            Log.e(TAG, "test date before parse = " + event.date)
-            val startDate = LocalDate.parse(
-                event.date, DateTimeFormatter.ofPattern(
-                    DATE_FORMAT_yyyy_MM_dd
-                )
-            )
+            val startDate =
+                LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             val endDate =
                 LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-            val dbd = ChronoUnit.DAYS.between(startDate, endDate).toInt()
-            if (dbd == 0) {
-                calculateList.add(event)
-            } else if (dbd > 0) {
-                val mEvent = event.copy(endDate = event.date, endTime = "25:00")
-                calculateList.add(mEvent)
-                for (i in 1..dbd) {
-                    val date = startDate.plusDays(i.toLong())
+
+            val numberOfDaysBetweenDays = ChronoUnit.DAYS.between(startDate, endDate).toInt()
+
+            // If start date and end date in the same day
+            if (numberOfDaysBetweenDays == 0) {
+                // Add current event to list
+                calculatedEvents.add(event)
+
+                // If start date and end date are different dates
+            } else if (numberOfDaysBetweenDays > 0) {
+
+                // Add event till the end of the graph
+                event.copy(endDate = event.date, endTime = "24:00").also {
+                    calculatedEvents.add(it)
+                }
+
+                for (day in 1..numberOfDaysBetweenDays) {
+                    val startDateOfNextGraphEvent = startDate.plusDays(day.toLong())
                         .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-                    val _endDate = startDate.plusDays(i.toLong())
+
+                    val endDateOfNextGraphEvent = startDate.plusDays(day.toLong())
                         .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-                    val copiedEvent = event.copy(
-                        date = date,
-                        endDate = _endDate,
+
+                    // By default it's line should be drew till the end of the graph
+                    val nextGraphEvent = event.copy(
+                        date = startDateOfNextGraphEvent,
+                        endDate = endDateOfNextGraphEvent,
                         time = "00:00",
-                        endTime = "25:00"
+                        endTime = "24:00"
                     )
-                    if (i == dbd) {
-                        if (index < Storage.eventList.size - 1) {
-                            copiedEvent.endDate = Storage.eventList[index + 1].date
-                            copiedEvent.endTime = Storage.eventList[index + 1].time
-                        } else {
-                            copiedEvent.endDate =
-                                LocalDate.now().format(
-                                    DateTimeFormatter.ofPattern(
-                                        DATE_FORMAT_yyyy_MM_dd
-                                    )
-                                )
-                            copiedEvent.endTime =
-                                LocalTime.now()
+
+                    // Check if this end day
+                    if (day == numberOfDaysBetweenDays) {
+                        // If current index is not last index,
+                        // then end date/time of current event should be next event's start date/time
+                        if (index < Storage.eventList.lastIndex) {
+                            nextGraphEvent.endDate = Storage.eventList.elementAt(index + 1).date
+                            nextGraphEvent.endTime = Storage.eventList.elementAt(index + 1).time
+                        } else { // If current index is last index, then end date/time is current date/time
+                            val timezone =
+                                Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
+
+                            val zoneId = ZoneId.of(timezone.value)
+
+                            nextGraphEvent.endDate =
+                                LocalDateTime.now(zoneId)
+                                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+
+                            nextGraphEvent.endTime =
+                                LocalDateTime.now(zoneId)
                                     .format(DateTimeFormatter.ofPattern(TIME_FORMAT_HH_mm))
                         }
                     }
-                    calculateList.add(copiedEvent)
+                    calculatedEvents.add(nextGraphEvent)
                 }
             }
         }
-        val map = calculateList.groupBy { it.date ?: "" }.toMutableMap()
+        val map = calculatedEvents.groupBy { it.date ?: "" }.toMutableMap()
         for (i in Storage.eventListMock) {
             if (!map.containsKey(i)) {
                 map[i] = emptyList()
@@ -270,7 +291,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             }
 
             event.calculateDuration()
-            Log.e(TAG, "test duration = " + hmsTimeFormatter(event.durationInMillis))
         }
     }
 

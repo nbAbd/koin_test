@@ -53,7 +53,7 @@
             android:text="@string/cancel"
             android:textColor="@color/white"
             android:background="@drawable/round_order_button"
-            android:backgroundTint="@color/grey2"
+            android:backgroundTint="@color/secondary_gray"
             android:layout_gravity="center"/>
 
 
