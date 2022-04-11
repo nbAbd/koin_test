@@ -111,24 +111,16 @@ class InsertEventFragment(
     private fun setupView() = with(binding) {
         observe()
         save.setOnClickListener {
-            // Location is not working
-//            LocationUtil.getCurrentLocationOnce(requireActivity(), requireContext()) {
-//                eventModel.apply {
-//                    coordinates = Location(
-//                        it.latitude.toFloat(),
-//                        it.longitude.toFloat()
-//                    )
-//                    eventCode = eventDutyStatus.code
-//                }
-//                viewModel.insertEvent(eventModel)
-//                Log.e("sending Model",eventModel.toString())
-//            }
-            eventModel.apply {
-                coordinates = Location(latitude = -10.12345f, longitude = 48.23432f)
-                eventCode = eventDutyStatus.code
+            LocationUtil.getCurrentLocationOnce(requireActivity(), requireContext()) {
+                eventModel.apply {
+                    coordinates = Location(
+                        it.latitude.toFloat(),
+                        it.longitude.toFloat()
+                    )
+                    eventCode = eventDutyStatus.code
+                }
+                viewModel.insertEvent(eventModel)
             }
-            Log.e("body", eventModel.toString())
-            viewModel.insertEvent(eventModel)
         }
         backInsertBtn.setOnClickListener {
             onCancelled(true)

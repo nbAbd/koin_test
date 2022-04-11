@@ -2,10 +2,12 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
 import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
@@ -22,10 +24,10 @@ class EventsCalculationFragment :
 
     override val viewModel: EventCalculationViewModel by viewModel()
     private val eventViewModel: EventViewModel by sharedViewModel()
-    private lateinit var eventStatusCode: EventCode
+    private var eventStatusCode: EventCode? = null
 
     override fun setupView() {
-        eventViewModel.getCurrentDutyStatus()?.let {
+        eventViewModel.getCurrentDutyStatus().let {
             eventStatusCode = it
         }
     }
@@ -36,7 +38,7 @@ class EventsCalculationFragment :
     }
 
     override fun observe() {
-        viewModel.onDutyBreakIn.observe(this, {
+        viewModel.onDutyBreakIn.observe(this) {
             if (it < 0) {
                 binding.breakProgressBar.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
@@ -47,9 +49,9 @@ class EventsCalculationFragment :
             binding.breakInValue.text = hmsTimeFormatter(it)
             binding.breakProgressBar.progress =
                 ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100)
-        })
+        }
 
-        viewModel.onDuty.observe(this, {
+        viewModel.onDuty.observe(this) {
             if (it < 0) {
                 binding.progressBar2.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
@@ -63,9 +65,9 @@ class EventsCalculationFragment :
 
 
             binding.onValue.text = hmsTimeFormatter(it)
-        })
+        }
 
-        viewModel.maxOnDuty.observe(this, {
+        viewModel.maxOnDuty.observe(this) {
             if (it < 0) {
                 binding.progressBar3.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
@@ -80,58 +82,59 @@ class EventsCalculationFragment :
                     ((it.toFloat() / 1000 / 60 / 60) * 100)
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
-        })
+        }
 
-        viewModel.onDutyDrivingLimit.observe(this, {
+        viewModel.onDutyDrivingLimit.observe(this) {
             binding.drivingLimit.text = hmsTimeFormatter2(it)
-        })
+        }
 
-        viewModel.onDutyExceedingTheLimitWarning.observe(this, {
+        viewModel.onDutyExceedingTheLimitWarning.observe(this) {
             Toast.makeText(
                 requireContext(),
                 "Warning!\n You continuously on duty more 14 hour",
                 Toast.LENGTH_SHORT
             ).show()
-        })
+        }
 
 
-        eventViewModel.eventList.observe(this, {
+        eventViewModel.eventList.observe(this) {
+            if (eventStatusCode == null) {
+                (activity as MainActivity).checkLastDutyStatusByLastEvent()
+            }
             viewModel.apply {
                 resetMillis()
                 calculate {
-                    if (::eventStatusCode.isInitialized) {
-                        when (eventStatusCode) {
-                            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                                // Cancel
-                                cancelTotalOnDutyCounter()
-                                cancelOnDutyCounter()
-                                cancelDrivingLimitCounter()
-                                cancelBreakInCounter()
+                    when (eventStatusCode) {
+                        EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                            // Cancel
+                            cancelTotalOnDutyCounter()
+                            cancelOnDutyCounter()
+                            cancelDrivingLimitCounter()
+                            cancelBreakInCounter()
 
-                                // Count
-                                startTotalOnDutyCounter()
-                                startOnDutyCounter()
-                            }
-
-                            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
-                                // Cancel
-                                cancelTotalOnDutyCounter()
-                                cancelOnDutyCounter()
-                                cancelDrivingLimitCounter()
-                                cancelBreakInCounter()
-
-                                // Count
-                                startTotalOnDutyCounter()
-                                startOnDutyCounter()
-                                startDrivingLimitCounter()
-                                startBreakInCounter()
-                            }
-                            else -> Unit
+                            // Count
+                            startTotalOnDutyCounter()
+                            startOnDutyCounter()
                         }
+
+                        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
+                            // Cancel
+                            cancelTotalOnDutyCounter()
+                            cancelOnDutyCounter()
+                            cancelDrivingLimitCounter()
+                            cancelBreakInCounter()
+
+                            // Count
+                            startTotalOnDutyCounter()
+                            startOnDutyCounter()
+                            startDrivingLimitCounter()
+                            startBreakInCounter()
+                        }
+                        else -> Unit
                     }
                 }
             }
-        })
+        }
     }
 
     override fun onStop() {

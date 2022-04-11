@@ -109,7 +109,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
             binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
                 if (isChecked) {
-                    Log.e("we are two times ere", "here")
                     var eventDutyStatus: EventCode? = null
                     when (checkedId) {
                         R.id.coDriverFragment -> {
