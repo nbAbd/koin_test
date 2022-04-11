@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.appbar
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
@@ -14,12 +15,19 @@ import androidx.core.view.isGone
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
+import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
@@ -27,10 +35,11 @@ import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.EventListAdap
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
 import com.pieaksoft.event.consumer.android.ui.events.InsertEventPagerDialog
-import com.pieaksoft.event.consumer.android.ui.events.adapter.EventsAdapter
 import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.graph.EventDataSet
+import com.pieaksoft.event.consumer.android.utils.graph.GraphManager
+import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 import com.pieaksoft.event.consumer.android.views.Dialogs
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
@@ -39,8 +48,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override val viewModel: EventViewModel by sharedViewModel()
-
-    private val eventsAdapter by lazy { EventsAdapter() }
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
@@ -54,16 +61,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         add(EditEvent.Header())
     }
 
-    private var sliderPosition: Int = 7
-        set(value) {
-            field = value
-            eventList.removeAll { it is EditEvent.Content }
-            eventListAdapter.list = eventList.apply {
-                viewModel.getEventsGroupByDate().values.toList()[value].forEach { event ->
-                    add(EditEvent.Content(event = event))
-                }
-            }
-        }
+    private var sliderPosition: Int = 0
 
     override fun onStart() {
         super.onStart()
@@ -71,50 +69,34 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getEventsGroupByDate().values.toList().apply {
-            if (isNotEmpty() && last().isNotEmpty()) {
-                last().forEach {
-                    eventList.add(EditEvent.Content(event = it))
-                }
-            }
-        }
         super.onViewCreated(view, savedInstanceState)
+        setupChart()
+        setupRecyclerview()
     }
 
     override fun setupView() {
         binding.apply {
-            closeLog.setOnClickListener {
-                findNavController().popBackStack()
-            }
+            closeLog.setOnClickListener { findNavController().popBackStack() }
 
-            insertBtn.setOnClickListener {
-                showInsertEventDialog()
-            }
+            insertBtn.setOnClickListener { showInsertEventDialog() }
 
             nextBtn.setOnClickListener { openNext() }
 
             prevBtn.setOnClickListener { goBack() }
 
-            viewModel.getEventsGroupByDate().values.toList().apply {
-                listOfEventsBtn.isEnabled = isNotEmpty() && last().isNotEmpty()
-            }
-
-            listOfEventsBtn.setOnClickListener {
-                handleEventsListButtonClick()
-            }
+            listOfEventsBtn.setOnClickListener { handleEventsListButtonClick() }
         }
-        setupRecyclerview()
     }
 
     private fun handleEventsListButtonClick() = with(binding) {
         if (eventsListRecyclerview.isGone) {
-            eventsRecyclerview.hideWithAnimation(to = Gravity.TOP, 500)
+            lineChart.hideWithAnimation(to = Gravity.TOP, 500)
             eventsListRecyclerview.showWithAnimation(500)
             listOfEventsBtn.backgroundTintList =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.red))
         } else {
             eventsListRecyclerview.hideWithAnimation(to = Gravity.BOTTOM, 500)
-            eventsRecyclerview.showWithAnimation(500)
+            lineChart.showWithAnimation(500)
             listOfEventsBtn.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.selector_button_blue)
             )
@@ -122,46 +104,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     private fun setupRecyclerview() {
-        binding.eventsRecyclerview.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    .apply {
-                        stackFromEnd = true
-                    }
-            adapter = eventsAdapter
-            attachSnapHelperWithListener(
-                PagerSnapHelper(),
-                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL_STATE_IDLE,
-                object : OnSnapPositionChangeListener {
-                    override fun onSnapPositionChange(position: Int) {
-                        sliderPosition = position
-                        launch {
-                            binding.listOfEventsBtn.isEnabled =
-                                viewModel.getEventsGroupByDate().values.toList()[position].isNotEmpty()
-                            binding.nextBtn.isEnabled = position != eventsAdapter.list.size.minus(1)
-                            binding.prevBtn.isEnabled = position != 0
-                            binding.dateText.text =
-                                eventsAdapter.list.keys.elementAt(sliderPosition)
-                                    .getDateFromString()
-                                    .formatToServerDateDefaults2()
-                        }
-                    }
-
-                    override fun onSnapPositionDragging() = Unit
-
-                    override fun onSnapPositionNotChange(position: Int) {
-                        launch {
-                            if (position > 0) {
-                                binding.dateText.text =
-                                    eventsAdapter.list.keys.elementAt(position).getDateFromString()
-                                        .formatToServerDateDefaults2()
-                            }
-                        }
-                    }
-
-                })
-        }
-
         eventListAdapter.list = eventList
 
         val decoration = object : DividerItemDecoration(requireContext(), VERTICAL) {
@@ -197,10 +139,9 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     private fun setEvents() {
-        eventsAdapter.list =
-            viewModel.getEventsGroupByDate()
-        binding.dateText.text = eventsAdapter.list.keys.last().getDateFromString()
-            .formatToServerDateDefaults2()
+        sliderPosition = viewModel.getEventsGroupByDate().toList().lastIndex
+        // Initial update of UI
+        updateUI()
     }
 
     override fun observe() {
@@ -222,13 +163,58 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     private fun openNext() {
-        if (sliderPosition == eventsAdapter.list.size.minus(1)) return
-        binding.eventsRecyclerview.smoothScrollToPosition(sliderPosition.plus(1))
+        if (sliderPosition == viewModel.getEventsGroupByDate().toList().lastIndex) {
+            binding.nextBtn.isEnabled = false
+            return
+        }
+
+        sliderPosition += 1
+
+        binding.prevBtn.isEnabled = true
+
+        // Update UI if sliderPosition is not at lastIndex
+        updateUI()
+
+        // Check button state again
+        binding.nextBtn.isEnabled =
+            sliderPosition != viewModel.getEventsGroupByDate().toList().lastIndex
     }
 
     private fun goBack() {
-        if (sliderPosition == 0) return
-        binding.eventsRecyclerview.smoothScrollToPosition(sliderPosition.minus(1))
+        if (sliderPosition == 0) {
+            binding.prevBtn.isEnabled = false
+            return
+        }
+
+        sliderPosition -= 1
+        binding.nextBtn.isEnabled = true
+
+        // Update UI if sliderPosition is not initial
+        updateUI()
+
+        binding.prevBtn.isEnabled = sliderPosition > 0
+    }
+
+    private fun updateUI() = with(viewModel.getEventsGroupByDate()) {
+        val dates = keys
+        val events = values.toList()
+
+        events.elementAtOrNull(sliderPosition).also {
+            // Draw chart
+            drawChart(it?.toMutableList() ?: mutableListOf())
+
+            //  Clear event list, setup for current sliderPos date
+            eventList.removeAll { editEvent -> editEvent is EditEvent.Content }
+            it?.map { event -> EditEvent.Content(event) }?.toCollection(eventList)
+            eventListAdapter.list = eventList
+
+            // Disable/enable eventListButton
+            binding.listOfEventsBtn.isEnabled =
+                eventList.filterIsInstance<EditEvent.Content>().isNotEmpty()
+        }
+
+        dates.elementAtOrNull(sliderPosition)?.getDateFromString()?.formatToServerDateDefaults2()
+            .also { binding.dateText.text = it }
     }
 
     private fun showInsertEventDialog() {
@@ -257,5 +243,200 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             (requireActivity() as MainActivity).binding.bottomNavigation.root.hide()
         }
         dialog.show(childFragmentManager, InsertEventPagerDialog::class.java.name)
+    }
+
+    private fun drawChart(events: MutableList<Event>) {
+        val eventDataSet = EventDataSet(events = events).apply {
+            axisDependency = YAxis.AxisDependency.LEFT
+            lineWidth = 2F
+            colors = getColorsFor(entries = values)
+            mode = LineDataSet.Mode.STEPPED
+            setDrawCircles(false)
+            setDrawValues(false)
+        }
+
+        binding.lineChart.apply {
+            updateRightAxisLabels(events)
+            data = LineData(eventDataSet)
+            notifyDataSetChanged()
+            animateX(1000)
+        }
+    }
+
+    private fun setupChart() = with(binding) {
+        // Setup line chart
+        lineChart.apply {
+            description.isEnabled = false
+            isDoubleTapToZoomEnabled = false
+            isClickable = false
+            setDrawGridBackground(false)
+            setDrawBorders(true)
+            setBorderColor(ContextCompat.getColor(requireContext(), R.color.separator))
+            setBackgroundColor(Color.TRANSPARENT)
+            setNoDataTextColor(Color.TRANSPARENT)
+            setTouchEnabled(false)
+        }
+
+        setupXAxis()
+        setupYAxisLeft()
+        setupYAxisRight()
+    }
+
+    private fun setupXAxis() = with(binding.lineChart.xAxis) {
+        position = XAxis.XAxisPosition.TOP
+        yOffset = 4F
+        axisMinimum = 0f
+        axisMaximum = 24f
+        labelCount = 25
+        textColor = ContextCompat.getColor(requireContext(), R.color.secondary_gray)
+        textSize = 12F
+        setCenterAxisLabels(false)
+        setDrawGridLines(false)
+        setDrawAxisLine(false)
+        setDrawGridLinesBehindData(false)
+        setDrawLimitLinesBehindData(false)
+
+        valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                if (value == -1f || value >= GraphManager.xAxisLabels.size) return ""
+                return GraphManager.xAxisLabels[value.toInt()]
+            }
+        }
+    }
+
+
+    private fun setupYAxisLeft() = with(binding.lineChart.axisLeft) {
+        axisMinimum = 0f
+        axisMaximum = 5f
+        xOffset = 16F
+        gridColor = ContextCompat.getColor(requireContext(), R.color.separator)
+        textColor = ContextCompat.getColor(requireContext(), R.color.secondary_gray)
+        textSize = 14F
+        setLabelCount(6, true)
+        setCenterAxisLabels(true)
+        setDrawGridLines(true)
+        setDrawAxisLine(false)
+        enableGridDashedLine(10F, 8F, 0F)
+
+        valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                if (value == -1f || value >= GraphManager.yAxisLabels.size) return ""
+                return GraphManager.yAxisLabels[value.toInt()]
+            }
+        }
+    }
+
+    private fun setupYAxisRight() = with(binding.lineChart.axisRight) {
+        axisMinimum = 0f
+        axisMaximum = 5f
+        xOffset = 16F
+        gridColor = ContextCompat.getColor(requireContext(), R.color.separator)
+        textColor = ContextCompat.getColor(requireContext(), R.color.secondary_gray)
+        textSize = 14F
+        setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+        setLabelCount(6, true)
+        setCenterAxisLabels(true)
+        setDrawGridLines(false)
+        setDrawAxisLine(false)
+        setDrawZeroLine(false)
+        setDrawTopYLabelEntry(false)
+
+        valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                val valueTotal = axis!!.mCenteredEntries.sum().toString()
+                val hm = valueTotal.split(".")
+                val hour = hm.first()
+                val min = hm.last().mapIndexed { index, c ->
+                    if (index == 0 && c == '0') return "" else c
+                }.toString()
+
+                val normalMinute = (min.toFloat() / 100).times(60).toInt()
+                val formattedMinute = if (normalMinute < 10) "0$normalMinute" else "$normalMinute"
+
+                if (axis.mEntryCount == 0) return ""
+                return "$hour:$formattedMinute"
+            }
+        }
+    }
+
+    private fun updateRightAxisLabels(events: List<Event>) {
+        binding.lineChart.axisRight.valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                if (value == 0F) return ""
+
+                val eventsByYAxis = events.groupBy { it.yAxis() }
+                val eventsByCurrentAxisValue = eventsByYAxis.getOrElse(value, { emptyList() })
+                eventsByCurrentAxisValue.forEach {
+                    it.endTime?.let { endTime ->
+                        if (endTime.contentEquals("25:00")) {
+                            it.endTime = "24:00"
+                        }
+                    }
+                    it.calculateDuration()
+                }
+                val totalDuration = eventsByCurrentAxisValue.sumOf { it.durationInMillis }
+                return hmsTimeFormatter(totalDuration)
+            }
+        }
+    }
+
+
+    private fun getColorsFor(entries: List<Entry>): List<Int> {
+        val colors = mutableListOf<Int>()
+        entries.forEachIndexed { index, entry ->
+            val nextEntry = entries.elementAtOrNull(index.inc())
+
+            when (entry.y) {
+                1F -> {
+                    if (nextEntry != null) {
+                        if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else {
+                            colors.add(ContextCompat.getColor(context!!, R.color.toast_yellow))
+                        }
+                    } else {
+                        colors.add(ContextCompat.getColor(context!!, R.color.toast_yellow))
+                    }
+                }
+                2F -> {
+                    if (nextEntry != null) {
+                        if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else {
+                            colors.add(ContextCompat.getColor(context!!, R.color.toast_green))
+                        }
+                    } else {
+                        colors.add(ContextCompat.getColor(context!!, R.color.toast_green))
+                    }
+                }
+                3F -> {
+                    if (nextEntry != null) {
+                        if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else {
+                            colors.add(ContextCompat.getColor(context!!, R.color.toast_blue))
+                        }
+                    } else {
+                        colors.add(ContextCompat.getColor(context!!, R.color.toast_blue))
+                    }
+                }
+                4F -> {
+                    if (nextEntry != null) {
+                        if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
+                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                        } else {
+                            colors.add(ContextCompat.getColor(context!!, R.color.toast_red))
+                        }
+                    } else {
+                        colors.add(ContextCompat.getColor(context!!, R.color.toast_red))
+                    }
+                }
+            }
+        }
+        return colors
     }
 }

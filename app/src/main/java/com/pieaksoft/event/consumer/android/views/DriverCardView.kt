@@ -53,7 +53,7 @@ class DriverCardView(context: Context, attrs: AttributeSet) : ConstraintLayout(c
                 driverStatus.background.colorFilter = PorterDuffColorFilter(
                     ContextCompat.getColor(
                         context,
-                        R.color.grey2
+                        R.color.secondary_gray
                     ), PorterDuff.Mode.SRC_IN
                 )
             }

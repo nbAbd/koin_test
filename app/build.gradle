@@ -149,5 +149,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:19.0.1"
 
     // splash-screen
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
