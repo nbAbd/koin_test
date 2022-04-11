@@ -96,8 +96,11 @@ class EventsCalculationFragment :
             ).show()
         }
 
-
         eventViewModel.eventList.observe(this) {
+            if (eventStatusCode != (activity as MainActivity).lastStatusInEventList()) {
+                (activity as MainActivity).checkLastDutyStatusByLastEvent()
+                eventViewModel.storeCurrentDutyStatus((activity as MainActivity).lastStatusInEventList())
+            }
             viewModel.apply {
                 resetMillis()
                 calculate {

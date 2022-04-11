@@ -141,9 +141,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                     }
 
                     eventDutyStatus?.let {
-                        if (checkedId != findSelectedItemByStatus(
-                                lastStatusInEventList()
-                            )
+                        if (checkedId != findSelectedItemByStatus(lastStatusInEventList())
                         ) {
                             Dialogs.showInsertEventDialogFragment(
                                 supportFragmentManager,
@@ -168,7 +166,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         navigateByDutyStatus(lastStatusInEventList())
     }
 
-    private fun lastStatusInEventList(): EventCode {
+    fun lastStatusInEventList(): EventCode {
         if (eventList.isNotEmpty()) {
             val eventCode = eventList[eventList.size - 1].eventCode
             if (eventCode != null) {
