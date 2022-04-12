@@ -308,6 +308,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     fun resetInserting() {
         _event.value = null
         _localEvent.value = null
+
         _eventInsertCode.value = null
         _eventInsertDate.value = null
     }
@@ -317,6 +318,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      * Save last selected duty status in order to open it again when user launches app
      * */
     fun storeCurrentDutyStatus(status: EventCode) {
+        sp.getString(CURRENT_DUTY_STATUS, null)?.let { if (it == status.code) return }
         sp.put(CURRENT_DUTY_STATUS, status.code)
     }
 

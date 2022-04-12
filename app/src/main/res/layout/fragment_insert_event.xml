@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:constraint_referenced_ids="trailer_number, ship_doc_number, license, from, odometer, to"
+            app:constraint_referenced_ids="trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it"
             app:flow_firstHorizontalStyle="spread_inside"
             app:flow_horizontalAlign="start"
             app:flow_horizontalGap="20dp"
@@ -93,6 +93,16 @@
             tools:ignore="MissingConstraints" />
 
         <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+            android:id="@+id/location_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hint="@string/input_data"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_weight="1"
+            app:title="@string/location_description"
+            tools:ignore="MissingConstraints" />
+
+        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
             android:id="@+id/ship_doc_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -109,7 +119,7 @@
             app:hint="@string/input_data"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_weight="1"
-            app:title="@string/ship_doc_number"
+            app:title="@string/from"
             tools:ignore="MissingConstraints" />
 
         <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
@@ -119,27 +129,62 @@
             app:hint="@string/input_data"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_weight="1"
-            app:title="@string/ship_doc_number"
+            app:title="@string/to"
             tools:ignore="MissingConstraints" />
+
+        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+            android:id="@+id/comment_it"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hint="@string/input_data"
+            app:commentField="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_weight="1"
+            app:maxElements="60"
+            app:title="@string/comment_title"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/personal_use"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@id/personal_use_text"
+            app:layout_constraintTop_toBottomOf="@id/comment_it"
+            app:srcCompat="@drawable/ic_radio_off" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/personal_use_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/personal_user"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/personal_use"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/personal_use" />
 
         <Space
             android:id="@+id/spacer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/next"
+            app:layout_constraintBottom_toTopOf="@id/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/flow" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/next"
+            android:id="@+id/save"
             android:layout_width="0dp"
             android:layout_height="@dimen/_50dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/round_order_button"
             android:enabled="true"
-            android:text="@string/next"
+            android:text="@string/save"
             android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"

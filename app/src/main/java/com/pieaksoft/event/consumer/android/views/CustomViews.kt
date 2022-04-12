@@ -72,9 +72,11 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
         }
 
         getBoolean(R.styleable.FloatingTitleEditText_commentField, false).also {
-            editText.afterTextChanged { comment ->
-                title.text =
-                    context.getString(R.string.comment_title_din, comment.length.toString())
+            if (it) {
+                editText.afterTextChanged { comment ->
+                    title.text =
+                        context.getString(R.string.comment_title_din, comment.length.toString())
+                }
             }
         }
 

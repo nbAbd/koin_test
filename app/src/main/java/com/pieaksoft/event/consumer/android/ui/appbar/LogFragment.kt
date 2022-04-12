@@ -1,7 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.appbar
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
@@ -16,6 +15,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
+import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.events.EventViewModel
+import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
+import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.EventListAdapter
+import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
+import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
+import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.graph.EventDataSet
+import com.pieaksoft.event.consumer.android.utils.graph.GraphManager
+import com.pieaksoft.event.consumer.android.views.Dialogs
+import com.pieaksoft.event.consumer.android.views.Dialogs.showInsertEventDialogFragment
+import org.koin.android.viewmodel.ext.android.sharedViewModel
+import android.graphics.Color
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -23,24 +39,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
-import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
-import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
-import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.EventListAdapter
-import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
-import com.pieaksoft.event.consumer.android.ui.dialog.InsertEventDialog
-import com.pieaksoft.event.consumer.android.ui.events.InsertEventPagerDialog
-import com.pieaksoft.event.consumer.android.utils.*
-import com.pieaksoft.event.consumer.android.utils.graph.EventDataSet
-import com.pieaksoft.event.consumer.android.utils.graph.GraphManager
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
-import com.pieaksoft.event.consumer.android.views.Dialogs
-import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     init {
@@ -53,7 +53,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         EventListAdapter { event ->
             viewModel.setEventInsertCode(code = EventCode.findByCode(event.eventCode ?: ""))
             viewModel.setEventInsertDate(date = event.certifyDate?.first()?.date?.getDateFromString()!!)
-            showInsertEventPagerDialog()
+            showInsertEventDialogFragment(childFragmentManager)
         }
     }
 
@@ -234,15 +234,8 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     private fun selectDate() {
         Dialogs.showDateTimeSelector(requireContext(), sp = viewModel.sp) { date ->
             viewModel.setEventInsertDate(date = date)
-            showInsertEventPagerDialog()
+            showInsertEventDialogFragment(childFragmentManager)
         }
-    }
-
-    private fun showInsertEventPagerDialog() {
-        val dialog = InsertEventPagerDialog {
-            (requireActivity() as MainActivity).binding.bottomNavigation.root.hide()
-        }
-        dialog.show(childFragmentManager, InsertEventPagerDialog::class.java.name)
     }
 
     private fun drawChart(events: MutableList<Event>) {
@@ -439,4 +432,5 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         }
         return colors
     }
+
 }

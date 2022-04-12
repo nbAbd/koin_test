@@ -328,15 +328,6 @@ fun TextView.setMultipleSpanTextLink(
     movementMethod = LinkMovementMethod.getInstance()
 }
 
-//fun String.phoneNumberFormat(region: String = "KG", util: PhoneNumberUtil): String {
-//    return util.format(util.parse(this, region), PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
-//}
-//
-//fun String.isPhoneNumberValid(region: String = "KG", util: PhoneNumberUtil): Boolean {
-//    val phoneNumberFormatter = util.parse(this, region)
-//    return util.isValidNumber(phoneNumberFormatter)
-//}
-
 fun TextView.setMultipleBoldText(
     string: String,
     boldString: String,
@@ -428,23 +419,6 @@ fun String.getGantColor(): String {
             "#9BAEC8"
         }
     }
-}
-
-fun RecyclerView.attachSnapHelperWithListener(
-    snapHelper: SnapHelper,
-    behavior: SnapOnScrollListener.Behavior = SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
-    onSnapPositionChangeListener: OnSnapPositionChangeListener
-) {
-    snapHelper.attachToRecyclerView(this)
-    val snapOnScrollListener =
-        SnapOnScrollListener(snapHelper, behavior, onSnapPositionChangeListener)
-    addOnScrollListener(snapOnScrollListener)
-}
-
-fun SnapHelper.getSnapPosition(recyclerView: RecyclerView): Int {
-    val layoutManager = recyclerView.layoutManager ?: return RecyclerView.NO_POSITION
-    val snapView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
-    return layoutManager.getPosition(snapView)
 }
 
 fun Context.isNetworkAvailable(): Boolean {
