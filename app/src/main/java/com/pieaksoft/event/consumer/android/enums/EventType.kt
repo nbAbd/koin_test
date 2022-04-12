@@ -30,7 +30,6 @@ enum class EventCode(val code: String) : Parcelable {
 
     companion object {
         private val DEFAULT = NONE
-        fun findByCode(code: String) =
-            values().find { it.code.contentEquals(code) } ?: DEFAULT
+        fun findByCode(code: String) = values().find { it.code.contentEquals(code) } ?: DEFAULT
     }
 }
