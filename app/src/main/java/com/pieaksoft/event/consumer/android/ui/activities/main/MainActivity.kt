@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
@@ -28,13 +27,13 @@ import com.pieaksoft.event.consumer.android.utils.Storage.eventList
 import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
     IMainAction {
 
     companion object {
         private const val ANIMATION_DURATION = 200L
-        private const val EVENT_DUTY_STATUS = "event_duty_status"
 
         fun newInstance(context: Context) = newIntent<MainActivity>(context)
     }
@@ -54,13 +53,9 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     private fun setCustomActionBar() = with(binding.appBar) {
         setSupportActionBar(toolbar)
-        menu.setOnClickListener {
-            navController.navigate(R.id.action_show_menu)
-        }
+        menu.setOnClickListener { navController.navigate(R.id.action_show_menu) }
 
-        log.setOnClickListener {
-            navController.navigate(R.id.action_show_log)
-        }
+        log.setOnClickListener { navController.navigate(R.id.action_show_log) }
 
         dotInspect.setOnClickListener {
             if (eventViewModel.eventListRequiresCertification.value?.isNotEmpty() == true) {
@@ -70,9 +65,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             }
         }
 
-        rules.setOnClickListener {
-            navController.navigate(R.id.rulesFragment)
-        }
+        rules.setOnClickListener { navController.navigate(R.id.rulesFragment) }
     }
 
     override fun setupView() {
@@ -108,78 +101,60 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             checkLastDutyStatus()
 
             binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                if (isChecked) {
-                    var eventDutyStatus: EventCode? = null
-                    when (checkedId) {
-                        R.id.coDriverFragment -> {
-                            eventViewModel.removeCurrentDutyStatus()
-                            navigateTo(id = checkedId)
-                            return@addOnButtonCheckedListener
-                        }
+                if (!isChecked) return@addOnButtonCheckedListener
 
-                        R.id.homeFragment -> {
-                            eventViewModel.removeCurrentDutyStatus()
-                            navigateTo(id = checkedId)
-                            return@addOnButtonCheckedListener
-                        }
-
-                        R.id.breakInFragment -> {
-                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
-                        }
-
-                        R.id.offFragment -> {
-                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
-                        }
-
-                        R.id.onFragment -> {
-                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
-                        }
-
-                        R.id.drivingFragment -> {
-                            eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
-                        }
+                var eventDutyStatus: EventCode? = null
+                when (checkedId) {
+                    R.id.coDriverFragment -> {
+                        eventViewModel.removeCurrentDutyStatus()
+                        navigateTo(id = checkedId)
+                        return@addOnButtonCheckedListener
                     }
 
-                    eventDutyStatus?.let {
-                        if (checkedId != findSelectedItemByStatus(lastStatusInEventList())
-                        ) {
-                            Dialogs.showInsertEventDialogFragment(
-                                supportFragmentManager,
-                                onCancelled = {
-                                    if (it) {
-                                        checkLastDutyStatusByLastEvent()
-                                    } else {
-                                        navigateTo(R.id.eventCalculationFragment, eventDutyStatus)
-                                    }
-                                }, eventDutyStatus
-                            )
-                        } else {
-                            navigateTo(R.id.eventCalculationFragment, eventDutyStatus)
+                    R.id.homeFragment -> {
+                        eventViewModel.removeCurrentDutyStatus()
+                        navigateTo(id = checkedId)
+                        return@addOnButtonCheckedListener
+                    }
+
+                    R.id.breakInFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH
+                    }
+
+                    R.id.offFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
+                    }
+
+                    R.id.onFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
+                    }
+
+                    R.id.drivingFragment -> {
+                        eventDutyStatus = EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING
+                    }
+                }
+
+                eventDutyStatus?.let {
+                    if (checkedId != eventList.lastItemEventCode.itemId) {
+                        eventViewModel.setEventInsertCode(code = it)
+                        eventViewModel.setEventInsertDate(Date())
+
+                        Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
+                            if (isCanceled) navigateTo(status = eventList.lastItemEventCode)
+                            else navigateTo(status = eventDutyStatus)
                         }
                     }
                 }
+
+                Log.e("Checked change listener", "I'm called")
             }
         }
-    }
-
-    fun checkLastDutyStatusByLastEvent() {
-        navigateByDutyStatus(lastStatusInEventList())
-    }
-
-    fun lastStatusInEventList(): EventCode {
-        if (eventList.isNotEmpty()) {
-            val eventCode = eventList[eventList.size - 1].eventCode
-            if (eventCode != null) {
-                return EventCode.findByCode(eventCode)
-            }
-        }
-        return EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
     }
 
     private fun checkLastDutyStatus() {
         // If last duty status is not null, then navigate to appropriate fragment
-        eventViewModel.getCurrentDutyStatus()?.let { dutyStatus ->
-            navigateByDutyStatus(status = dutyStatus)
+        eventViewModel.getCurrentDutyStatus()?.let { status ->
+            navigateTo(status = status)
             return
         }
 
@@ -190,30 +165,17 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         }
     }
 
-    private fun navigateTo(id: Int) = navController.navigate(id)
-
-    private fun navigateTo(id: Int, dutyStatus: EventCode) {
-        eventViewModel.storeCurrentDutyStatus(status = dutyStatus)
-        navController.navigate(id, bundleOf(EVENT_DUTY_STATUS to dutyStatus))
-    }
-
-    private fun navigateByDutyStatus(status: EventCode) {
-        navController.navigate(R.id.eventCalculationFragment, bundleOf(EVENT_DUTY_STATUS to status))
-        setSelectedItemByStatus(status)
-    }
-
-    private fun setSelectedItemByStatus(status: EventCode) {
-        findSelectedItemByStatus(status)?.let { binding.bottomNavigation.root.check(it) }
-    }
-
-    private fun findSelectedItemByStatus(status: EventCode): Int? {
-        return when (status) {
-            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> R.id.breakInFragment
-            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> R.id.offFragment
-            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> R.id.onFragment
-            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
-            else -> null
+    fun navigateTo(id: Int = R.id.eventCalculationFragment, status: EventCode? = null) {
+        status?.let {
+            eventViewModel.storeCurrentDutyStatus(status = status)
+            status.itemId?.let {
+                if (it != binding.bottomNavigation.root.checkedButtonId) {
+                    binding.bottomNavigation.root.check(it)
+                }
+            }
         }
+
+        navController.navigate(id)
     }
 
 
@@ -347,4 +309,13 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 })
         }
     }
+
+    private val EventCode.itemId: Int?
+        get() = when (this) {
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> R.id.breakInFragment
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> R.id.offFragment
+            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> R.id.onFragment
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
+            else -> null
+        }
 }

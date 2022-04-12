@@ -137,8 +137,8 @@
     <string name="change_signature">Change</string>
     <string name="save_signature">Save</string>
     <string name="settings">Settings</string>
-    <string name="To">To</string>
-    <string name="From">From</string>
+    <string name="to">To</string>
+    <string name="from">From</string>
     <string name="personal_user">Personal user</string>
 
     <string-array name="countries">

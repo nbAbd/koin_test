@@ -2,34 +2,30 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
-import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter
-import com.pieaksoft.event.consumer.android.utils.hmsTimeFormatter2
+import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 class EventsCalculationFragment :
-    BaseMVVMFragment<FragmentEventCalculationBinding, EventCalculationViewModel>() {
+    BaseMVVMFragment<FragmentEventCalculationBinding, EventCalculationViewModel>(), Modifier {
 
     init {
         requiresActionBar = true
     }
 
     override val viewModel: EventCalculationViewModel by viewModel()
+
     private val eventViewModel: EventViewModel by sharedViewModel()
-    private lateinit var eventStatusCode: EventCode
+    private var eventStatusCode: EventCode? = null
+
 
     override fun setupView() {
-        eventViewModel.getCurrentDutyStatus()?.let {
-            eventStatusCode = it
-        }
+        eventStatusCode = eventViewModel.getCurrentDutyStatus()
     }
 
     override fun onResume() {
@@ -97,14 +93,15 @@ class EventsCalculationFragment :
         }
 
         eventViewModel.eventList.observe(this) {
-            if (eventStatusCode != (activity as MainActivity).lastStatusInEventList()) {
-                (activity as MainActivity).checkLastDutyStatusByLastEvent()
-                eventViewModel.storeCurrentDutyStatus((activity as MainActivity).lastStatusInEventList())
+            if (eventStatusCode != Storage.eventList.lastItemEventCode) {
+                performStatusChange()
+                return@observe
             }
+
             viewModel.apply {
                 resetMillis()
                 calculate {
-                    if (::eventStatusCode.isInitialized) {
+                    if (eventStatusCode != null) {
                         when (eventStatusCode) {
                             EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
                                 // Cancel

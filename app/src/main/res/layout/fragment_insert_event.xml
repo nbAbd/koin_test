@@ -119,7 +119,7 @@
             app:hint="@string/input_data"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_weight="1"
-            app:title="@string/From"
+            app:title="@string/from"
             tools:ignore="MissingConstraints" />
 
         <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
@@ -129,7 +129,7 @@
             app:hint="@string/input_data"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_weight="1"
-            app:title="@string/To"
+            app:title="@string/to"
             tools:ignore="MissingConstraints" />
 
         <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText

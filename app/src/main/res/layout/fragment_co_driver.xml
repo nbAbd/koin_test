@@ -26,24 +26,29 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_exit"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            app:icon="@drawable/ic_close"
+            app:iconPadding="0dp"
+            app:iconSize="@dimen/_25dp"
+            app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_close" />
+            app:rippleColor="@color/separator_alpha" />
 
         <com.pieaksoft.event.consumer.android.views.DriverCardView
             android:id="@+id/primary_driver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:name="Test"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/additional_driver"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/team_driving" />
+            app:layout_constraintTop_toBottomOf="@+id/team_driving"
+            app:name="Test" />
 
 
         <com.pieaksoft.event.consumer.android.views.DriverCardView
@@ -62,10 +67,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:visibility="gone"
         android:background="@drawable/border_driver_item"
         android:paddingStart="100dp"
         android:paddingEnd="100dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,10 +82,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="41dp"
             android:drawableStart="@drawable/ic_driver_comp_24"
+            android:drawablePadding="16dp"
             android:text="@string/add_co_driver"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:drawablePadding="16dp"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toTopOf="parent" />
 
