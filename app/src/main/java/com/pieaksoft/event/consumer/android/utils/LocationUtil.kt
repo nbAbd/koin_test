@@ -8,12 +8,16 @@ import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.araujo.jordan.excuseme.ExcuseMe
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.ConnectionResult.*
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.pieaksoft.event.consumer.android.R
 
@@ -99,21 +103,19 @@ object LocationUtil {
         }
     }
 
-    private val errorStatuses = listOf(
-        SERVICE_INVALID, SERVICE_MISSING, SERVICE_DISABLED,
-        SERVICE_VERSION_UPDATE_REQUIRED, SERVICE_UPDATING
-    )
     private const val MIN_TIME_BW_UPDATES = 5000L
     private const val MIN_DISTANCE_CHANGE_FOR_UPDATES = 5F
-    lateinit var onLocationUpdates: LocationListener
     private lateinit var locationManager: LocationManager
+    private lateinit var mLocationRequest: LocationRequest
+    private lateinit var onLocationAvailableListener: LocationListener
+
+    private const val FASTEST_INTERVAL: Long = 2000
 
     fun startGettingLocation(
         activity: Activity,
         context: Context,
         onLocationUpdates: LocationListener
     ) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -131,35 +133,53 @@ object LocationUtil {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
             if (isGPSEnabled || isNetworkEnabled) {
-                if (errorStatuses.contains(
-                        GoogleApiAvailability.getInstance()
-                            .isGooglePlayServicesAvailable(context)
-                    )
+                if (SUCCESS !=
+                    GoogleApiAvailability.getInstance()
+                        .isGooglePlayServicesAvailable(context)
                 ) {
-                    this.onLocationUpdates = onLocationUpdates
+
+                    val onLocationAvailableListener = LocationListener {
+                        stopGettingLocation()
+                        onLocationUpdates.onLocationChanged(it)
+                    }
                     if (isGPSEnabled) {
                         locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                            onLocationUpdates
+                            onLocationAvailableListener
                         )
                     } else {
                         locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                            onLocationUpdates
+                            onLocationAvailableListener
                         )
                     }
                 } else {
-                    fusedLocationClient.lastLocation.addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            onLocationUpdates.onLocationChanged(it.result)
-                        } else {
-                            context.showMessage(it.exception.toString())
+
+                    val fusedLocationClient =
+                        LocationServices.getFusedLocationProviderClient(activity)
+
+                    mLocationRequest = LocationRequest()
+                    mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                    mLocationRequest.interval = MIN_TIME_BW_UPDATES
+                    mLocationRequest.fastestInterval = FASTEST_INTERVAL
+
+                    val locationCallback = object : LocationCallback() {
+                        override fun onLocationResult(p0: LocationResult) {
+                            if (p0.locations.isNotEmpty()) {
+                                onLocationUpdates.onLocationChanged(p0.lastLocation)
+                                fusedLocationClient.removeLocationUpdates(this)
+                            }
                         }
                     }
+
+                    fusedLocationClient.requestLocationUpdates(
+                        mLocationRequest, locationCallback,
+                        Looper.getMainLooper()
+                    )
                 }
             } else {
                 context.showMessage(context.getString(R.string.turn_on_location))
@@ -168,6 +188,7 @@ object LocationUtil {
     }
 
     fun stopGettingLocation() {
-        locationManager.removeUpdates(onLocationUpdates)
+        if (this::onLocationAvailableListener.isInitialized)
+            locationManager.removeUpdates(onLocationAvailableListener)
     }
 }

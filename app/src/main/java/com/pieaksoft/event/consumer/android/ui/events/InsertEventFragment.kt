@@ -27,8 +27,6 @@ class InsertEventFragment(
     private val binding get() = _binding!!
     private var isChecked = true
 
-    private var location: android.location.Location? = null
-
     private val eventModel: Event by lazy {
         Event(
             "",
@@ -136,7 +134,6 @@ class InsertEventFragment(
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.resetInserting()
-        LocationUtil.stopGettingLocation()
         _binding = null
     }
 }
