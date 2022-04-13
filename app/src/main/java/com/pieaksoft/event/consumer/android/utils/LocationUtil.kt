@@ -5,15 +5,17 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.araujo.jordan.excuseme.ExcuseMe
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.ConnectionResult.*
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
+import com.pieaksoft.event.consumer.android.R
 
 object LocationUtil {
 
@@ -97,18 +99,19 @@ object LocationUtil {
         }
     }
 
-    private fun isLocationEnabled(context: Context): Boolean {
-        val locationManager: LocationManager =
-            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
+    private val errorStatuses = listOf(
+        SERVICE_INVALID, SERVICE_MISSING, SERVICE_DISABLED,
+        SERVICE_VERSION_UPDATE_REQUIRED, SERVICE_UPDATING
+    )
+    private const val MIN_TIME_BW_UPDATES = 5000L
+    private const val MIN_DISTANCE_CHANGE_FOR_UPDATES = 5F
+    lateinit var onLocationUpdates: LocationListener
+    private lateinit var locationManager: LocationManager
 
-    fun getCurrentLocationOnce(
+    fun startGettingLocation(
         activity: Activity,
         context: Context,
-        onLocationAvailable: (location: Location) -> Unit
+        onLocationUpdates: LocationListener
     ) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
         if (ActivityCompat.checkSelfPermission(
@@ -119,13 +122,52 @@ object LocationUtil {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            if (isLocationEnabled(context)) {
-                fusedLocationClient.lastLocation.addOnSuccessListener {
-                    onLocationAvailable(it)
+            locationManager =
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+            val isNetworkEnabled =
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+            if (isGPSEnabled || isNetworkEnabled) {
+                if (errorStatuses.contains(
+                        GoogleApiAvailability.getInstance()
+                            .isGooglePlayServicesAvailable(context)
+                    )
+                ) {
+                    this.onLocationUpdates = onLocationUpdates
+                    if (isGPSEnabled) {
+                        locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                            onLocationUpdates
+                        )
+                    } else {
+                        locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                            onLocationUpdates
+                        )
+                    }
+                } else {
+                    fusedLocationClient.lastLocation.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            onLocationUpdates.onLocationChanged(it.result)
+                        } else {
+                            context.showMessage(it.exception.toString())
+                        }
+                    }
                 }
             } else {
-                Toast.makeText(context, "Turn on location", Toast.LENGTH_LONG).show()
+                context.showMessage(context.getString(R.string.turn_on_location))
             }
         }
+    }
+
+    fun stopGettingLocation() {
+        locationManager.removeUpdates(onLocationUpdates)
     }
 }
