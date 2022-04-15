@@ -15,7 +15,10 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
-import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.LocationUtil
+import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
+import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
+import com.pieaksoft.event.consumer.android.utils.switchSelectStopIcon
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
@@ -55,7 +58,7 @@ class InsertEventFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_FRAME, R.style.ThemeDialog)
-        LocationUtil.startGettingLocation(this,requireActivity(), requireContext()) {
+        LocationUtil.startGettingLocation(requireActivity(), requireContext()) {
             eventModel.coordinates = Location(it.latitude.toFloat(), it.longitude.toFloat())
             if (viewModel.isUserWaitingToSave()) binding.save.performClick()
         }

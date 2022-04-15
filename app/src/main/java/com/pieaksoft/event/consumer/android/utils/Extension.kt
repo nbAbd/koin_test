@@ -40,8 +40,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
 import java.text.DateFormat
@@ -57,7 +55,7 @@ fun Fragment.toast(text: String) {
     Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
 }
 
-fun AppCompatActivity.toast(text: String) {
+fun Activity.toast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 

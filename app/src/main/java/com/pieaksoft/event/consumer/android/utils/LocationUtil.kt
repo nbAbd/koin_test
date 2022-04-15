@@ -9,7 +9,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.araujo.jordan.excuseme.ExcuseMe
@@ -112,7 +111,6 @@ object LocationUtil {
     private const val FASTEST_INTERVAL: Long = 2000
 
     fun startGettingLocation(
-        fragment: Fragment,
         activity: Activity,
         context: Context,
         onLocationUpdates: LocationListener
@@ -183,7 +181,7 @@ object LocationUtil {
                     )
                 }
             } else {
-                fragment.toast(context.getString(R.string.turn_on_location))
+                activity.toast(context.getString(R.string.turn_on_location))
             }
         }
     }
