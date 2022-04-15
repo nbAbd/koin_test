@@ -36,7 +36,4 @@ val List<Event>.lastItemStartDate: Date?
         return null
     }
 
-val eventList: List<Event>
-    get() {
-        return Storage.eventList
-    }
+val eventList = Storage.eventList

@@ -471,14 +471,6 @@ fun ImageView.switchSelectStopIcon(select: Boolean) {
     }
 }
 
-fun Context.showMessage(text: String) {
-    Toast.makeText(
-        this,
-        text,
-        Toast.LENGTH_LONG
-    ).show()
-}
-
 fun View.showWithAnimation(duration: Int = 300) {
     if (isShown) return
 

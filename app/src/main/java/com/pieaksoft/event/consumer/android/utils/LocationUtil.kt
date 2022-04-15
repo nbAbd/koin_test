@@ -112,6 +112,7 @@ object LocationUtil {
     private const val FASTEST_INTERVAL: Long = 2000
 
     fun startGettingLocation(
+        fragment: Fragment,
         activity: Activity,
         context: Context,
         onLocationUpdates: LocationListener
@@ -182,12 +183,12 @@ object LocationUtil {
                     )
                 }
             } else {
-                context.showMessage(context.getString(R.string.turn_on_location))
+                fragment.toast(context.getString(R.string.turn_on_location))
             }
         }
     }
 
-    fun stopGettingLocation() {
+    private fun stopGettingLocation() {
         if (this::onLocationAvailableListener.isInitialized)
             locationManager.removeUpdates(onLocationAvailableListener)
     }

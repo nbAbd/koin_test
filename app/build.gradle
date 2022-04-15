@@ -124,7 +124,7 @@ dependencies {
     implementation 'com.github.miguelbcr:TableFixHeaders-Wrapper:0.2.0'
 
 
-    implementation 'com.github.Nurumbet-ux:SingleDateAndTimePicker:master-SNAPSHOT'
+    implementation 'com.github.florent37:singledateandtimepicker:2.2.7'
     implementation 'nl.joery.timerangepicker:timerangepicker:1.0.0'
 
 
