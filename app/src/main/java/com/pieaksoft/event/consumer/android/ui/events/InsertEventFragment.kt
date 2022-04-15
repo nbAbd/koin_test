@@ -13,6 +13,7 @@ import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
+import com.pieaksoft.event.consumer.android.model.event.isLocationSet
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.LocationUtil
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
@@ -57,6 +58,10 @@ class InsertEventFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_FRAME, R.style.ThemeDialog)
+        LocationUtil.startGettingLocation(requireActivity(), requireContext()) {
+            eventModel.coordinates = Location(it.latitude.toFloat(), it.longitude.toFloat())
+            if (viewModel.isUserWaitingToSave()) binding.save.performClick()
+        }
     }
 
     override fun onStart() {
@@ -116,15 +121,8 @@ class InsertEventFragment(
     private fun setupView() = with(binding) {
         observe()
         save.setOnClickListener {
-            LocationUtil.getCurrentLocationOnce(requireActivity(), requireContext()) {
-                eventModel.apply {
-                    coordinates = Location(
-                        it.latitude.toFloat(),
-                        it.longitude.toFloat()
-                    )
-                }
-                viewModel.insertEvent(eventModel)
-            }
+            if (eventModel.isLocationSet()) viewModel.insertEvent(eventModel)
+            else viewModel.showProgress()
         }
         backInsertBtn.setOnClickListener {
             onCancelled(true)

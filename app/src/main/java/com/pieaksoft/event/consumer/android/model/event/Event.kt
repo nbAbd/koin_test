@@ -19,7 +19,7 @@ data class Event(
     var date: String? = "",
     var time: String? = "",
     @TypeConverters(Location::class)
-    var coordinates: Location = Location(0f, 0f),
+    var coordinates: Location = Location(null, null),
     val shippingDocumentNumber: String? = "",
     val totalEngineHours: Int? = 0,
     val totalEngineMiles: Int? = 0,
@@ -70,3 +70,5 @@ fun Event.formatDuration(): String {
         )
     )
 }
+
+fun Event.isLocationSet() = coordinates.latitude != null && coordinates.longitude != null
