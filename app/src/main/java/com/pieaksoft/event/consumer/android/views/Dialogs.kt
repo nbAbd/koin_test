@@ -67,7 +67,7 @@ object Dialogs {
             .customLocale(Locale.US)
             .setTimeZone(timezone)
             .defaultDate(dateSdf)
-            .minDateRange(startDate.addMinutes(+1))
+            .minDateRange(startDate)
             .maxDateRange(dateSdf)
             .minutesStep(1)
             .bottomSheet()
