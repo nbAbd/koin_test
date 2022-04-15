@@ -58,6 +58,8 @@ object Dialogs {
         val startDate: Date = eventList.lastItemStartDate ?: dateSdf
 
         SingleDateAndTimePickerDialog.Builder(context)
+            .customLocale(Locale.US)
+            .setTimeZone(timezone)
             .defaultDate(dateSdf)
             .minDateRange(startDate.addMinutes(+1))
             .maxDateRange(dateSdf)
