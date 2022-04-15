@@ -55,7 +55,7 @@ class InsertEventFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_FRAME, R.style.ThemeDialog)
-        LocationUtil.startGettingLocation(requireActivity(), requireContext()) {
+        LocationUtil.startGettingLocation(this,requireActivity(), requireContext()) {
             eventModel.coordinates = Location(it.latitude.toFloat(), it.longitude.toFloat())
             if (viewModel.isUserWaitingToSave()) binding.save.performClick()
         }
