@@ -1,7 +1,14 @@
 package com.pieaksoft.event.consumer.android.utils
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.model.event.Event
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 object Storage {
     var eventList: List<Event> = emptyList()
@@ -19,7 +26,17 @@ val List<Event>.lastItemEventCode: EventCode
 val List<Event>.lastItem: Event
     get() = takeWhile { it.eventCode != null }.last()
 
-val List<Event>.lastItemStartDate: String
+val List<Event>.lastItemStartDate: Date?
+    @SuppressLint("SimpleDateFormat")
     get() {
-        return ""
+        if (isNotEmpty()) {
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            return formatter.parse(last().date + " " + last().time)
+        }
+        return null
+    }
+
+val eventList: List<Event>
+    get() {
+        return Storage.eventList
     }
