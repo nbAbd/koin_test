@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
 import androidx.core.content.ContextCompat
@@ -15,8 +16,7 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.DialogSwapDriversBinding
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
-import com.pieaksoft.event.consumer.android.utils.addDays
+import com.pieaksoft.event.consumer.android.utils.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -56,11 +56,19 @@ object Dialogs {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
         val dateSdf = sdf.parse(LocalDateTime.now(zoneId).toString()) ?: Date()
 
+        val startDate = eventList.lastItemStartDate ?: run {
+            Log.w(
+                "Dialogs",
+                "eventList.lastItemStartDate is null, so we'll use $dateSdf"
+            )
+            dateSdf
+        }.also { it.addMinutes(1) }
+
         SingleDateAndTimePickerDialog.Builder(context)
             .customLocale(Locale.US)
             .setTimeZone(timezone)
             .defaultDate(dateSdf)
-            .minDateRange(dateSdf.addDays(-7))
+            .minDateRange(startDate)
             .maxDateRange(dateSdf)
             .minutesStep(1)
             .bottomSheet()

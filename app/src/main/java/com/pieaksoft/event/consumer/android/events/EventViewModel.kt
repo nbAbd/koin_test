@@ -341,4 +341,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             commit()
         }
     }
+
+    fun isUserWaitingToSave(): Boolean {
+        return if (progress.value == true) {
+            hideProgress()
+            true
+        } else false
+    }
 }

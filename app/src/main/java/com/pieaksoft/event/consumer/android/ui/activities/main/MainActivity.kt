@@ -146,8 +146,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                         }
                     }
                 }
-
-                Log.e("Checked change listener", "I'm called")
             }
         }
     }
