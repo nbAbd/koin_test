@@ -56,17 +56,17 @@ object Dialogs {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
         val dateSdf = sdf.parse(LocalDateTime.now(zoneId).toString()) ?: Date()
 
-        val startDate = eventList.lastItemStartDate ?: run {
+        var startDate = eventList.lastItemStartDate ?: run {
             Log.w(
                 "Dialogs",
                 "eventList.lastItemStartDate is null, so we'll use $dateSdf"
             )
             dateSdf
-        }.also { it.addMinutes(1) }
+        }
+        startDate.addMinutes(1).also { startDate = it }
 
         SingleDateAndTimePickerDialog.Builder(context)
             .customLocale(Locale.US)
-            .setTimeZone(timezone)
             .defaultDate(dateSdf)
             .minDateRange(startDate)
             .maxDateRange(dateSdf)

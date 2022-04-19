@@ -2,49 +2,29 @@ package com.pieaksoft.event.consumer.android.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.provider.Settings
 import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
-import androidx.annotation.ColorInt
-import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 fun FragmentActivity.toast(text: String) {
@@ -117,73 +97,10 @@ fun Fragment.hideKeyboard() {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-//fun ImageView.setImage(url: String?) {
-//    Picasso.get()
-//        .load(url?.let { Uri.parse(it) })
-//        .placeholder(R.drawable.placeholder)
-//        .into(this)
-//}
-
 fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) {
     // hierarchy.setPlaceholderImage(context?.let { TextDrawableUtil.getTextDrawable(it, placeHolder) })
     setImageURI(url)
 }
-
-//fun ImageView.setImage(listContent: List<Image>?) {
-//    when {
-//        listContent.isNullOrEmpty() -> {
-//            Picasso.get()
-//                .load(R.drawable.placeholder)
-//                .placeholder(R.drawable.placeholder)
-//                .into(this)
-//        }
-//        else -> setImage(listContent.first().thumbnailUrl)
-//    }
-//}
-
-//fun bitmapDescriptorFromVector(
-//    context: Context,
-//    @DrawableRes vectorDrawableResourceId: Int
-//): BitmapDescriptor? {
-//    val background = ContextCompat.getDrawable(context, vectorDrawableResourceId)
-//    background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
-//    val vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId)
-//
-//    val bitmap = Bitmap.createBitmap(
-//        background.intrinsicWidth,
-//        background.intrinsicHeight,
-//        Bitmap.Config.ARGB_8888
-//    )
-//    val canvas = Canvas(bitmap)
-//    background.draw(canvas)
-//    vectorDrawable?.draw(canvas)
-//    return BitmapDescriptorFactory.fromBitmap(bitmap)
-//
-//}
-
-
-@SuppressLint("SimpleDateFormat")
-val formatter = SimpleDateFormat("HH:mm")
-
-@SuppressLint("SimpleDateFormat")
-val formatterDateAndTime = SimpleDateFormat("EEE, MMM d/yyyy")
-
-
-//fun ImageView.circleImage(url: String?) {
-//    Glide.with(context)
-//        .load(url ?: "")
-//        .transform(CenterCrop(), RoundedCorners(50))
-//        .placeholder(R.drawable.placeholder)
-//        .into(this)
-//}
-
-//fun ImageView.withCorner(url: String?, radius: Int) {
-//    Glide.with(context)
-//        .load(url ?: "")
-//        .transform(CenterCrop(), RoundedCorners(radius))
-//        .placeholder(R.drawable.placeholder)
-//        .into(this)
-//}
 
 /**
  * View extensions
@@ -301,6 +218,5 @@ fun View.hideWithAnimation(to: Int, duration: Int = 300) {
                 super.onAnimationEnd(animation)
                 isGone = true
             }
-        })
-        .start()
+        }).start()
 }

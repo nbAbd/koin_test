@@ -27,7 +27,7 @@ val List<Event>.lastItemStartDate: Date?
     get() {
         if (isNotEmpty()) {
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm")
-            return formatter.parse(last().date + " " + last().time)
+            return formatter.parse(lastItem.date + " " + lastItem.time)
         }
         return null
     }

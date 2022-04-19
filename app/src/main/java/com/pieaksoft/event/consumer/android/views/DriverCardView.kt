@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ItemDriverBinding
@@ -16,10 +15,12 @@ import com.pieaksoft.event.consumer.android.utils.setImageWithPlaceHolder
 import com.pieaksoft.event.consumer.android.utils.visible
 
 class DriverCardView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
-    private val binding by viewBinding(ItemDriverBinding::bind)
+    private var binding: ItemDriverBinding
 
     init {
-        inflate(context, R.layout.item_driver, this)
+        inflate(context, R.layout.item_driver, this).also {
+            binding = ItemDriverBinding.bind(it)
+        }
 
         val imageView: SimpleDraweeView = findViewById(R.id.driver_image)
         val textView: AppCompatTextView = findViewById(R.id.driver_name)
@@ -31,7 +32,6 @@ class DriverCardView(context: Context, attrs: AttributeSet) : ConstraintLayout(c
         )
         textView.text = attributes.getString(R.styleable.DriverCardView_name)
         attributes.recycle()
-
     }
 
     fun setDriverInfo(driver: Profile, current: Boolean = true) {

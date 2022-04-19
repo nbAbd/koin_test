@@ -26,6 +26,7 @@
     <string name="email">Email</string>
     <string name="email_hint">Email here</string>
     <string name="faq">FAQ</string>
+    <string name="ok">OK</string>
     <string name="first_name">First name</string>
     <string name="first_name_hint">First name here</string>
     <string name="h_window">14h Window</string>
