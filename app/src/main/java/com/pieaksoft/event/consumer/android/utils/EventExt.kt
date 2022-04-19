@@ -45,25 +45,6 @@ fun hmsTimeFormatter(millis: Long, withSeconds: Boolean = false): String {
         String.format(format, hours, min)
 }
 
-fun millisToHoursMinutes(millisUntilFinished: Long): String {
-
-
-    val remainingHours = when (val hours = millisUntilFinished / 1000 / 60 / 60) {
-        in 10..1000 -> hours.toString()
-        else -> "0$hours"
-    }
-    val remainingMinutes = when (val minutes = millisUntilFinished / 1000 / 60 % 60) {
-        in 10..59 -> minutes.toString()
-        else -> "0$minutes"
-    }
-
-    return String.format(
-        "%s:%s",
-        remainingHours,
-        remainingMinutes
-    )
-}
-
 
 fun hmsTimeFormatter2(millis: Long, withSeconds: Boolean = false): String {
     val hours = abs(TimeUnit.MILLISECONDS.toHours(millis))

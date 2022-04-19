@@ -5,9 +5,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
-import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import com.pieaksoft.event.consumer.android.ui.codriver.CoDriverFragment
-import com.pieaksoft.event.consumer.android.ui.events_fragments.EventsCalculationFragment
 
 fun DialogFragment.hideSystemUI() {
     dialog?.window?.setFlags(

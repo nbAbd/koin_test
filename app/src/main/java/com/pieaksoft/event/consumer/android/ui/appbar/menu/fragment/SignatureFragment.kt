@@ -12,7 +12,6 @@ import com.pieaksoft.event.consumer.android.ui.appbar.menu.MenuViewModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.get
-import com.pieaksoft.event.consumer.android.utils.visible
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 

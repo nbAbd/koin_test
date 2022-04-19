@@ -44,7 +44,7 @@ class EventsCalculationFragment :
             }
             binding.breakInValue.text = hmsTimeFormatter(it)
             binding.breakProgressBar.progress =
-                ((it.toFloat() / 60000 / on_Duty_Break_In_Minutes) * 100)
+                ((it.toFloat() / 60000 / ON_DUTY_BREAK_IN_MINUTES) * 100)
         }
 
         viewModel.onDuty.observe(this) {
@@ -56,7 +56,7 @@ class EventsCalculationFragment :
                 binding.progressBar2.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
                 binding.progressBar2.progress =
-                    ((it.toFloat() / 60000 / on_Duty_Window_Minutes) * 100)
+                    ((it.toFloat() / 60000 / ON_DUTY_WINDOW_MINUTES) * 100)
             }
 
 

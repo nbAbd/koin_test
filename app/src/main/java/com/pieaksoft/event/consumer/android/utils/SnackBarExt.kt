@@ -47,34 +47,6 @@ fun AppCompatActivity.showCustomSnackBar(
     snackBar.show()
 }
 
-fun Fragment.showCustomSnackBar(
-    message: String,
-    duration: Int = Snackbar.LENGTH_SHORT,
-    type: SnackBarType
-) {
-    val binding = CustomToastViewBinding.inflate(layoutInflater)
-    val rootView = activity?.window?.decorView?.findViewById(android.R.id.content) as ViewGroup
-    binding.apply {
-        this.title.text = title.toString()
-        this.message.text = message
-        verticalLine.background?.colorFilter =
-            BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                ContextCompat.getColor(requireContext(), type.color),
-                BlendModeCompat.SRC_IN
-            )
-    }
-
-    val snackBar = Snackbar.make(rootView, "", duration)
-    snackBar.view.setBackgroundColor(Color.TRANSPARENT)
-    val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout
-    (snackBar.view.layoutParams as FrameLayout.LayoutParams).apply {
-        gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-    }
-    snackBarLayout.setPadding(0, 0, 0, 0)
-    snackBarLayout.addView(binding.root)
-    snackBar.show()
-}
-
 enum class SnackBarType(val title: String, @ColorRes val color: Int) {
     ERROR("Error", R.color.toast_red),
     SUCCESS("Success", R.color.toast_green),

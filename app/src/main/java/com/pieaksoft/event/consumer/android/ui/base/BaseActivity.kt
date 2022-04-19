@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android.ui.base
 import android.app.NotificationManager
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
@@ -26,20 +27,11 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
-    val sp by lazy {
+    val sp: SharedPreferences by lazy {
         getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
     val db: AppDataBase by inject()
-
-    private val pd by lazy {
-        ProgressDialog(this).apply {
-            setMessage(context.getString(R.string.loading))
-            setCancelable(false)
-        }
-    }
-
-    var connectionStateMonitor: ConnectionStateMonitor? = null
 
     abstract fun setView()
     abstract fun bindVM()
@@ -58,55 +50,6 @@ abstract class BaseActivity(@LayoutRes private val idRes: Int) : AppCompatActivi
     }
 
     override fun onNegative() {
-    }
-
-    fun setProgressVisible(visible: Boolean) {
-        launch {
-            if (!isUIAvailable()) {
-                return@launch
-            }
-            try {
-                if (visible && !pd.isShowing) {
-                    pd.show()
-                } else if (!visible && pd.isShowing) {
-                    pd.dismiss()
-                }
-            } catch (e: Exception) {
-            }
-        }
-    }
-
-    fun showDialogWithOkNoButton(
-        title: String, message: String,
-        @StringRes positiveStringRes: Int = R.string.yes,
-        @StringRes negativeStringRes: Int = R.string.no,
-        listenerOk: View.OnClickListener?, listenerNo: View.OnClickListener?
-    ) {
-        launch {
-            if (!isUIAvailable()) {
-                return@launch
-            }
-
-            val alert = AlertDialog.Builder(this@BaseActivity).create()
-            alert.setTitle(title)
-            alert.setMessage(message)
-            alert.setCancelable(false)
-            alert.setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                this@BaseActivity.getText(positiveStringRes)
-            ) { _, _ ->
-                listenerOk?.onClick(null)
-                alert.dismiss()
-            }
-            alert.setButton(
-                AlertDialog.BUTTON_NEGATIVE,
-                this@BaseActivity.getText(negativeStringRes)
-            ) { _, _ ->
-                listenerNo?.onClick(null)
-                alert.dismiss()
-            }
-            alert.show()
-        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

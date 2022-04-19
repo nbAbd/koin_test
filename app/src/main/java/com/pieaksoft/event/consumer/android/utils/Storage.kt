@@ -18,8 +18,3 @@ val List<Event>.lastItemEventCode: EventCode
 
 val List<Event>.lastItem: Event
     get() = takeWhile { it.eventCode != null }.last()
-
-val List<Event>.lastItemStartDate: String
-    get() {
-        return ""
-    }

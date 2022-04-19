@@ -13,13 +13,13 @@ import androidx.fragment.app.FragmentManager
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.DialogSwapDriversBinding
-import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment
 import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
 import com.pieaksoft.event.consumer.android.utils.addDays
 import java.text.SimpleDateFormat
-import java.time.*
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 object Dialogs {

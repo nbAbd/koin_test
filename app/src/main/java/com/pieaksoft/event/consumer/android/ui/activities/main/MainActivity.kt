@@ -27,6 +27,7 @@ import com.pieaksoft.event.consumer.android.utils.Storage.eventList
 import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.lang.Error
 import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
@@ -220,8 +221,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         })
 
         eventViewModel.error.observe(this, {
-            val error = ErrorHandler.getErrorMessage(it, this)
-            Log.e("test_logerrror", "test insert error response = $error")
+            ErrorHandler.showError(binding.root, it)
         })
     }
 

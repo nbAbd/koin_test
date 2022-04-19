@@ -40,8 +40,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
 import java.text.DateFormat
@@ -60,11 +58,6 @@ fun Fragment.toast(text: String) {
 fun AppCompatActivity.toast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
-
-fun AppCompatActivity.showCustomToast(message: String, withLength: Int = Toast.LENGTH_SHORT) {
-
-}
-
 
 inline fun <reified T> SharedPreferences.get(key: String, defaultValue: T): T {
     when (T::class) {
@@ -100,17 +93,6 @@ inline fun <reified T> SharedPreferences.put(key: String, value: T) {
     }
 
     editor.apply()
-}
-
-fun String.getActualText(): String {
-    return when (this) {
-        "popularity" -> "По популярности"
-        "date_add" -> "По дате добавления"
-        "new" -> "По новизне"
-        "price_asc" -> "Цена: по возрастанию"
-        "price_desc" -> "Цена: по убыванию"
-        else -> "По дате добавления"
-    }
 }
 
 fun Activity.hideKeyboard() {
@@ -159,14 +141,6 @@ fun SimpleDraweeView.setImageWithPlaceHolder(url: String?, placeHolder: String) 
 //    }
 //}
 
-fun Button.isVisibleButton(data: Any?) {
-    if (data != null) {
-        this.visibility = View.VISIBLE
-    } else {
-        this.visibility = View.GONE
-    }
-}
-
 //fun bitmapDescriptorFromVector(
 //    context: Context,
 //    @DrawableRes vectorDrawableResourceId: Int
@@ -187,32 +161,12 @@ fun Button.isVisibleButton(data: Any?) {
 //
 //}
 
-fun ViewGroup.createView(@LayoutRes resId: Int) =
-    LayoutInflater.from(context).inflate(resId, this, false)!!
-
 
 @SuppressLint("SimpleDateFormat")
 val formatter = SimpleDateFormat("HH:mm")
 
 @SuppressLint("SimpleDateFormat")
 val formatterDateAndTime = SimpleDateFormat("EEE, MMM d/yyyy")
-
-fun toTime(long: Long): String = formatter.format(Date(long * 1000))
-
-fun toDateFormat(long: Long): Date = Date(long)
-
-fun toDate(long: Long): String =
-    DateFormat.getDateInstance(DateFormat.LONG).format(Date(long * 1000))
-
-@SuppressLint("SimpleDateFormat")
-fun dateToLong(date: String): Long {
-    val formatter = SimpleDateFormat("dd-MM-yyyy")
-    val dates = formatter.parse(date) as Date
-    return dates.time / 1000
-}
-
-
-fun toFormatDate(long: Long): String = formatterDateAndTime.format(Date(long * 1000))
 
 
 //fun ImageView.circleImage(url: String?) {
@@ -231,15 +185,6 @@ fun toFormatDate(long: Long): String = formatterDateAndTime.format(Date(long * 1
 //        .into(this)
 //}
 
-fun ImageView.setTint(@ColorInt color: Int?) {
-    if (color == null) {
-        ImageViewCompat.setImageTintList(this, null)
-        return
-    }
-    ImageViewCompat.setImageTintMode(this, PorterDuff.Mode.SRC_ATOP)
-    ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(color))
-}
-
 /**
  * View extensions
  */
@@ -251,14 +196,6 @@ fun View.show() {
     visibility = View.VISIBLE
 }
 
-fun View.invisible(invisible: Boolean, withGone: Boolean = false) {
-    visibility = when {
-        invisible -> View.INVISIBLE
-        withGone -> View.GONE
-        else -> View.VISIBLE
-    }
-}
-
 fun View.visible(visible: Boolean, withGone: Boolean = true) {
     visibility = when {
         visible -> View.VISIBLE
@@ -267,118 +204,8 @@ fun View.visible(visible: Boolean, withGone: Boolean = true) {
     }
 }
 
-fun View.notEnableForOneSec() {
-    isEnabled = false
-    Handler().postDelayed({ isEnabled = true }, 1000)
-}
-
-fun View.notEnableForSec(seconds: Long) {
-    isEnabled = false
-    Handler().postDelayed({ isEnabled = true }, seconds)
-}
-
-fun View.notClickableForTwoSec() {
-    isClickable = false
-    Handler().postDelayed({ isClickable = true }, 2000)
-}
-
-fun View.notClickableForOneSec() {
-    isClickable = false
-    Handler().postDelayed({ isClickable = true }, 1000)
-}
-
-fun TextView.crossline() {
-    paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-}
-
-fun TextView.setMultipleSpanTextLink(
-    string: String,
-    linkString: String,
-    linkString2: String,
-    listener: View.OnClickListener,
-    listener2: View.OnClickListener
-) {
-    val spannableString = SpannableString(string)
-    val span = object : ClickableSpan() {
-        override fun onClick(p0: View) {
-            listener.onClick(p0)
-        }
-    }
-    val span2 = object : ClickableSpan() {
-        override fun onClick(p0: View) {
-            listener2.onClick(p0)
-        }
-    }
-    if (string.contains(linkString))
-        spannableString.setSpan(
-            span,
-            string.indexOf(linkString),
-            string.indexOf(linkString) + linkString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-    if (string.contains(linkString2))
-        spannableString.setSpan(
-            span2,
-            string.indexOf(linkString2),
-            string.indexOf(linkString2) + linkString2.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    text = spannableString
-    movementMethod = LinkMovementMethod.getInstance()
-}
-
-fun TextView.setMultipleBoldText(
-    string: String,
-    boldString: String,
-    boldString2: String,
-    color: Int
-) {
-    val spannableString = SpannableString(string)
-    if (string.contains(boldString)) {
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            string.indexOf(boldString),
-            string.indexOf(boldString) + boldString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            ForegroundColorSpan(color),
-            string.indexOf(boldString),
-            string.indexOf(boldString) + boldString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-    if (string.contains(boldString2)) {
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            string.indexOf(boldString2),
-            string.indexOf(boldString2) + boldString2.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            ForegroundColorSpan(color),
-            string.indexOf(boldString2),
-            string.indexOf(boldString2) + boldString2.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-    text = spannableString
-}
-
 fun Activity.isUIAvailable(): Boolean {
     return !isFinishing && !isDestroyed
-}
-
-@ColorInt
-fun String.toColorInt(default: String = "#1976D2"): Int {
-    return if (this.isBlank()) {
-        Color.parseColor(default)
-    } else try {
-        Color.parseColor(this)
-    } catch (e: Exception) {
-        Color.parseColor(default)
-    }
 }
 
 
@@ -394,31 +221,6 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
             afterTextChanged.invoke(editable.toString())
         }
     })
-}
-
-fun TextView.setDrawableStart(drawable: Int) {
-    this.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0)
-
-}
-
-fun String.getGantColor(): String {
-    return when {
-        this == "Off" -> {
-            "#D7112A"
-        }
-        this == "SB" -> {
-            "#0045CF"
-        }
-        this == "D" -> {
-            "#27AE60"
-        }
-        this == "On" -> {
-            "#E5AF0A"
-        }
-        else -> {
-            "#9BAEC8"
-        }
-    }
 }
 
 fun Context.isNetworkAvailable(): Boolean {
