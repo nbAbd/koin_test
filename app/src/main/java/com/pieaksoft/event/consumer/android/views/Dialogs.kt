@@ -15,6 +15,7 @@ import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePick
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.DialogSwapDriversBinding
 import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.events.InsertEventFragment
 import com.pieaksoft.event.consumer.android.utils.*
 import java.text.SimpleDateFormat
@@ -82,9 +83,10 @@ object Dialogs {
 
     fun showInsertEventDialogFragment(
         fragmentManager: FragmentManager,
+        event: Event?=null,
         onCancelled: (IsCancelled: Boolean) -> Unit = {}
     ) {
-        val dialog = InsertEventFragment(onCancelled)
+        val dialog = InsertEventFragment(event, onCancelled)
         dialog.show(fragmentManager, InsertEventFragment::class.java.name)
     }
 }

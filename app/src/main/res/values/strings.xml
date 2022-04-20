@@ -139,7 +139,7 @@
     <string name="settings">Settings</string>
     <string name="to">To</string>
     <string name="from">From</string>
-    <string name="personal_user">Personal user</string>
+    <string name="personal_use">Personal use</string>
     <string name="turn_on_location">Turn on location</string>
 
     <string-array name="countries">

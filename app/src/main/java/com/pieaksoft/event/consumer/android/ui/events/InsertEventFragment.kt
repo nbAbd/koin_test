@@ -10,20 +10,19 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventBinding
 import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.enums.toReadable
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
-import com.pieaksoft.event.consumer.android.utils.LocationUtil
-import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
-import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
-import com.pieaksoft.event.consumer.android.utils.switchSelectStopIcon
+import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class InsertEventFragment(
+    private val event: Event?,
     private val onCancelled: (IsCancelled: Boolean) -> Unit
 ) : DialogFragment() {
     private var _binding: FragmentInsertEventBinding? = null
@@ -76,12 +75,26 @@ class InsertEventFragment(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun observe() {
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
+
+            // if user editing existing event
+            event?.let {
+                eventModel.date = event.date
+                eventModel.time = event.time
+                binding.date.run {
+                    show()
+                    editText.setText("${it.date} ${it.time}")
+                }
+                return@observe
+            }
+
             // If date is not null, then set date/time
             it?.let {
                 eventModel.date = it.formatToServerDateDefaults(timezone)
                 eventModel.time = it.formatToServerTimeDefaults(timezone)
+                return@observe
             }
 
             // If date is null set current date/time
@@ -92,6 +105,14 @@ class InsertEventFragment(
         }
 
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
+            event?.let {
+                binding.eventStatus.run {
+                    show()
+                    editText.setText(it.eventCode?.toReadable())
+                }
+                eventModel.eventCode = event.eventCode
+                return@observe
+            }
             eventCode?.let { eventModel.eventCode = it.code }
         }
 

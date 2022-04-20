@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/menu_sub_bkg"
-    android:fillViewport="true"
-    android:fitsSystemWindows="true"
-    android:isScrollContainer="true">
+    android:background="@color/main_background_color"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="24dp"
+    tools:context=".ui.events.InsertEventFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/insert_event_container"
+        android:id="@+id/insert_event_container_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="32dp"
-        android:paddingTop="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/co_driver_bkg">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/insert_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/insert_event"
             android:textColor="@color/white"
             android:textSize="24sp"
@@ -30,11 +27,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/back_insert_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
@@ -44,105 +42,149 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/insert_title" />
 
-        <androidx.constraintlayout.helper.widget.Flow
-            android:id="@+id/flow"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:constraint_referenced_ids="trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it"
-            app:flow_firstHorizontalStyle="spread_inside"
-            app:flow_horizontalAlign="start"
-            app:flow_horizontalGap="20dp"
-            app:flow_horizontalStyle="packed"
-            app:flow_maxElementsWrap="2"
-            app:flow_verticalAlign="top"
-            app:flow_verticalGap="8dp"
-            app:flow_wrapMode="aligned"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@id/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/insert_title" />
+            app:layout_constraintTop_toBottomOf="@id/insert_title">
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/trailer_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/trailer_number"
-            tools:ignore="MissingConstraints" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/insert_title">
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/license"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/license"
-            tools:ignore="MissingConstraints" />
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:constraint_referenced_ids="trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it,event_status,date"
+                    app:flow_firstHorizontalStyle="spread_inside"
+                    app:flow_horizontalAlign="start"
+                    app:flow_horizontalGap="8dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_maxElementsWrap="2"
+                    app:flow_verticalAlign="top"
+                    app:flow_verticalGap="20dp"
+                    app:flow_wrapMode="aligned"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/odometer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/odometer"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/trailer_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/trailer_number"
+                    tools:ignore="MissingConstraints" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/location_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/location_description"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/license"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/license"
+                    tools:ignore="MissingConstraints" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/ship_doc_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/ship_doc_number"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/odometer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/odometer"
+                    tools:ignore="MissingConstraints" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/from"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/from"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/location_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/location_description"
+                    tools:ignore="MissingConstraints" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/to"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:title="@string/to"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/event_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:editable="false"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="Event status"
+                    tools:ignore="MissingConstraints" />
 
-        <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-            android:id="@+id/comment_it"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/input_data"
-            app:commentField="true"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_weight="1"
-            app:maxElements="60"
-            app:title="@string/comment_title"
-            tools:ignore="MissingConstraints" />
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/ship_doc_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/ship_doc_number"
+                    tools:ignore="MissingConstraints" />
+
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/from"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/from"
+                    tools:ignore="MissingConstraints" />
+
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/to"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="@string/to"
+                    tools:ignore="MissingConstraints" />
+
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/comment_it"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:commentField="true"
+                    app:hint="@string/input_data"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:maxElements="60"
+                    app:title="@string/comment_title"
+                    tools:ignore="MissingConstraints" />
+
+                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:editable="false"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:title="date"
+                    tools:ignore="MissingConstraints" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/personal_use"
@@ -152,14 +194,15 @@
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintEnd_toStartOf="@id/personal_use_text"
-            app:layout_constraintTop_toBottomOf="@id/comment_it"
+            app:layout_constraintTop_toBottomOf="@id/scroll_container"
             app:srcCompat="@drawable/ic_radio_off" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/personal_use_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/personal_user"
+            android:layout_marginEnd="24dp"
+            android:text="@string/personal_use"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="12sp"
@@ -167,19 +210,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/personal_use" />
 
-        <Space
-            android:id="@+id/spacer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/save"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/flow" />
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save"
             android:layout_width="0dp"
             android:layout_height="@dimen/_50dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/round_order_button"
@@ -188,10 +223,9 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spacer"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".3421" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</FrameLayout>

@@ -51,9 +51,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
-            viewModel.setEventInsertCode(code = EventCode.findByCode(event.eventCode ?: ""))
-            viewModel.setEventInsertDate(date = event.certifyDate?.first()?.date?.getDateFromString()!!)
-            showInsertEventDialogFragment(childFragmentManager)
+            showInsertEventDialogFragment(childFragmentManager, event)
         }
     }
 

@@ -33,3 +33,15 @@ enum class EventCode(val code: String) : Parcelable {
         fun findByCode(code: String) = values().find { it.code.contentEquals(code) } ?: DEFAULT
     }
 }
+
+fun String.toReadable(): String {
+    return when (this) {
+        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY.code -> "OFF DUTY"
+        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH.code -> "SLEEPER BERTH"
+        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code -> "DRIVING"
+        EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING.code -> "ON DUTY"
+        EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV.code -> "PERSONAL USE OF CMV"
+        EventCode.DRIVER_INDICATES_YARD_MOVES.code -> "YARD MOVES"
+        else -> ""
+    }
+}
