@@ -3,7 +3,6 @@ package com.pieaksoft.event.consumer.android.ui.dialog
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
 import com.araujo.jordan.excuseme.ExcuseMe
 import com.google.android.material.button.MaterialButton
 import com.pieaksoft.event.consumer.android.R

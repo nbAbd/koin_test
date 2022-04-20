@@ -32,6 +32,7 @@ import com.pieaksoft.event.consumer.android.views.Dialogs
 import com.pieaksoft.event.consumer.android.views.Dialogs.showInsertEventDialogFragment
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import android.graphics.Color
+import android.graphics.Typeface
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -40,6 +41,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.utils.graph.YAxisRenderer
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 
 class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
@@ -241,7 +243,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     private fun drawChart(events: MutableList<Event>) {
         val eventDataSet = EventDataSet(events = events).apply {
             axisDependency = YAxis.AxisDependency.LEFT
-            lineWidth = 2F
+            lineWidth = 2.2F
             colors = getColorsFor(entries = values)
             mode = LineDataSet.Mode.STEPPED
             setDrawCircles(false)
@@ -262,6 +264,18 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             description.isEnabled = false
             isDoubleTapToZoomEnabled = false
             isClickable = false
+            rendererLeftYAxis = YAxisRenderer(
+                viewPortHandler,
+                axisLeft,
+                getTransformer(YAxis.AxisDependency.LEFT),
+                requireContext()
+            )
+            rendererRightYAxis = YAxisRenderer(
+                viewPortHandler,
+                axisRight,
+                getTransformer(YAxis.AxisDependency.RIGHT),
+                requireContext()
+            )
             setDrawGridBackground(false)
             setDrawBorders(true)
             setBorderColor(ContextCompat.getColor(requireContext(), R.color.separator))
@@ -303,8 +317,8 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         axisMaximum = 5f
         xOffset = 16F
         gridColor = ContextCompat.getColor(requireContext(), R.color.separator)
-        textColor = ContextCompat.getColor(requireContext(), R.color.secondary_gray)
         textSize = 14F
+        typeface = Typeface.DEFAULT_BOLD
         setLabelCount(6, true)
         setCenterAxisLabels(true)
         setDrawGridLines(true)
@@ -324,7 +338,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         axisMaximum = 5f
         xOffset = 16F
         gridColor = ContextCompat.getColor(requireContext(), R.color.separator)
-        textColor = ContextCompat.getColor(requireContext(), R.color.secondary_gray)
         textSize = 14F
         setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
         setLabelCount(6, true)
@@ -368,7 +381,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                     it.calculateDuration()
                 }
                 val totalDuration = eventsByCurrentAxisValue.sumOf { it.durationInMillis }
-                return hmsTimeFormatter(totalDuration)
+                return hmTimeFormatter(totalDuration)
             }
         }
     }
@@ -383,7 +396,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                 1F -> {
                     if (nextEntry != null) {
                         if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else {
                             colors.add(ContextCompat.getColor(context!!, R.color.toast_yellow))
                         }
@@ -394,9 +407,9 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                 2F -> {
                     if (nextEntry != null) {
                         if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else {
                             colors.add(ContextCompat.getColor(context!!, R.color.toast_green))
                         }
@@ -407,9 +420,9 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                 3F -> {
                     if (nextEntry != null) {
                         if (entry.y < nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else {
                             colors.add(ContextCompat.getColor(context!!, R.color.toast_blue))
                         }
@@ -420,7 +433,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                 4F -> {
                     if (nextEntry != null) {
                         if (entry.y > nextEntry.y && entry.x == nextEntry.x) {
-                            colors.add(ContextCompat.getColor(context!!, R.color.secondary_gray))
+                            colors.add(ContextCompat.getColor(context!!, R.color.separator))
                         } else {
                             colors.add(ContextCompat.getColor(context!!, R.color.toast_red))
                         }

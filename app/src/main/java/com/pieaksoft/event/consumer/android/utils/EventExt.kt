@@ -1,28 +1,7 @@
 package com.pieaksoft.event.consumer.android.utils
 
-import com.pieaksoft.event.consumer.android.model.event.Event
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
-
-fun Event.getCode(): String {
-    return when {
-        eventCode?.equals("DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY") == true -> {
-            "Off"
-        }
-        eventCode?.equals("DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH") == true -> {
-            "SB"
-        }
-        eventCode?.equals("DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING") == true -> {
-            "D"
-        }
-        eventCode?.equals("DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING") == true -> {
-            "On"
-        }
-        else -> {
-            ""
-        }
-    }
-}
 
 fun hmsTimeFormatter(millis: Long, withSeconds: Boolean = false): String {
     val hours = abs(TimeUnit.MILLISECONDS.toHours(millis))
@@ -45,25 +24,6 @@ fun hmsTimeFormatter(millis: Long, withSeconds: Boolean = false): String {
         String.format(format, hours, min)
 }
 
-fun millisToHoursMinutes(millisUntilFinished: Long): String {
-
-
-    val remainingHours = when (val hours = millisUntilFinished / 1000 / 60 / 60) {
-        in 10..1000 -> hours.toString()
-        else -> "0$hours"
-    }
-    val remainingMinutes = when (val minutes = millisUntilFinished / 1000 / 60 % 60) {
-        in 10..59 -> minutes.toString()
-        else -> "0$minutes"
-    }
-
-    return String.format(
-        "%s:%s",
-        remainingHours,
-        remainingMinutes
-    )
-}
-
 
 fun hmsTimeFormatter2(millis: Long, withSeconds: Boolean = false): String {
     val hours = abs(TimeUnit.MILLISECONDS.toHours(millis))
@@ -84,5 +44,24 @@ fun hmsTimeFormatter2(millis: Long, withSeconds: Boolean = false): String {
         String.format(format, hours, min, sec)
     } else
         String.format(format, hours, min)
+}
 
+fun hmTimeFormatter(millis: Long): String {
+    val hours = abs(TimeUnit.MILLISECONDS.toHours(millis))
+    val min = abs(
+        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+            TimeUnit.MILLISECONDS.toHours(millis)
+        )
+    )
+    return String.format(hours, min)
+}
+
+private fun String.Companion.format(vararg args: Long): String {
+    val hours = args[0]
+    val min = args[1]
+    return if (hours == 0L) {
+        String.format("%02dm", min)
+    } else {
+        String.format("%dh %02dm", hours, min)
+    }
 }

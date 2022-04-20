@@ -19,11 +19,6 @@
         <item name="cornerSize">10dp</item>
     </style>
 
-    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
-        <item name="colorPrimary">@color/colorAccent</item>
-        <item name="colorOnPrimary">@color/colorAccent</item>
-    </style>
-
     <style name="SeparatorStyle">
         <item name="color">@color/separator</item>
         <item name="alpha">1</item>
@@ -82,43 +77,6 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomLeft">14dp</item>
         <item name="cornerSizeBottomRight">14dp</item>
-    </style>
-
-
-    <style name="BluetoothOnOffButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:textColor">@color/selector_on_off_text</item>
-        <item name="android:gravity">center</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:colorButtonNormal">@color/grey_opacity</item>
-        <item name="colorOnPrimary">@color/selector_on_off_text</item>
-        <item name="colorOnSecondary">@color/selector_on_off_text</item>
-        <item name="android:textAppearance">@style/OnOffTextAppearance</item>
-        <item name="enforceTextAppearance">@style/OnOffTextAppearance</item>
-    </style>
-
-    <style name="OnOffTextAppearance" parent="@style/TextAppearance.MaterialComponents.Button">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/selector_on_off_text</item>
-    </style>
-
-    <style name="BluetoothOnOffShapeAppearanceRight" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeBottomRight">16dp</item>
-        <item name="cornerSizeTopRight">16dp</item>
-    </style>
-
-    <style name="BluetoothOnOffShapeAppearanceLeft" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeBottomLeft">16dp</item>
-        <item name="cornerSizeTopLeft">16dp</item>
     </style>
 
     <style name="PermissionDialogButton.Disallowed" parent="Widget.MaterialComponents.Button.UnelevatedButton">

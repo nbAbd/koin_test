@@ -19,7 +19,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewModel>(), Modifier {
     override val viewModel: ProfileViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
-    private val eventViewModel: EventViewModel by viewModel()
 
     private var loginValue: String? = null
     private var passwordValue: String? = null

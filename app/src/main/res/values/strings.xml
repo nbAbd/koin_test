@@ -3,15 +3,12 @@
     <string name="allow">ALLOW</string>
     <string name="allowed">ALLOWED</string>
     <string name="app_name">ELD</string>
-    <string name="apply">Apply</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="break_in">Break in</string>
-    <string name="canada_rules">Canada Rules</string>
     <string name="cancel">Cancel</string>
     <string name="certification_need">Certification need</string>
     <string name="certify_all_selected">Certify all selected</string>
     <string name="choose_date_time">Choose date and time</string>
-    <string name="city_province">City (requires state/province)</string>
     <string name="co_driver">Co-Driver</string>
     <string name="comment_title">Comment(0/60)</string>
     <string name="comment_title_din">Comment(%s/60)</string>
@@ -20,46 +17,22 @@
     <string name="confirm">Confirm</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="country">Country</string>
-    <string name="current_driver">Current driver</string>
     <string name="dot_inspect">DOT Inspect</string>
     <string name="driver_licence_hint">Driver licence here</string>
     <string name="driver_licence_number">Driver licence number</string>
     <string name="driving">Driving</string>
     <string name="driving_limit">Driving limit</string>
-    <string name="duration">Duration:\n %s:%sh</string>
     <string name="duty_cycle">Duty Cycle</string>
-    <string name="dvir">DVIR</string>
     <string name="email">Email</string>
     <string name="email_hint">Email here</string>
-    <string name="end_time">End time</string>
     <string name="faq">FAQ</string>
+    <string name="ok">OK</string>
     <string name="first_name">First name</string>
     <string name="first_name_hint">First name here</string>
     <string name="h_window">14h Window</string>
     <string name="input_data">Input data</string>
     <string name="insert_event">Insert event</string>
     <string name="json_error">Json parsing error</string>
-    <string name="large_text">
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "Bold, graphic, intentional.\n\n"
-        "Material is the metaphor.\n\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "interface that immerse the user in the experience.\n"
-        "seams, divides space, and indicates moving parts.\n\n"
-        "technologically advanced and open to imagination and magic.\n"
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "waypoints for the user.\n\n"
-        "world, without breaking the rules of physics.\n"
-    </string>
     <string name="last_name">Last name</string>
     <string name="last_name_hint">Last name here</string>
     <string name="license">License</string>
@@ -107,15 +80,11 @@
     <string name="server_error">Server error</string>
     <string name="ship_doc_number">Shipping document number</string>
     <string name="sleeper_berth">Sleeper berth</string>
-    <string name="start_time">Start time</string>
     <string name="state">State</string>
-    <string name="state_province">State/province</string>
     <string name="swap_ask">Are you sure you want to swap the driver?</string>
     <string name="team_driving">Team driving</string>
     <string name="text_it_is_empty">It\'s empty</string>
     <string name="trailer_number">Trailer number</string>
-    <string name="truck">Truck</string>
-    <string name="truck_settings">Truck Settings</string>
     <string name="unknown_error">Unknown error</string>
     <string name="usdot_number">USDOT Number</string>
     <string name="usdot_number_hint">USDOT Number here</string>
@@ -141,6 +110,11 @@
     <string name="from">From</string>
     <string name="personal_user">Personal user</string>
     <string name="turn_on_location">Turn on location</string>
+    <string name="connect_with_truck">Connect with truck</string>
+    <string name="eight_hours">08:00</string>
+    <string name="fourteen_hours">14:00</string>
+    <string name="seventy_hours">70:00</string>
+    <string name="current_driver">Current driver</string>
 
     <string-array name="countries">
         <item>Canada</item>

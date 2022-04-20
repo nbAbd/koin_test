@@ -14,32 +14,6 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import java.util.*
 
-fun Activity.displayMetrics(): DisplayMetrics {
-    val displayMetrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(displayMetrics)
-    return displayMetrics
-}
-
-@Suppress("ObsoleteSdkInt")
-inline fun <reified T : Any> Activity.launchActivity(
-    requestCode: Int = -1,
-    options: Bundle? = null,
-    noinline init: Intent.() -> Unit = {}
-) {
-
-    val intent = newIntent<T>(this)
-    intent.init()
-
-    Handler(Looper.getMainLooper()).post {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            startActivityForResult(intent, requestCode, options)
-        } else {
-            startActivityForResult(intent, requestCode)
-        }
-    }
-    //TODO: delete and use intents with newInstance in each activity
-}
-
 inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(context, T::class.java)
 
 /**

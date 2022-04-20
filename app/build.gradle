@@ -76,16 +76,13 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
-    implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
-    implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.2"
+    implementation "androidx.navigation:navigation-ui-ktx:2.4.2"
 
-    implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-config-ktx:21.0.2'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-
-    implementation 'com.github.ImaginativeShohag:Oops-No-Internet:v1.1.2'
 
     //Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
@@ -108,25 +105,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
 
-    // view binding
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.0-beta01'
-
-    // To use only without reflection variants of viewBinding
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.0-beta01'
-
     // permissions
     implementation 'com.github.AraujoJordan:ExcuseMe:0.9.5'
-
-    // ble
-    implementation 'com.github.weliem:blessed-android:2.0.6'
-
-    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
-    implementation 'com.github.miguelbcr:TableFixHeaders-Wrapper:0.2.0'
-
-
-    implementation 'com.github.florent37:singledateandtimepicker:2.2.7'
-    implementation 'nl.joery.timerangepicker:timerangepicker:1.0.0'
-
 
     implementation "androidx.room:room-runtime:2.4.2"
     annotationProcessor "androidx.room:room-compiler:2.4.2"
@@ -153,4 +133,8 @@ dependencies {
 
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Fixed timezone
+    //noinspection GradleDynamicVersion
+    implementation 'com.github.yeojoy:SingleDateAndTimePicker:+'
 }

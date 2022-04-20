@@ -1,19 +1,13 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu
 
-import com.pieaksoft.event.consumer.android.db.AppDataBase
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Result
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.network.ServiceApi
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import java.lang.Exception
 
-class MenuRepositoryImpl(
-    private val serviceApi: ServiceApi,
-    private val appDataBase: AppDataBase
-) :
-    MenuRepository {
+class MenuRepositoryImpl(private val serviceApi: ServiceApi) : MenuRepository {
     override suspend fun uploadSignature(file: MultipartBody.Part): Result<ResponseBody, Exception> {
         return try {
             val response = serviceApi.uploadSignature(file)
@@ -23,7 +17,7 @@ class MenuRepositoryImpl(
         }
     }
 
-    override suspend fun downloadSignature(token:String): Result<ResponseBody, Exception> {
+    override suspend fun downloadSignature(token: String): Result<ResponseBody, Exception> {
         return try {
             val response = serviceApi.downloadSignature("Bearer $token")
             Success(response)
@@ -31,5 +25,4 @@ class MenuRepositoryImpl(
             Failure(e)
         }
     }
-
 }

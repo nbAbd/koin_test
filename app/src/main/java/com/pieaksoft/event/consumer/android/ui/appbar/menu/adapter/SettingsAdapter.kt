@@ -51,12 +51,5 @@ class SettingsAdapter(val onClick: (item: SettingItem) -> Unit) :
         };
 
         abstract val value: String
-
-        companion object {
-            private val DEFAULT = SIGNATURE
-            fun getByValue(value: String): SettingItem {
-                return values().find { it.value == value } ?: DEFAULT
-            }
-        }
     }
 }

@@ -19,7 +19,9 @@
         <item name="windowSplashScreenBackground">@color/main_background_color</item>
         <item name="windowSplashScreenAnimationDuration">400</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_transparent</item>
-        <item name="android:windowSplashscreenContent">@drawable/ic_splash_screen</item>
+        <item name="android:windowSplashscreenContent" tools:targetApi="o">
+            @drawable/ic_splash_screen
+        </item>
         <item name="postSplashScreenTheme">@style/Theme.ELD</item>
     </style>
 </resources>
