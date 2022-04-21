@@ -18,9 +18,10 @@ object Storage {
 }
 
 fun Map<String, List<Event>>.getStartDateTimeOfGivenEvent(event: Event): Event? {
-    for (index in keys.reversed()) {
-        if (index <= event.date.toString()) {
-            this[index]?.last { it.id == event.id }.also {
+    if (event.time != "00:00") return event
+    keys.reversed().forEach { index ->
+        if (index < event.date.toString()) {
+            this[index]?.last().also {
                 if (it?.time != "00:00") return it
             }
         }
