@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.network
 
+import androidx.room.Update
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable
 import com.pieaksoft.event.consumer.android.model.auth.AuthModel
 import com.pieaksoft.event.consumer.android.model.event.Event
@@ -23,6 +24,9 @@ interface ServiceApi {
     @POST("api/event")
     suspend fun insertEvent(@Body body: Event): Event
 
+    @PUT("api/event/{id}")
+    suspend fun updateEvent(@Path("id") id: String, @Body body: Event): Event
+
     @POST("api/event")
     suspend fun certifyEvent(@Body body: Event): Event
 
@@ -34,8 +38,8 @@ interface ServiceApi {
 
     @Multipart
     @POST("api/upload")
-    suspend fun uploadSignature(@Part file:MultipartBody.Part):ResponseBody
+    suspend fun uploadSignature(@Part file: MultipartBody.Part): ResponseBody
 
     @GET("api/download")
-    suspend fun downloadSignature(@Header("Authorization") token: String):ResponseBody
+    suspend fun downloadSignature(@Header("Authorization") token: String): ResponseBody
 }

@@ -93,6 +93,29 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         }
     }
 
+    fun updateEvent(e: Event) {
+        showProgress()
+        launch {
+            if (isNetworkAvailable) {
+                val result = withContext(Dispatchers.IO) { repository.updateEvent(event = e) }
+
+                hideProgress()
+
+                when (result) {
+                    is Success -> result.data.let { _event.value = it }
+                    is Failure -> _error.value = result.error
+                }
+            } else {
+                // update event in the Room
+                withContext(Dispatchers.IO) { repository.insertEventToDB(event = e) }
+
+                hideProgress()
+                _localEvent.value = e
+            }
+        }
+
+    }
+
     fun certifyEvent(date: String, event: Event) {
         event.certification = Certification(date = date, status = STATUS_CERTIFIED)
         showProgress()

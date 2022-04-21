@@ -141,6 +141,8 @@
     <string name="from">From</string>
     <string name="personal_use">Personal use</string>
     <string name="turn_on_location">Turn on location</string>
+    <string name="event_status">Event status</string>
+    <string name="date">Start date</string>
 
     <string-array name="countries">
         <item>Canada</item>

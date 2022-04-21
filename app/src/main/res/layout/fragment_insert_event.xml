@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:constraint_referenced_ids="trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it,event_status,date"
+                    app:constraint_referenced_ids="event_status,date,trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it"
                     app:flow_firstHorizontalStyle="spread_inside"
                     app:flow_horizontalAlign="start"
                     app:flow_horizontalGap="8dp"
@@ -127,7 +127,7 @@
                     app:editable="false"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
-                    app:title="Event status"
+                    app:title="@string/event_status"
                     tools:ignore="MissingConstraints" />
 
                 <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
@@ -180,7 +180,7 @@
                     app:editable="false"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
-                    app:title="date"
+                    app:title="@string/date"
                     tools:ignore="MissingConstraints" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,9 +190,8 @@
             android:id="@+id/personal_use"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginVertical="8dp"
             android:layout_marginEnd="18dp"
-            android:layout_marginBottom="8dp"
             app:layout_constraintEnd_toStartOf="@id/personal_use_text"
             app:layout_constraintTop_toBottomOf="@id/scroll_container"
             app:srcCompat="@drawable/ic_radio_off" />

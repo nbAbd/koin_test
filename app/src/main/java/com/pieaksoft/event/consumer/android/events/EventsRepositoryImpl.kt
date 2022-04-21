@@ -19,6 +19,15 @@ class EventsRepositoryImpl(private val serviceApi: ServiceApi, val db: AppDataBa
         }
     }
 
+    override suspend fun updateEvent(event: Event): Result<Event, Exception> {
+        return try {
+            val response = serviceApi.updateEvent(event.id, event)
+            Success(response)
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
+
     override suspend fun insertEventToDB(event: Event) {
         event.isSyncWithServer = false
         db.getAppDao().saveEvent(event)

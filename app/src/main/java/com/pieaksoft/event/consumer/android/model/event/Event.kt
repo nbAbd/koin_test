@@ -27,7 +27,7 @@ data class Event(
     val eventRecordStatus: String? = "",
     val malfunctionIndicatorStatus: String? = "",
     val dataDiagnosticEventIndicatorStatus: String? = "",
-    val driverLocationDescription: String? = "",
+    var driverLocationDescription: String? = "",
     val dutyStatus: String? = "",
     @TypeConverters(Certification::class)
     var certification: Certification? = null,

@@ -29,7 +29,7 @@ class InsertEventFragment(
     private val binding get() = _binding!!
     private var isChecked = true
 
-    private val eventModel: Event by lazy {
+    private var eventModel =
         Event(
             "",
             eventType = EventInsertType.DUTY_STATUS_CHANGE.type,
@@ -44,7 +44,6 @@ class InsertEventFragment(
             dutyStatus = "OFF_DUTY",
             certification = null
         )
-    }
 
     private val profileViewModel: ProfileViewModel by viewModel()
 
@@ -75,21 +74,8 @@ class InsertEventFragment(
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observe() {
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
-
-            // if user editing existing event
-            event?.let {
-                eventModel.date = event.date
-                eventModel.time = event.time
-                binding.date.run {
-                    show()
-                    editText.setText("${it.date} ${it.time}")
-                }
-                return@observe
-            }
-
             // If date is not null, then set date/time
             it?.let {
                 eventModel.date = it.formatToServerDateDefaults(timezone)
@@ -105,14 +91,6 @@ class InsertEventFragment(
         }
 
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
-            event?.let {
-                binding.eventStatus.run {
-                    show()
-                    editText.setText(it.eventCode?.toReadable())
-                }
-                eventModel.eventCode = event.eventCode
-                return@observe
-            }
             eventCode?.let { eventModel.eventCode = it.code }
         }
 
@@ -138,12 +116,30 @@ class InsertEventFragment(
         setupView()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     private fun setupView() = with(binding) {
         observe()
+
+        // if user editing existing event
+        event?.let {
+            eventModel = event
+            with(binding) {
+                date.show()
+                eventStatus.show()
+                date.editText.setText("${it.date} ${it.time}")
+                eventStatus.editText.setText(it.eventCode?.toReadable())
+            }
+        }
+
         save.setOnClickListener {
-            if (eventModel.isLocationSet()) viewModel.insertEvent(eventModel)
-            else viewModel.showProgress()
+            if (eventModel.isLocationSet()) {
+                event?.let {
+                    eventModel.driverLocationDescription = binding.locationDescription.toString()
+                    viewModel.updateEvent(eventModel)
+                    return@setOnClickListener
+                }
+                viewModel.insertEvent(eventModel)
+            } else viewModel.showProgress()
         }
         backInsertBtn.setOnClickListener {
             onCancelled(true)

@@ -17,6 +17,17 @@ object Storage {
     var isNetworkEnable: Boolean = true
 }
 
+fun Map<String, List<Event>>.getStartDateTimeOfGivenEvent(event: Event): Event? {
+    for (index in keys.reversed()) {
+        if (index <= event.date.toString()) {
+            this[index]?.last { it.id == event.id }.also {
+                if (it?.time != "00:00") return it
+            }
+        }
+    }
+    return null
+}
+
 val List<Event>.lastItemEventCode: EventCode
     get() {
         if (isEmpty()) return EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY

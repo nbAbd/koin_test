@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
-import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
@@ -39,6 +38,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 
@@ -51,7 +51,9 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
-            showInsertEventDialogFragment(childFragmentManager, event)
+            Storage.eventListGroupByDate.getStartDateTimeOfGivenEvent(event)?.let {
+                showInsertEventDialogFragment(childFragmentManager, it)
+            }
         }
     }
 
