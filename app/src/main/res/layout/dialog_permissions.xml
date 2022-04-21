@@ -183,7 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="8dp"
-            android:text="Connect with truck"
+            android:text="@string/connect_with_truck"
             android:textColor="@color/secondary_gray"
             app:layout_constraintEnd_toStartOf="@id/btn_bluetooth_allow"
             app:layout_constraintStart_toStartOf="@+id/bluetooth_title"

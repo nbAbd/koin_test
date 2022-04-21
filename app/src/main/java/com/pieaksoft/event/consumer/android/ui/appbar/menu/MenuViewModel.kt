@@ -4,9 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
@@ -18,7 +16,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.MultipartBody.Part.Companion.createFormData
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.ResponseBody
 import java.io.*
 
 

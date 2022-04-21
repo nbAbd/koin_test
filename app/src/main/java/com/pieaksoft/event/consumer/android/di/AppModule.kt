@@ -34,12 +34,12 @@ val AppModule = module {
     }
     single<LoginRepo> { LoginRepoImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
-    single<MenuRepository> { MenuRepositoryImpl(get(), get()) }
+    single<MenuRepository> { MenuRepositoryImpl(get()) }
     single<EventsRepository> { EventsRepositoryImpl(get(), get()) }
 
     viewModel { LoginViewModel(get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EventViewModel(get(), get()) }
     viewModel { EventCalculationViewModel(get()) }
-    viewModel { MenuViewModel(get(),get()) }
+    viewModel { MenuViewModel(get(), get()) }
 }
