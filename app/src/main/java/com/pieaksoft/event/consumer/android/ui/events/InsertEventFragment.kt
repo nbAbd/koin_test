@@ -31,16 +31,10 @@ class InsertEventFragment(
         Event(
             "",
             eventType = EventInsertType.DUTY_STATUS_CHANGE.type,
-            shippingDocumentNumber = "test",
-            totalEngineHours = 20,
-            totalEngineMiles = 450,
-            eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
-            eventRecordStatus = "ACTIVE",
-            malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-            dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
-            driverLocationDescription = "chicago, IL",
-            dutyStatus = "OFF_DUTY",
-            certification = null
+            eventRecordOrigin = EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
         )
 
     private val profileViewModel: ProfileViewModel by viewModel()
@@ -121,22 +115,16 @@ class InsertEventFragment(
         // if user editing existing event
         event?.let {
             eventModel = event
-            eventModel.eventRecordStatus = EventRecordStatusType.ACTIVE.type
-            date.show()
-            eventStatus.show()
-            date.editText.setText("${it.date} ${it.time}")
-            eventStatus.editText.setText(it.eventCode?.toReadable())
+            setData(event)
         }
 
         save.setOnClickListener {
             if (eventModel.isLocationSet()) {
                 event?.let {
-                    eventModel.driverLocationDescription =
-                        binding.locationDescription.editText.text.toString()
-                    viewModel.updateEvent(eventModel)
+                    updateEvent()
                     return@setOnClickListener
                 }
-                viewModel.insertEvent(eventModel)
+                insertEvent()
             } else viewModel.showProgress()
         }
         backInsertBtn.setOnClickListener {
@@ -146,6 +134,47 @@ class InsertEventFragment(
         personalUse.setOnClickListener {
             personalUse.switchSelectStopIcon(isChecked)
             isChecked = !isChecked
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setData(event: Event) = with(binding) {
+        event.run {
+            this@with.date.show()
+            eventStatus.show()
+            this@with.date.editText.setText("$date $time")
+            eventStatus.editText.setText(eventCode?.toReadable())
+            locationDescription.editText.setText(driverLocationDescription)
+            shipDocNumber.editText.setText(shippingDocumentNumber)
+            to.editText.setText(toAddress)
+            from.editText.setText(fromAddress)
+            commentIt.editText.setText(comment)
+            trailerNumber.editText.setText(trailer)
+            odometer.editText.setText(totalEngineMiles.toString())
+        }
+    }
+
+    private fun insertEvent() {
+        mapViewData()
+        viewModel.insertEvent(eventModel)
+    }
+
+    private fun updateEvent() = with(binding) {
+        mapViewData()
+        viewModel.updateEvent(eventModel)
+    }
+
+    private fun mapViewData() = with(binding) {
+        eventModel.run {
+            driverLocationDescription = locationDescription.editText.text.toString()
+            shippingDocumentNumber = shipDocNumber.editText.text.toString()
+            toAddress = to.editText.text.toString()
+            fromAddress = from.editText.text.toString()
+            comment = commentIt.editText.text.toString()
+            val odometer = odometer.editText.text.toString()
+            totalEngineMiles = if (odometer.isEmpty()) odometer.toInt() else 0
+            trailer = trailerNumber.editText.text.toString()
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type
         }
     }
 

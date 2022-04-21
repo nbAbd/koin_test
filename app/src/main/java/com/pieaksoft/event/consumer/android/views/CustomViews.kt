@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
+import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
 import android.util.AttributeSet
@@ -62,6 +63,11 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
         getInteger(R.styleable.FloatingTitleEditText_maxElements, Int.MAX_VALUE).also {
             editText.filters = arrayOf(InputFilter.LengthFilter(it))
         }
+        getBoolean(R.styleable.FloatingTitleEditText_inputTypeNumber, false).also {
+            if (it) {
+                editText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+        }
         getDrawable(R.styleable.FloatingTitleEditText_android_drawableEnd).also {
             editText.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -87,6 +93,7 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
                 editText.keyListener = null
             }
         }
+
     }
 }
 

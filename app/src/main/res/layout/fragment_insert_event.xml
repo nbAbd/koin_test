@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     app:hint="@string/input_data"
                     app:layout_constrainedWidth="true"
+                    app:inputTypeNumber="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/odometer"
                     tools:ignore="MissingConstraints" />
@@ -137,6 +138,7 @@
                     android:layout_height="wrap_content"
                     app:hint="@string/input_data"
                     app:layout_constrainedWidth="true"
+                    app:inputTypeNumber="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/ship_doc_number"
                     tools:ignore="MissingConstraints" />

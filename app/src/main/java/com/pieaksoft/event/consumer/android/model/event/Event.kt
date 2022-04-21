@@ -20,9 +20,9 @@ data class Event(
     var time: String? = "",
     @TypeConverters(Location::class)
     var coordinates: Location = Location(null, null),
-    val shippingDocumentNumber: String? = "",
+    var shippingDocumentNumber: String? = "",
     val totalEngineHours: Int? = 0,
-    val totalEngineMiles: Int? = 0,
+    var totalEngineMiles: Int? = 0,
     var eventRecordOrigin: String? = "",
     var eventRecordStatus: String? = "",
     val malfunctionIndicatorStatus: String? = "",
@@ -40,6 +40,10 @@ data class Event(
     var endDate: String? = "",
     var endTime: String? = "25:00",
     var durationInMillis: Long = 0L,
+    var toAddress: String? = "",
+    var fromAddress: String? = "",
+    var trailer: String? = "",
+    var comment: String? = "",
     var isSyncWithServer: Boolean? = true
 ) : Serializable {
 

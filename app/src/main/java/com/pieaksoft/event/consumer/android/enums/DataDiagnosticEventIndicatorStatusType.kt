@@ -1,0 +1,7 @@
+package com.pieaksoft.event.consumer.android.enums
+
+enum class DataDiagnosticEventIndicatorStatusType(val type: String) {
+    NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER("NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER"),
+    AT_LEAST_ONE_ACTIVE_DATA_DIAGNOSTIC_EVENT_FOR_DRIVER("AT_LEAST_ONE_ACTIVE_DATA_DIAGNOSTIC_EVENT_FOR_DRIVER"),
+    NONE("NONE");
+}

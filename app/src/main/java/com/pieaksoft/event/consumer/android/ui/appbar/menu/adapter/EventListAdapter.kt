@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -15,11 +16,12 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListBinding
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListHeaderBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.model.event.formatDuration
 
-class EventListAdapter(private val editCallback: (Event) -> Unit) :
+class EventListAdapter(val context: Context, private val editCallback: (Event) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var list = emptyList<EditEvent>()
@@ -97,6 +99,12 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
     inner class EditEventContentViewHolder(val binding: ItemEventListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) = with(binding) {
+
+            if (event.eventRecordOrigin != EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type)
+                eventEditBtn.backgroundTintList =
+                    ContextCompat.getColorStateList(context, R.color.grey)
+
+            eventEditBtn.setOnClickListener { editCallback(event) }
             root.apply {
                 dividerDrawable = ShapeDrawable(RectShape()).apply {
                     intrinsicWidth = 2
@@ -121,8 +129,6 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
                 eventTr.text = it
                 eventSh.text = it
             }
-
-            eventEditBtn.setOnClickListener { editCallback(event) }
         }
     }
 
