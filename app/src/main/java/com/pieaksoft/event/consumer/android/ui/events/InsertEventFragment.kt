@@ -122,18 +122,17 @@ class InsertEventFragment(
         event?.let {
             eventModel = event
             eventModel.eventRecordStatus = EventRecordStatusType.ACTIVE.type
-            with(binding) {
-                date.show()
-                eventStatus.show()
-                date.editText.setText("${it.date} ${it.time}")
-                eventStatus.editText.setText(it.eventCode?.toReadable())
-            }
+            date.show()
+            eventStatus.show()
+            date.editText.setText("${it.date} ${it.time}")
+            eventStatus.editText.setText(it.eventCode?.toReadable())
         }
 
         save.setOnClickListener {
             if (eventModel.isLocationSet()) {
                 event?.let {
-                    eventModel.driverLocationDescription = binding.locationDescription.toString()
+                    eventModel.driverLocationDescription =
+                        binding.locationDescription.editText.text.toString()
                     viewModel.updateEvent(eventModel)
                     return@setOnClickListener
                 }

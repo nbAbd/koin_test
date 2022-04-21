@@ -23,7 +23,7 @@ data class Event(
     val shippingDocumentNumber: String? = "",
     val totalEngineHours: Int? = 0,
     val totalEngineMiles: Int? = 0,
-    val eventRecordOrigin: String? = "",
+    var eventRecordOrigin: String? = "",
     var eventRecordStatus: String? = "",
     val malfunctionIndicatorStatus: String? = "",
     val dataDiagnosticEventIndicatorStatus: String? = "",
