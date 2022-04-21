@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventBinding
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.Timezone
-import com.pieaksoft.event.consumer.android.enums.toReadable
+import com.pieaksoft.event.consumer.android.enums.*
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
@@ -123,6 +121,7 @@ class InsertEventFragment(
         // if user editing existing event
         event?.let {
             eventModel = event
+            eventModel.eventRecordStatus = EventRecordStatusType.ACTIVE.type
             with(binding) {
                 date.show()
                 eventStatus.show()

@@ -24,7 +24,7 @@ data class Event(
     val totalEngineHours: Int? = 0,
     val totalEngineMiles: Int? = 0,
     val eventRecordOrigin: String? = "",
-    val eventRecordStatus: String? = "",
+    var eventRecordStatus: String? = "",
     val malfunctionIndicatorStatus: String? = "",
     val dataDiagnosticEventIndicatorStatus: String? = "",
     var driverLocationDescription: String? = "",
