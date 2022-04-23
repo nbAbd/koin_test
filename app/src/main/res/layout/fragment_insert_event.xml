@@ -19,10 +19,10 @@
             android:id="@+id/insert_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
             android:text="@string/insert_event"
             android:textColor="@color/white"
             android:textSize="24sp"
-            android:paddingVertical="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,8 +46,8 @@
             android:id="@+id/scroll_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:fillViewport="true"
             android:layout_marginBottom="16dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toTopOf="@id/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:constraint_referenced_ids="event_status,date,trailer_number, ship_doc_number, license, from, odometer, to, location_description, comment_it"
+                    app:constraint_referenced_ids="event_status,date_txt,trailer_number, ship_doc_number, from, odometer, to, location_description, comment_it"
                     app:flow_firstHorizontalStyle="spread_inside"
                     app:flow_horizontalAlign="start"
                     app:flow_horizontalGap="8dp"
@@ -91,22 +91,12 @@
                     tools:ignore="MissingConstraints" />
 
                 <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-                    android:id="@+id/license"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/input_data"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintHorizontal_weight="1"
-                    app:title="@string/license"
-                    tools:ignore="MissingConstraints" />
-
-                <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
                     android:id="@+id/odometer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:hint="@string/input_data"
-                    app:layout_constrainedWidth="true"
                     app:inputTypeNumber="true"
+                    app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/odometer"
                     tools:ignore="MissingConstraints" />
@@ -137,8 +127,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:hint="@string/input_data"
-                    app:layout_constrainedWidth="true"
                     app:inputTypeNumber="true"
+                    app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/ship_doc_number"
                     tools:ignore="MissingConstraints" />
@@ -176,7 +166,7 @@
                     tools:ignore="MissingConstraints" />
 
                 <com.pieaksoft.event.consumer.android.views.FloatingTitleEditText
-                    android:id="@+id/date"
+                    android:id="@+id/date_txt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
@@ -190,27 +180,27 @@
         </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/personal_use"
+            android:id="@+id/personal_user_or_yard_mv_btn"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginVertical="8dp"
             android:layout_marginEnd="18dp"
-            app:layout_constraintEnd_toStartOf="@id/personal_use_text"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/personal_use_or_yard_mv"
             app:layout_constraintTop_toBottomOf="@id/scroll_container"
             app:srcCompat="@drawable/ic_radio_off" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/personal_use_text"
+            android:id="@+id/personal_use_or_yard_mv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:text="@string/personal_use"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/personal_use"
+            app:layout_constraintBottom_toBottomOf="@id/personal_user_or_yard_mv_btn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/personal_use" />
+            app:layout_constraintTop_toTopOf="@id/personal_user_or_yard_mv_btn" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save"

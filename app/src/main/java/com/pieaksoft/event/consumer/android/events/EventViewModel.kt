@@ -113,7 +113,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 _localEvent.value = e
             }
         }
-
     }
 
     fun certifyEvent(date: String, event: Event) {

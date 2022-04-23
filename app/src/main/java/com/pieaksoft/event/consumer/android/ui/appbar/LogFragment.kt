@@ -39,9 +39,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.getStartTime
 import com.pieaksoft.event.consumer.android.utils.graph.YAxisRenderer
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 
@@ -55,7 +55,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     private val eventListAdapter by lazy {
         EventListAdapter(requireContext()) { event ->
             if (event.eventRecordOrigin == EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type) {
-                Storage.eventListGroupByDate.getStartDateTimeOfGivenEvent(event)?.let {
+                event.getStartTime()?.let {
                     showInsertEventDialogFragment(childFragmentManager, it)
                 }
             } else toast(getString(R.string.no_access_to_edit_autorecorded_event))

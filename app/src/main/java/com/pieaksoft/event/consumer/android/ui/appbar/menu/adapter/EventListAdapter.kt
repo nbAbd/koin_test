@@ -100,9 +100,10 @@ class EventListAdapter(val context: Context, private val editCallback: (Event) -
         RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) = with(binding) {
 
-            if (event.eventRecordOrigin != EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type)
-                eventEditBtn.backgroundTintList =
+            eventEditBtn.backgroundTintList =
+                if (event.eventRecordOrigin != EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type)
                     ContextCompat.getColorStateList(context, R.color.grey)
+                else ContextCompat.getColorStateList(context, R.color.blue)
 
             eventEditBtn.setOnClickListener { editCallback(event) }
             root.apply {

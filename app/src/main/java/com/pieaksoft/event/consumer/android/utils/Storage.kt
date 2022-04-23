@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.model.event.Event
 import java.text.SimpleDateFormat
+import java.time.LocalTime
 import java.util.*
 
 object Storage {
@@ -11,18 +12,6 @@ object Storage {
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
     var isNetworkEnable: Boolean = true
-}
-
-fun Map<String, List<Event>>.getStartDateTimeOfGivenEvent(event: Event): Event? {
-    if (event.time != "00:00") return event
-    keys.reversed().forEach { index ->
-        if (index < event.date.toString()) {
-            this[index]?.last().also {
-                if (it?.time != "00:00") return it
-            }
-        }
-    }
-    return null
 }
 
 val List<Event>.lastItemEventCode: EventCode

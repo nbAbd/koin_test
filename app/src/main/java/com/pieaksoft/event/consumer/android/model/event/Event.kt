@@ -4,8 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
+import com.pieaksoft.event.consumer.android.utils.Storage
+import com.pieaksoft.event.consumer.android.utils.Storage.eventListGroupByDate
 import java.io.Serializable
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
@@ -13,7 +16,7 @@ import java.util.concurrent.TimeUnit
 @Entity
 data class Event(
     @PrimaryKey
-    val id: String = "1",
+    val id: String = "",
     var eventType: String? = "",
     var eventCode: String? = "",
     var date: String? = "",
@@ -76,3 +79,17 @@ fun Event.formatDuration(): String {
 }
 
 fun Event.isLocationSet() = coordinates.latitude != null && coordinates.longitude != null
+
+fun Event.getStartTime(): Event? {
+    val givenEventTime = LocalTime.parse(this.time)
+    if (givenEventTime != LocalTime.MIN) return this
+    eventListGroupByDate.keys.reversed().forEach { index ->
+        if (index < this.date.toString()) {
+            eventListGroupByDate[index]?.last().also {
+                if (LocalTime.parse(it?.time) != LocalTime.MIN)
+                    return it
+            }
+        }
+    }
+    return null
+}

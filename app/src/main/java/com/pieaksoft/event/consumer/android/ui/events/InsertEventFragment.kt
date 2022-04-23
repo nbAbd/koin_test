@@ -29,7 +29,6 @@ class InsertEventFragment(
 
     private var eventModel =
         Event(
-            "",
             eventType = EventInsertType.DUTY_STATUS_CHANGE.type,
             eventRecordOrigin = EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type,
             eventRecordStatus = EventRecordStatusType.ACTIVE.type,
@@ -83,7 +82,22 @@ class InsertEventFragment(
         }
 
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
-            eventCode?.let { eventModel.eventCode = it.code }
+            eventCode?.let {
+                when (eventCode) {
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
+                    }
+
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
+                    }
+                    else -> {
+                    }
+                }
+                eventModel.eventCode = it.code
+            }
         }
 
         viewModel.event.observe(this) {
@@ -131,8 +145,23 @@ class InsertEventFragment(
             onCancelled(true)
             dialog?.dismiss()
         }
-        personalUse.setOnClickListener {
-            personalUse.switchSelectStopIcon(isChecked)
+        personalUserOrYardMvBtn.setOnClickListener {
+            personalUserOrYardMvBtn.switchSelectStopIcon(isChecked)
+            if (isChecked) {
+                eventModel.eventType =
+                    EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+
+                if (personalUseOrYardMv.text.equals(getString(R.string.personal_use))) {
+                    eventModel.eventCode =
+                        EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV.code
+                } else {
+                    eventModel.eventCode =
+                        EventCode.DRIVER_INDICATES_YARD_MOVES.code
+                }
+            } else {
+                eventModel.eventType = event?.eventType
+                eventModel.eventCode = event?.eventCode
+            }
             isChecked = !isChecked
         }
     }
@@ -140,9 +169,9 @@ class InsertEventFragment(
     @SuppressLint("SetTextI18n")
     private fun setData(event: Event) = with(binding) {
         event.run {
-            this@with.date.show()
+            dateTxt.show()
             eventStatus.show()
-            this@with.date.editText.setText("$date $time")
+            dateTxt.editText.setText("$date $time")
             eventStatus.editText.setText(eventCode?.toReadable())
             locationDescription.editText.setText(driverLocationDescription)
             shipDocNumber.editText.setText(shippingDocumentNumber)
@@ -172,7 +201,7 @@ class InsertEventFragment(
             fromAddress = from.editText.text.toString()
             comment = commentIt.editText.text.toString()
             val odometer = odometer.editText.text.toString()
-            totalEngineMiles = if (odometer.isEmpty()) odometer.toInt() else 0
+            totalEngineMiles = if (odometer.isEmpty()) 0 else odometer.toInt()
             trailer = trailerNumber.editText.text.toString()
             eventRecordStatus = EventRecordStatusType.ACTIVE.type
         }
