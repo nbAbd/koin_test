@@ -21,7 +21,7 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.model.event.formatDuration
 
-class EventListAdapter(val context: Context, private val editCallback: (Event) -> Unit) :
+class EventListAdapter(private val editCallback: (Event) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var list = emptyList<EditEvent>()
@@ -102,8 +102,8 @@ class EventListAdapter(val context: Context, private val editCallback: (Event) -
 
             eventEditBtn.backgroundTintList =
                 if (event.eventRecordOrigin != EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type)
-                    ContextCompat.getColorStateList(context, R.color.grey)
-                else ContextCompat.getColorStateList(context, R.color.blue)
+                    ContextCompat.getColorStateList(root.context, R.color.grey)
+                else ContextCompat.getColorStateList(root.context, R.color.blue)
 
             eventEditBtn.setOnClickListener { editCallback(event) }
             root.apply {
