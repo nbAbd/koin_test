@@ -30,9 +30,10 @@
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/back_insert_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="0dp"
+            android:scaleType="fitStart"
+            android:paddingTop="20dp"
+            android:paddingHorizontal="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
@@ -40,7 +41,8 @@
             android:src="@drawable/ic_back_left"
             app:layout_constraintBottom_toBottomOf="@id/insert_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/insert_title" />
+            app:layout_constraintTop_toTopOf="@id/insert_title"
+            tools:ignore="RtlSymmetry" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_container"

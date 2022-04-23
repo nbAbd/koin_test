@@ -53,7 +53,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     override val viewModel: EventViewModel by sharedViewModel()
 
     private val eventListAdapter by lazy {
-        EventListAdapter(requireContext()) { event ->
+        EventListAdapter { event ->
             if (event.eventRecordOrigin == EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type) {
                 event.getStartTime()?.let {
                     showInsertEventDialogFragment(childFragmentManager, it)
