@@ -106,6 +106,13 @@ class InsertEventFragment(
                 dialog?.dismiss()
             }
         }
+
+        viewModel.localEvent.observe(this) {
+            it?.let {
+                viewModel.getEventList()
+                dialog?.dismiss()
+            }
+        }
     }
 
     override fun onCreateView(

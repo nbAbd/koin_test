@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter
+import com.pieaksoft.event.consumer.android.utils.eventList
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
 import com.pieaksoft.event.consumer.android.utils.toast
@@ -29,22 +31,15 @@ class RecordsCertificationFragment :
 
     private val tempEvent: Event by lazy {
         Event(
-            "",
-            EventInsertType.DRIVERS_CERTIFICATION_RE_CERTIFICATION_OF_RECORDS.type,
-            EventCode.DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD.code,
+            eventType = EventInsertType.DRIVERS_CERTIFICATION_RE_CERTIFICATION_OF_RECORDS.type,
+            eventCode = EventCode.DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD.code,
             date = Date().formatToServerDateDefaults(),
             time = Date().formatToServerTimeDefaults(),
-            Location(-10.12345f, 48.23432f),
-            shippingDocumentNumber = "test",
-            totalEngineHours = 20,
-            totalEngineMiles = 450,
+            coordinates = Location(-10.12345f, 48.23432f),
             eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
             eventRecordStatus = "ACTIVE",
             malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-            dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER",
-            driverLocationDescription = "chicago, IL",
-            dutyStatus = "OFF_DUTY",
-            certification = null
+            dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER"
         )
     }
 
@@ -81,26 +76,29 @@ class RecordsCertificationFragment :
     }
 
     override fun observe() {
-        viewModel.eventListRequiresCertification.observe(viewLifecycleOwner, { events ->
+        viewModel.eventListRequiresCertification.observe(viewLifecycleOwner) { events ->
             if (events.isNotEmpty()) {
                 certificationAdapter.list = ArrayList(events.groupBy { it.date ?: "" }.keys)
             } else {
                 findNavController().popBackStack()
             }
-        })
+        }
 
         viewModel.certifiedDate.observe(this) { date ->
-            date?.let {
-                certificationAdapter.list.filter { it != date }.also { events ->
-                    if (events.isEmpty()) findNavController().popBackStack()
-                    else certificationAdapter.update(ArrayList(events))
+            if (certificationAdapter.dateList.isNotEmpty()) certificationAdapter.dateList.removeLast()
+            if (certificationAdapter.dateList.isEmpty()) {
+                date?.let {
+                    certificationAdapter.list.filter { it != date }.also { events ->
+                        if (events.isEmpty()) findNavController().popBackStack()
+                        else certificationAdapter.update(ArrayList(events))
+                    }
                 }
             }
         }
 
-        viewModel.error.observe(this, {
+        viewModel.error.observe(this) {
             toast(it.message ?: "")
-        })
+        }
     }
 
     override fun onStop() {
