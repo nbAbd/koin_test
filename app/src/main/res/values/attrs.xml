@@ -11,6 +11,7 @@
         <attr name="maxElements" format="integer" />
         <attr name="commentField" format="boolean" />
         <attr name="editable" format="boolean" />
+        <attr name="android:inputType" />
     </declare-styleable>
 
     <declare-styleable name="SeparatorView">

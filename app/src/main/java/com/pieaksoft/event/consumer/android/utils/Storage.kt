@@ -16,7 +16,11 @@ object Storage {
 val List<Event>.lastItemEventCode: EventCode
     get() {
         if (isEmpty()) return EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
-        return EventCode.findByCode(lastItem.eventCode!!)
+        return when (val lastEventCode = EventCode.findByCode(lastItem.eventCode!!)) {
+            EventCode.DRIVER_INDICATES_YARD_MOVES -> EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING
+            EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV -> EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY
+            else -> lastEventCode
+        }
     }
 
 val List<Event>.lastItem: Event

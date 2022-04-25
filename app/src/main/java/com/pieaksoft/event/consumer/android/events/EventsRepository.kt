@@ -6,6 +6,7 @@ import com.pieaksoft.event.consumer.android.model.report.Report
 
 interface EventsRepository {
     suspend fun insertEvent(event: Event): Result<Event, Exception>
+    suspend fun updateEvent(event: Event): Result<Event, Exception>
     suspend fun insertEventToDB(event: Event)
     suspend fun certifyEvent(event: Event): Result<Event, Exception>
     suspend fun getEventList(): Result<List<Event>, Exception>

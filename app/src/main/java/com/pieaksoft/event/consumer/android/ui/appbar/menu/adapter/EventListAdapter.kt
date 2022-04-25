@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -15,6 +16,7 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListBinding
 import com.pieaksoft.event.consumer.android.databinding.ItemEventListHeaderBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.model.event.formatDuration
@@ -97,6 +99,13 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
     inner class EditEventContentViewHolder(val binding: ItemEventListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) = with(binding) {
+
+            eventEditBtn.backgroundTintList =
+                if (event.eventRecordOrigin != EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type)
+                    ContextCompat.getColorStateList(root.context, R.color.grey)
+                else ContextCompat.getColorStateList(root.context, R.color.blue)
+
+            eventEditBtn.setOnClickListener { editCallback(event) }
             root.apply {
                 dividerDrawable = ShapeDrawable(RectShape()).apply {
                     intrinsicWidth = 2
@@ -121,8 +130,6 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
                 eventTr.text = it
                 eventSh.text = it
             }
-
-            eventEditBtn.setOnClickListener { editCallback(event) }
         }
     }
 
@@ -150,10 +157,16 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
             private val DEFAULT = OFF
             fun appearanceBy(code: String): EventTypeAppearance {
                 return when (EventCode.findByCode(code)) {
-                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> OFF
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY,
+                    EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV -> OFF
+
                     EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> SLEEP
+
                     EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> DRIVING
-                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> ON
+
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING,
+                    EventCode.DRIVER_INDICATES_YARD_MOVES -> ON
+
                     else -> DEFAULT
                 }
             }

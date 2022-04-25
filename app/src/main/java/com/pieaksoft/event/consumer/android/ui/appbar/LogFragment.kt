@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentLogBinding
-import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.edit.EditEvent
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
@@ -40,7 +39,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.getStartTime
 import com.pieaksoft.event.consumer.android.utils.graph.YAxisRenderer
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 
@@ -53,9 +54,11 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
-            viewModel.setEventInsertCode(code = EventCode.findByCode(event.eventCode ?: ""))
-            viewModel.setEventInsertDate(date = event.certifyDate?.first()?.date?.getDateFromString()!!)
-            showInsertEventDialogFragment(childFragmentManager)
+            if (event.eventRecordOrigin == EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type) {
+                event.getStartTime()?.let {
+                    showInsertEventDialogFragment(childFragmentManager, it)
+                }
+            } else toast(getString(R.string.no_access_to_edit_autorecorded_event))
         }
     }
 
@@ -147,21 +150,21 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override fun observe() {
-        viewModel.eventList.observe(this, {
+        viewModel.eventList.observe(this) {
             setEvents()
-        })
+        }
 
-        viewModel.eventListByDate.observe(this, {
+        viewModel.eventListByDate.observe(this) {
             setEvents()
-        })
+        }
 
-        viewModel.progress.observe(this, {
+        viewModel.progress.observe(this) {
             (requireActivity() as MainActivity).setProgressVisible(it)
-        })
+        }
 
-        viewModel.error.observe(this, {
+        viewModel.error.observe(this) {
             Log.e("test_logger_error", "test insert error response = ${it.message}")
-        })
+        }
     }
 
     private fun openNext() {

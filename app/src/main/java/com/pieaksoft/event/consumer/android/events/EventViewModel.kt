@@ -5,13 +5,14 @@ import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.Storage
@@ -93,6 +94,28 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         }
     }
 
+    fun updateEvent(e: Event) {
+        showProgress()
+        launch {
+            if (isNetworkAvailable) {
+                val result = withContext(Dispatchers.IO) { repository.updateEvent(event = e) }
+
+                hideProgress()
+
+                when (result) {
+                    is Success -> result.data.let { _event.value = it }
+                    is Failure -> _error.value = result.error
+                }
+            } else {
+                // update event in the Room
+                withContext(Dispatchers.IO) { repository.insertEventToDB(event = e) }
+
+                hideProgress()
+                _localEvent.value = e
+            }
+        }
+    }
+
     fun certifyEvent(date: String, event: Event) {
         event.certification = Certification(date = date, status = STATUS_CERTIFIED)
         showProgress()
@@ -167,8 +190,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        Storage.eventList =
-            events.filter { it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type }
+        Storage.eventList = events.filter { it.isDutyStatusChanged() }
         Storage.eventListGroupByDate = calculateEvents()
         eventList.value = events
         eventListByDate.value = calculateEvents()
@@ -192,22 +214,25 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             val endDate =
                 LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
 
-            val numberOfDaysBetweenDays = ChronoUnit.DAYS.between(startDate, endDate).toInt()
+            val numberOfDaysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate).toInt()
 
             // If start date and end date in the same day
-            if (numberOfDaysBetweenDays == 0) {
+            if (numberOfDaysBetweenDates == 0) {
                 // Add current event to list
                 calculatedEvents.add(event)
 
                 // If start date and end date are different dates
-            } else if (numberOfDaysBetweenDays > 0) {
+            } else if (numberOfDaysBetweenDates > 0) {
 
                 // Add event till the end of the graph
-                event.copy(endDate = event.date, endTime = "24:00").also {
+                event.copy(
+                    endDate = event.date,
+                    endTime = context.getString(R.string.twenty_four_hours)
+                ).also {
                     calculatedEvents.add(it)
                 }
 
-                for (day in 1..numberOfDaysBetweenDays) {
+                for (day in 1..numberOfDaysBetweenDates) {
                     val startDateOfNextGraphEvent = startDate.plusDays(day.toLong())
                         .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
 
@@ -218,12 +243,12 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     val nextGraphEvent = event.copy(
                         date = startDateOfNextGraphEvent,
                         endDate = endDateOfNextGraphEvent,
-                        time = "00:00",
-                        endTime = "24:00"
+                        time = context.getString(R.string.zero_hours),
+                        endTime = context.getString(R.string.twenty_four_hours)
                     )
 
                     // Check if this end day
-                    if (day == numberOfDaysBetweenDays) {
+                    if (day == numberOfDaysBetweenDates) {
                         // If current index is not last index,
                         // then end date/time of current event should be next event's start date/time
                         if (index < Storage.eventList.lastIndex) {

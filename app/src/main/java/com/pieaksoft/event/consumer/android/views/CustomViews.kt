@@ -9,6 +9,7 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.inputmethod.EditorInfo
 import android.widget.AutoCompleteTextView
 import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -62,6 +63,11 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
         getInteger(R.styleable.FloatingTitleEditText_maxElements, Int.MAX_VALUE).also {
             editText.filters = arrayOf(InputFilter.LengthFilter(it))
         }
+        getInt(R.styleable.FloatingTitleEditText_android_inputType, EditorInfo.TYPE_NULL).also {
+            if (it != EditorInfo.TYPE_NULL) {
+                editText.inputType = it
+            }
+        }
         getDrawable(R.styleable.FloatingTitleEditText_android_drawableEnd).also {
             editText.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -87,6 +93,7 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
                 editText.keyListener = null
             }
         }
+
     }
 }
 
