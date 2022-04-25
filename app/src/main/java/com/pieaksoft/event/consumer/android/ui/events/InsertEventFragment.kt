@@ -93,8 +93,7 @@ class InsertEventFragment(
                         binding.personalUserOrYardMvBtn.show()
                         binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
                     }
-                    else -> {
-                    }
+                    else -> Unit
                 }
                 eventModel.eventCode = it.code
             }
@@ -129,53 +128,56 @@ class InsertEventFragment(
         setupView()
     }
 
-    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     private fun setupView() = with(binding) {
         observe()
 
         // if user editing existing event
         event?.let {
             eventModel = event
-            setData(event)
+            fillUI(event)
         }
 
         save.setOnClickListener {
-            if (eventModel.isLocationSet()) {
-                event?.let {
-                    updateEvent()
-                    return@setOnClickListener
-                }
-                insertEvent()
-            } else viewModel.showProgress()
+            // Update (If local event is not null, then it's update)
+            if (event != null) {
+                updateEvent()
+                return@setOnClickListener
+            }
+
+            // Insert
+            if (eventModel.isLocationSet()) insertEvent()
+            else viewModel.showProgress()
         }
+
         backInsertBtn.setOnClickListener {
             onCancelled(true)
             dialog?.dismiss()
         }
+
         personalUserOrYardMvBtn.setOnClickListener {
             personalUserOrYardMvBtn.switchSelectStopIcon(isChecked)
             if (isChecked) {
                 eventModel.eventType =
                     EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
 
-                if (personalUseOrYardMv.text.equals(getString(R.string.personal_use))) {
-                    eventModel.eventCode =
-                        EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV.code
-                } else {
-                    eventModel.eventCode =
-                        EventCode.DRIVER_INDICATES_YARD_MOVES.code
+                when (EventCode.findByCode(eventModel.eventCode ?: "")) {
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
+                        eventModel.eventCode =
+                            EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV.code
+                    }
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                        eventModel.eventCode = EventCode.DRIVER_INDICATES_YARD_MOVES.code
+                    }
+                    else -> Unit
                 }
-            } else {
-                eventModel.eventType = event?.eventType
-                eventModel.eventCode = event?.eventCode
             }
             isChecked = !isChecked
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setData(event: Event) = with(binding) {
-        event.run {
+    private fun fillUI(event: Event) = with(binding) {
+        with(event) {
             dateTxt.show()
             eventStatus.show()
             dateTxt.editText.setText("$date $time")
@@ -191,16 +193,16 @@ class InsertEventFragment(
     }
 
     private fun insertEvent() {
-        mapViewData()
+        updateEventModel()
         viewModel.insertEvent(eventModel)
     }
 
-    private fun updateEvent() = with(binding) {
-        mapViewData()
+    private fun updateEvent() {
+        updateEventModel()
         viewModel.updateEvent(eventModel)
     }
 
-    private fun mapViewData() = with(binding) {
+    private fun updateEventModel() = with(binding) {
         eventModel.run {
             driverLocationDescription = locationDescription.editText.text.toString()
             shippingDocumentNumber = shipDocNumber.editText.text.toString()

@@ -5,13 +5,15 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:radius="10dp" />
                     <gradient
-                        android:centerColor="#1A52596C"
-                        android:endColor="#40373C49"
-                        android:startColor="#66616A83"
-                        android:type="radial"
-                        android:useLevel="false" />
+                        android:centerColor="#282C37"
+                        android:centerX="50%"
+                        android:centerY="50%"
+                        android:endColor="#491A373C"
+                        android:gradientRadius="100%"
+                        android:startColor="#491A373C"
+                        android:type="radial" />
+                    <corners android:radius="10dp" />
                 </shape>
             </item>
             <item

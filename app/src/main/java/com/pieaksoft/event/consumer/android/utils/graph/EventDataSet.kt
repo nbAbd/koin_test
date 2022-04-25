@@ -71,10 +71,16 @@ class EventDataSet(entries: MutableList<Entry>?) : LineDataSet(entries, "") {
 fun Event.yAxis(): Float {
     if (eventCode == null) return 0F
     return when (EventCode.findByCode(code = eventCode!!)) {
-        EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> 1F
+        EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING,
+        EventCode.DRIVER_INDICATES_YARD_MOVES -> 1F
+
         EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> 2F
+
         EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> 3F
-        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> 4F
+
+        EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY,
+        EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV -> 4F
+
         else -> 0F
     }
 }

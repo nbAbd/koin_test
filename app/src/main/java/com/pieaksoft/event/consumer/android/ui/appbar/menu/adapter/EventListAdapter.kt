@@ -157,10 +157,16 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
             private val DEFAULT = OFF
             fun appearanceBy(code: String): EventTypeAppearance {
                 return when (EventCode.findByCode(code)) {
-                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> OFF
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY,
+                    EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV -> OFF
+
                     EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH -> SLEEP
+
                     EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> DRIVING
-                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> ON
+
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING,
+                    EventCode.DRIVER_INDICATES_YARD_MOVES -> ON
+
                     else -> DEFAULT
                 }
             }

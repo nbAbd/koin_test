@@ -27,22 +27,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/back_insert_btn"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:scaleType="fitStart"
-            android:paddingTop="20dp"
             android:paddingHorizontal="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back_left"
+            app:icon="@drawable/ic_back_left"
+            app:iconGravity="start"
+            app:iconPadding="0dp"
+            app:iconSize="@dimen/_30dp"
+            app:iconTint="@color/secondary_gray"
             app:layout_constraintBottom_toBottomOf="@id/insert_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/insert_title"
-            tools:ignore="RtlSymmetry" />
+            app:layout_constraintTop_toTopOf="@id/insert_title" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_container"
@@ -96,8 +94,8 @@
                     android:id="@+id/odometer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     app:hint="@string/input_data"
-                    app:inputTypeNumber="true"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/odometer"
@@ -128,8 +126,8 @@
                     android:id="@+id/ship_doc_number"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     app:hint="@string/input_data"
-                    app:inputTypeNumber="true"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintHorizontal_weight="1"
                     app:title="@string/ship_doc_number"

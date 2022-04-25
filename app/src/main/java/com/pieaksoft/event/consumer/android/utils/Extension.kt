@@ -30,18 +30,18 @@ import com.pieaksoft.event.consumer.android.R
 private var toast: Toast? = null
 
 fun FragmentActivity.toast(text: String) {
-    singleToast(this, text)
+    toast(this, text)
 }
 
 fun Fragment.toast(text: String) {
-    singleToast(requireContext(), text)
+    toast(requireContext(), text)
 }
 
 fun Activity.toast(text: String) {
-    singleToast(this, text)
+    toast(this, text)
 }
 
-fun singleToast(context: Context, text: String) {
+private fun toast(context: Context, text: String) {
     toast?.cancel()
     toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
     toast?.show()

@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
-import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.inputmethod.EditorInfo
 import android.widget.AutoCompleteTextView
 import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -63,9 +63,9 @@ class FloatingTitleEditText constructor(context: Context, attrs: AttributeSet) :
         getInteger(R.styleable.FloatingTitleEditText_maxElements, Int.MAX_VALUE).also {
             editText.filters = arrayOf(InputFilter.LengthFilter(it))
         }
-        getBoolean(R.styleable.FloatingTitleEditText_inputTypeNumber, false).also {
-            if (it) {
-                editText.inputType = InputType.TYPE_CLASS_NUMBER
+        getInt(R.styleable.FloatingTitleEditText_android_inputType, EditorInfo.TYPE_NULL).also {
+            if (it != EditorInfo.TYPE_NULL) {
+                editText.inputType = it
             }
         }
         getDrawable(R.styleable.FloatingTitleEditText_android_drawableEnd).also {

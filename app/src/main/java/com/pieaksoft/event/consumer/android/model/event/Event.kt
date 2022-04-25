@@ -4,7 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
-import com.pieaksoft.event.consumer.android.utils.Storage
+import com.pieaksoft.event.consumer.android.enums.dutyStatuses
+import com.pieaksoft.event.consumer.android.enums.toInsertType
 import com.pieaksoft.event.consumer.android.utils.Storage.eventListGroupByDate
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -79,6 +80,8 @@ fun Event.formatDuration(): String {
 }
 
 fun Event.isLocationSet() = coordinates.latitude != null && coordinates.longitude != null
+
+fun Event.isDutyStatusChanged() = eventType?.toInsertType() in dutyStatuses
 
 fun Event.getStartTime(): Event? {
     val givenEventTime = LocalTime.parse(this.time)

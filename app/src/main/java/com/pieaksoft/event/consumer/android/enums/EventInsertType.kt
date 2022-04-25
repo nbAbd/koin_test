@@ -11,3 +11,13 @@ enum class EventInsertType(val type: String) {
     CYCLE_RESET("CYCLE_RESET"),
     NONE("NONE");
 }
+
+val dutyStatuses: Array<EventInsertType>
+    get() = arrayOf(
+        EventInsertType.DUTY_STATUS_CHANGE,
+        EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES
+    )
+
+fun String.toInsertType(): EventInsertType {
+    return EventInsertType.values().first { it.type.contentEquals(this) }
+}
