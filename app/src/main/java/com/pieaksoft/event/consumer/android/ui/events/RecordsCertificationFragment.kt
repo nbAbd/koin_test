@@ -83,7 +83,7 @@ class RecordsCertificationFragment :
         }
 
         viewModel.certifiedDate.observe(this) { date ->
-            if (certificationAdapter.dateList.isNotEmpty()) certificationAdapter.dateList.removeLast()
+            if (certificationAdapter.dateList.isNotEmpty()) certificationAdapter.dateList.removeFirst()
             if (certificationAdapter.dateList.isEmpty()) {
                 date?.let {
                     certificationAdapter.list.filter { it != date }.also { events ->
