@@ -150,21 +150,21 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override fun observe() {
-        viewModel.eventList.observe(this, {
+        viewModel.eventList.observe(this) {
             setEvents()
-        })
+        }
 
-        viewModel.eventListByDate.observe(this, {
+        viewModel.eventListByDate.observe(this) {
             setEvents()
-        })
+        }
 
-        viewModel.progress.observe(this, {
+        viewModel.progress.observe(this) {
             (requireActivity() as MainActivity).setProgressVisible(it)
-        })
+        }
 
-        viewModel.error.observe(this, {
+        viewModel.error.observe(this) {
             Log.e("test_logger_error", "test insert error response = ${it.message}")
-        })
+        }
     }
 
     private fun openNext() {

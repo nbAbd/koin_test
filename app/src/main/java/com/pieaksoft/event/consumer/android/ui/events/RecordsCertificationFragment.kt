@@ -1,7 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +14,6 @@ import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter
-import com.pieaksoft.event.consumer.android.utils.eventList
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
 import com.pieaksoft.event.consumer.android.utils.toast
