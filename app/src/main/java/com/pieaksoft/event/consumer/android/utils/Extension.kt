@@ -27,16 +27,24 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
 
 
+private var toast: Toast? = null
+
 fun FragmentActivity.toast(text: String) {
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    singleToast(this, text)
 }
 
 fun Fragment.toast(text: String) {
-    Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    singleToast(requireContext(), text)
 }
 
 fun Activity.toast(text: String) {
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    singleToast(this, text)
+}
+
+fun singleToast(context: Context, text: String) {
+    toast?.cancel()
+    toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+    toast?.show()
 }
 
 inline fun <reified T> SharedPreferences.get(key: String, defaultValue: T): T {
