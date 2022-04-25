@@ -69,8 +69,8 @@ class InsertEventFragment(
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
             // If date is not null, then set date/time
             it?.let {
-                eventModel.date = it.formatToServerDateDefaults(timezone)
-                eventModel.time = it.formatToServerTimeDefaults(timezone)
+                eventModel.date = it.formatToServerDateDefaults()
+                eventModel.time = it.formatToServerTimeDefaults()
                 return@observe
             }
 
