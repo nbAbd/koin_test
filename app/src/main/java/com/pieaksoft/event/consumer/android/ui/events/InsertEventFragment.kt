@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventBinding
@@ -66,6 +67,14 @@ class InsertEventFragment(
     }
 
     private fun observe() {
+        KeyboardHeightProvider(
+            requireContext(),
+            requireActivity().windowManager,
+            binding.root
+        ) {
+            binding.scrollContainer.updatePadding(bottom = it)
+        }
+
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
             // If date is not null, then set date/time
             it?.let {

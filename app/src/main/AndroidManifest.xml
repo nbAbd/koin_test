@@ -50,7 +50,7 @@
         <activity
             android:name=".ui.activities.main.MainActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
         <activity android:name="com.pieaksoft.event.consumer.android.ui.activities.registration.RegistrationActivity" />
     </application>
 </manifest>

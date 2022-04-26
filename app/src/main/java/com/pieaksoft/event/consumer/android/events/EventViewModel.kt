@@ -51,7 +51,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     private val _eventInsertCode = MutableLiveData<EventCode?>()
     val eventInsertCode: LiveData<EventCode?> = _eventInsertCode
 
-    private val _eventInsertDate = MutableLiveData<Date?>()
+    private val _eventInsertDate = MutableLiveData<Date?>(null)
     val eventInsertDate: LiveData<Date?> = _eventInsertDate
 
     private val _event = MutableLiveData<Event?>(null)

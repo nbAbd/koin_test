@@ -57,14 +57,15 @@ object Dialogs {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
         val dateSdf = sdf.parse(LocalDateTime.now(zoneId).toString()) ?: Date()
 
-        var startDate = eventList.lastItemStartDate ?: run {
+        val startDate = if (eventList.lastItemStartDate != null) {
+            eventList.lastItemStartDate!!.addMinutes(1)
+        } else run {
             Log.w(
                 "Dialogs",
                 "eventList.lastItemStartDate is null, so we'll use $dateSdf"
             )
             dateSdf
         }
-        startDate.addMinutes(1).also { startDate = it }
 
         SingleDateAndTimePickerDialog.Builder(context)
             .customLocale(Locale.US)
@@ -84,7 +85,7 @@ object Dialogs {
 
     fun showInsertEventDialogFragment(
         fragmentManager: FragmentManager,
-        event: Event?=null,
+        event: Event? = null,
         onCancelled: (IsCancelled: Boolean) -> Unit = {}
     ) {
         val dialog = InsertEventFragment(event, onCancelled)

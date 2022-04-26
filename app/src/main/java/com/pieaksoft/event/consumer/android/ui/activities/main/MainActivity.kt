@@ -138,7 +138,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 eventDutyStatus?.let {
                     if (checkedId != eventList.lastItemEventCode.itemId) {
                         eventViewModel.setEventInsertCode(code = it)
-                        eventViewModel.setEventInsertDate(Date())
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
                             if (isCanceled) navigateTo(status = eventList.lastItemEventCode)
