@@ -71,8 +71,12 @@ class InsertEventFragment(
             requireContext(),
             requireActivity().windowManager,
             binding.root
-        ) {
-            binding.scrollContainer.updatePadding(bottom = it)
+        ) { keyboardHeight, isOpen ->
+            if (isOpen) {
+                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
+            } else {
+                binding.scrollContainer.updatePadding(bottom = 0)
+            }
         }
 
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {

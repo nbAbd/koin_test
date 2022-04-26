@@ -15,7 +15,7 @@ class KeyboardHeightProvider(
     context: Context,
     windowManager: WindowManager,
     parentView: View,
-    listener: (keyBoardHeight: Int) -> Unit
+    listener: (keyBoardHeight:Int,isKeyboardOpen:Boolean) -> Unit
 ) : PopupWindow(context) {
 
     init {
@@ -38,7 +38,8 @@ class KeyboardHeightProvider(
             if (keyboardHeight < 100) {
                 keyboardHeight = 0
             }
-            listener(keyboardHeight)
+            val keyboardOpen = keyboardHeight > 0
+            listener(keyboardHeight,keyboardOpen)
         }
         contentView = popupView
         softInputMode =
