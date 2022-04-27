@@ -2,6 +2,7 @@ package com.pieaksoft.event.consumer.android.ui.events
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,16 +82,15 @@ class InsertEventFragment(
 
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
             // If date is not null, then set date/time
-            it?.let {
+            if(it !=null){
                 eventModel.date = it.formatToServerDateDefaults()
                 eventModel.time = it.formatToServerTimeDefaults()
-                return@observe
-            }
-
-            // If date is null set current date/time
-            Date().apply {
-                eventModel.date = formatToServerDateDefaults(timezone)
-                eventModel.time = formatToServerTimeDefaults(timezone)
+            }else{
+                // If date is null set current date/time
+                Date().apply {
+                    eventModel.date = formatToServerDateDefaults(timezone)
+                    eventModel.time = formatToServerTimeDefaults(timezone)
+                }
             }
         }
 
@@ -146,6 +146,7 @@ class InsertEventFragment(
 
         // if user editing existing event
         event?.let {
+            Log.e("time",eventModel.date.toString()+" "+eventModel.time.toString())
             eventModel = event
             fillUI(event)
         }
