@@ -81,16 +81,19 @@ class InsertEventFragment(
         }
 
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
+            if (event != null) return@observe
+
             // If date is not null, then set date/time
-            if(it !=null){
+            it?.let {
                 eventModel.date = it.formatToServerDateDefaults()
                 eventModel.time = it.formatToServerTimeDefaults()
-            }else{
-                // If date is null set current date/time
-                Date().apply {
-                    eventModel.date = formatToServerDateDefaults(timezone)
-                    eventModel.time = formatToServerTimeDefaults(timezone)
-                }
+                return@observe
+            }
+
+            // If date is null set current date/time
+            Date().apply {
+                eventModel.date = formatToServerDateDefaults(timezone)
+                eventModel.time = formatToServerTimeDefaults(timezone)
             }
         }
 
@@ -146,7 +149,7 @@ class InsertEventFragment(
 
         // if user editing existing event
         event?.let {
-            Log.e("time",eventModel.date.toString()+" "+eventModel.time.toString())
+            Log.e("time", eventModel.date.toString() + " " + eventModel.time.toString())
             eventModel = event
             fillUI(event)
         }
