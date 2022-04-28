@@ -1,0 +1,51 @@
+package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
+
+import com.google.android.material.tabs.TabLayoutMediator
+import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.databinding.FragmentGeneralRulesBinding
+import com.pieaksoft.event.consumer.android.model.rules.Rules
+import com.pieaksoft.event.consumer.android.model.rules.RulesData
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.RulesPagerAdapter
+import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
+
+class GeneralRulesFragment :
+    BaseFragment<FragmentGeneralRulesBinding>() {
+
+    private val tabTitles = listOf(
+        binding.root.context.getString(R.string.usa),
+        binding.root.context.getString(R.string.canada)
+    )
+
+    private val usaRulesList = mutableListOf<RulesData>().apply {
+        add(RulesData.Header())
+        add(RulesData.Content(Rules("Available driving", "08:00")))
+        add(RulesData.Content(Rules("Rest break", "08:00")))
+        add(RulesData.Content(Rules("Driving", "08:00")))
+        add(RulesData.Content(Rules("On-Duty", "08:00")))
+        add(RulesData.Content(Rules("Weekly", "08:00")))
+    }
+
+    private val canadaRulesList = mutableListOf<RulesData>().apply {
+        add(RulesData.Header())
+        add(RulesData.Content(Rules("Available driving", "08:00")))
+        add(RulesData.Content(Rules("Rest break", "12:00")))
+        add(RulesData.Content(Rules("Driving", "23:00")))
+        add(RulesData.Content(Rules("On-Duty", "05:00")))
+        add(RulesData.Content(Rules("Weekly", "09:00")))
+    }
+
+    private val usaRulesAdapter: RulesPagerAdapter by lazy {
+        RulesPagerAdapter(
+            this, usaRulesList, canadaRulesList
+        )
+    }
+
+    override fun setupView() = with(binding) {
+        viewPagerRules.apply {
+            adapter = usaRulesAdapter
+        }
+        TabLayoutMediator(tabLayout, viewPagerRules) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
+    }
+}

@@ -11,25 +11,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentRulesBinding
-import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.UsaRulesAdapter
+import com.pieaksoft.event.consumer.android.model.rules.Rules
+import com.pieaksoft.event.consumer.android.model.rules.RulesData
+import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.RulesAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
 class RulesFragment : BaseFragment<FragmentRulesBinding>() {
-    private val ruleData: Map<String, String> by lazy {
-        mapOf(
-            "Available driving" to "08:00",
-            "Rest break" to "08:00",
-            "Driving" to "11:00",
-            "On-Duty" to "14:00",
-            "Weekly" to "70:00",
-            "Shift hours" to "----",
-            "Day off remaining" to "----",
-        )
+    private val usaRulesList = mutableListOf<RulesData>().apply {
+        add(RulesData.Header())
+        add(RulesData.Content(Rules("Available driving", "08:00")))
+        add(RulesData.Content(Rules("Rest break", "08:00")))
+        add(RulesData.Content(Rules("Driving", "08:00")))
+        add(RulesData.Content(Rules("On-Duty", "08:00")))
+        add(RulesData.Content(Rules("Weekly", "08:00")))
     }
-    private val usaRulesAdapter: UsaRulesAdapter by lazy { UsaRulesAdapter() }
+    private val usaRulesAdapter: RulesAdapter by lazy { RulesAdapter() }
 
     override fun setupView() {
-        usaRulesAdapter.rules = ruleData
+        usaRulesAdapter.rules = usaRulesList
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

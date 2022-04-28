@@ -70,7 +70,7 @@
                     app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_usa_rules"
+                        android:id="@+id/item_rules"
                         style="@style/MenuItem.MaterialButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -108,15 +108,6 @@
                     android:showDividers="middle"
                     app:selectionRequired="true"
                     app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_faq"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/faq"
-                        app:icon="@drawable/ic_faq"
-                        app:shapeAppearanceOverlay="@style/MenuMaterialButton.ShapeAppearance.Top" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_logout"
