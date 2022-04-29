@@ -1,10 +1,9 @@
-package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
+package com.pieaksoft.event.consumer.android.ui.appbar.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.pieaksoft.event.consumer.android.model.rules.Rules
 import com.pieaksoft.event.consumer.android.model.rules.RulesData
-import com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.RulePageFragment
+import com.pieaksoft.event.consumer.android.ui.appbar.RulePageFragment
 
 class RulesPagerAdapter(
     fragment: Fragment,

@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMenuBinding
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity
@@ -42,34 +41,16 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
 
     override fun setupView() {
         binding.apply {
-            itemRules.isChecked = true
+            itemMd.isChecked = true
             btnClose.setOnClickListener { findNavController().popBackStack() }
-            toggleGroupTop.addOnButtonCheckedListener(menuGroupSelectedListener)
-            toggleGroupBottom.addOnButtonCheckedListener(menuGroupSelectedListener)
-            itemRules.addOnCheckedChangeListener(menuItemCheckListener)
             itemMd.addOnCheckedChangeListener(menuItemCheckListener)
             itemLogout.addOnCheckedChangeListener(menuItemCheckListener)
             itemSettings.addOnCheckedChangeListener(menuItemCheckListener)
         }
     }
 
-    private val menuGroupSelectedListener =
-        MaterialButtonToggleGroup.OnButtonCheckedListener { _, checkedId, _ ->
-            with(binding) {
-                if (toggleGroupTop.checkedButtonIds.contains(checkedId)) {
-                    if (toggleGroupBottom.checkedButtonIds.isNotEmpty()) toggleGroupBottom.clearChecked()
-                    else return@with
-                }
-                if (toggleGroupBottom.checkedButtonIds.contains(checkedId)) {
-                    if (toggleGroupTop.checkedButtonIds.isNotEmpty()) toggleGroupTop.clearChecked()
-                    else return@with
-                }
-            }
-        }
-
     private val menuItemCheckListener = MaterialButton.OnCheckedChangeListener { button, isCheck ->
         when (button.id) {
-            R.id.item_rules -> navController.navigate(R.id.general_rules_fragment)
             R.id.item_md -> navController.navigate(R.id.md_fragment)
             R.id.item_logout -> if (isCheck) showLogoutDialog()
             R.id.item_settings -> navController.navigate(R.id.settingsFragment)
@@ -116,7 +97,8 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
-                binding.toggleGroupBottom.clearChecked()
+                binding.toggleGroupTop.check(R.id.md_fragment)
+                binding.itemMd.isChecked = true
             }.create()
 
         alertDialog.window?.setFlags(

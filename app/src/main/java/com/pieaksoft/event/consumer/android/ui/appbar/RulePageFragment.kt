@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment
+package com.pieaksoft.event.consumer.android.ui.appbar
 
 import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentRulePageBinding
-import com.pieaksoft.event.consumer.android.model.rules.Rules
 import com.pieaksoft.event.consumer.android.model.rules.RulesData
-import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.RulesAdapter
+import com.pieaksoft.event.consumer.android.ui.appbar.adapter.RulesAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
 class RulePageFragment(private val rules: List<RulesData>) :
@@ -20,10 +19,6 @@ class RulePageFragment(private val rules: List<RulesData>) :
 
     private val rulesAdapter: RulesAdapter by lazy {
         RulesAdapter()
-    }
-
-    init {
-        requiresBottomNavigation = false
     }
 
     override fun setupView() {
@@ -52,7 +47,7 @@ class RulePageFragment(private val rules: List<RulesData>) :
 
         decoration.setDrawable(divider)
 
-        binding.recyclerViewo.apply {
+        binding.recyclerView.apply {
             layoutManager =
                 LinearLayoutManager(requireContext())
             adapter = rulesAdapter

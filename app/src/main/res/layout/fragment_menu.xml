@@ -70,15 +70,6 @@
                     app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_rules"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/usa_rules"
-                        app:icon="@drawable/ic_usa"
-                        app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Top" />
-
-                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_md"
                         style="@style/MenuItem.MaterialButton"
                         android:layout_width="match_parent"
@@ -96,19 +87,6 @@
                         app:icon="@drawable/setting_icon"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Bottom" />
 
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/toggleGroupBottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:divider="@drawable/menu_item_separator"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_logout"
                         style="@style/MenuItem.MaterialButton"
@@ -117,8 +95,8 @@
                         android:text="@string/logout"
                         app:icon="@drawable/ic_logout"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Bottom" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
 
+                </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <Space
                     android:layout_width="match_parent"
@@ -140,6 +118,6 @@
             app:layout_constraintStart_toEndOf="@id/scrollable_list_menu"
             app:layout_constraintTop_toBottomOf="@id/btn_close"
             app:navGraph="@navigation/nav_graph_menu"
-            tools:layout="@layout/fragment_empty_menu" />
+            tools:layout="@layout/fragment_md" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

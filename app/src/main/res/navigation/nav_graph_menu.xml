@@ -3,13 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_nav_graph"
-    app:startDestination="@id/general_rules_fragment">
-
-    <fragment
-        android:id="@+id/general_rules_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.GeneralRulesFragment"
-        android:label="Rules"
-        tools:layout="@layout/fragment_general_rules" />
+    app:startDestination="@id/md_fragment">
 
     <fragment
         android:id="@+id/md_fragment"

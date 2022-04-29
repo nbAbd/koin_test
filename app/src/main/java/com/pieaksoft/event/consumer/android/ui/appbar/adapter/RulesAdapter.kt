@@ -1,4 +1,4 @@
-package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
+package com.pieaksoft.event.consumer.android.ui.appbar.adapter
 
 import android.content.res.ColorStateList
 import android.graphics.Typeface
@@ -26,7 +26,7 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RulesAdapter.RulesViewHolder {
+    ): RulesViewHolder {
         return RulesViewHolder(
             RulesRecyclerItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -36,7 +36,11 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
         )
     }
 
-    override fun onBindViewHolder(holder: RulesAdapter.RulesViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RulesViewHolder, position: Int) {
+        if (position == rules.size - 1) {
+            holder.bindLasItem((rules[position] as RulesData.Content).rules)
+            return
+        }
         when (val rulesData = rules[position]) {
             is RulesData.Header -> holder.bindHeader(rulesData.titles)
             is RulesData.Content -> holder.bind(rulesData.rules)
@@ -55,7 +59,7 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
                     paint.color = ContextCompat.getColor(context, R.color.rules_separator)
                 }
             }
-            root.setBackgroundColor(root.context.getColor(R.color.half_dark_grey))
+            root.setBackgroundColor(root.context.getColor(R.color.black_bars_light))
             rulesTime.text = content.rulesTime
             rulesType.text = content.rulesType
         }
@@ -65,7 +69,7 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
                 background = GradientDrawable().apply {
                     shape = GradientDrawable.RECTANGLE
                     color =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.grey_type))
+                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.half_blue))
                     cornerRadii = floatArrayOf(12f, 12f, 12f, 12f, 0f, 0f, 0f, 0f)
                 }
 
@@ -74,13 +78,46 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
                     paint.color = ContextCompat.getColor(context, R.color.rules_separator)
                 }
             }
-            rulesType.setTypeface(rulesType.typeface, Typeface.BOLD)
-            rulesTime.setTypeface(rulesTime.typeface, Typeface.BOLD)
+            rulesType.apply {
+                setTypeface(rulesTime.typeface, Typeface.BOLD)
+                setTextColor(root.context.getColor(R.color.secondary_gray))
+            }
+            rulesTime.apply {
+                setTypeface(rulesTime.typeface, Typeface.BOLD)
+                setTextColor(root.context.getColor(R.color.secondary_gray))
+            }
+
             root.children
                 .filter { it is AppCompatTextView }
                 .forEachIndexed { index, textView ->
                     (textView as AppCompatTextView).text = titles[index]
                 }
         }
+
+        fun bindLasItem(content: Rules) = with(binding) {
+
+            root.apply {
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    setStroke(1,root.context.getColor(R.color.secondary_gray))
+                    cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, 12f, 12f, 12f, 12f)
+                }
+
+                dividerDrawable = ShapeDrawable(RectShape()).apply {
+                    intrinsicWidth = 1
+                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
+                }
+            }
+            root.apply {
+                dividerDrawable = ShapeDrawable(RectShape()).apply {
+                    intrinsicWidth = 1
+                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
+                }
+            }
+            root.setBackgroundColor(root.context.getColor(R.color.black_bars_light))
+            rulesTime.text = content.rulesTime
+            rulesType.text = content.rulesType
+        }
+
     }
 }
