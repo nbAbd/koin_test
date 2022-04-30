@@ -6,12 +6,17 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.isNetworkAvailable
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel(context: Application) : AndroidViewModel(context), CoroutineScope,
@@ -47,5 +52,21 @@ abstract class BaseViewModel(context: Application) : AndroidViewModel(context), 
 
     fun hideProgress() {
         _progress.postValue(false)
+    }
+
+    private fun getUserTimezone(): Timezone {
+        return Timezone.findByName(sp.getString(USER_TIMEZONE, "")!!)
+    }
+
+    fun getFormattedUserDate(notConfigDate: Boolean = false): String {
+        return Date().formatToServerDateDefaults(if (!notConfigDate) getUserTimezone() else null)
+    }
+
+    fun getFormattedUserTime(notConfigTime: Boolean = false): String {
+        return Date().formatToServerDateDefaults(if (!notConfigTime) getUserTimezone() else null)
+    }
+
+    fun saveUserTimezone(timezone: String?) {
+        sp.put(USER_TIMEZONE, timezone)
     }
 }

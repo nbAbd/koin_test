@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pieaksoft.event.consumer.android.databinding.FragmentRecordsCertificationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.EventInsertType
+import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
+import com.pieaksoft.event.consumer.android.enums.EventRecordStatusType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
-import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
@@ -31,13 +32,10 @@ class RecordsCertificationFragment :
         Event(
             eventType = EventInsertType.DRIVERS_CERTIFICATION_RE_CERTIFICATION_OF_RECORDS.type,
             eventCode = EventCode.DRIVER_FIRST_CERTIFICATION_OF_DAILY_RECORD.code,
-            date = Date().formatToServerDateDefaults(),
-            time = Date().formatToServerTimeDefaults(),
-            coordinates = Location(-10.12345f, 48.23432f),
-            eventRecordOrigin = "AUTOMATICALLY_RECORDED_BY_ELD",
-            eventRecordStatus = "ACTIVE",
-            malfunctionIndicatorStatus = "NO_ACTIVE_MALFUNCTION",
-            dataDiagnosticEventIndicatorStatus = "NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER"
+            date = viewModel.getFormattedUserDate(),
+            time = viewModel.getFormattedUserTime(),
+            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type
         )
     }
 
@@ -52,6 +50,10 @@ class RecordsCertificationFragment :
             certificationAdapter.dateList.forEach { date ->
                 viewModel.certifyEvent(date = date, event = tempEvent)
             }
+        }
+
+        cancelCert.setOnClickListener {
+            findNavController().popBackStack()
         }
 
         btnClose.setOnClickListener {

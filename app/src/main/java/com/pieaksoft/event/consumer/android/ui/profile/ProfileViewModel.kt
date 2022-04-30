@@ -20,6 +20,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
         profileRepository.getAdditionalProfiles().asLiveData()
 
     val needUpdateObservable = SingleLiveEvent<Boolean>()
+    val currentDriverProfile = SingleLiveEvent<Profile>()
 
     val doesNoticeExistingProfile: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -28,7 +29,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
     }
 
 
-    fun getProfile(isAdditional: Boolean = false) {
+    fun getProfile(isAdditional: Boolean = false, fromDB: Boolean = false) {
         launch {
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
@@ -38,7 +39,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
                     SHARED_PREFERENCES_CURRENT_USER_ID, ""
                 )
             )
-
+//            if (!fromDB) {
             when (val response = profileRepository.getProfile(token ?: "")) {
                 is Success -> {
                     response.data.let {
@@ -61,7 +62,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
                             val additionalProfile = it.copy(isAdditional = true)
                             profileRepository.saveProfile(profile = additionalProfile)
                         } else {
-
+                            currentDriverProfile.postValue(it)
                             // if primary profile exists, then update it
                             if (profileRepository.isProfileExists(id = it.id)) {
                                 profileRepository.update(profile = it)
@@ -85,6 +86,11 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
                     _error.value = response.error
                 }
             }
+//            } else {
+//                profileRepository.getProfileById(profileId ?: "").collect {
+//                    currentDriverProfile.postValue(it)
+//                }
+//            }
         }
     }
 
@@ -96,13 +102,5 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
         sp.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken).apply()
         sp.edit().putString(SHARED_PREFERENCES_MAIN_USER_ID, additionalToken).apply()
         needUpdateObservable.postValue(true)
-    }
-
-    private fun saveUserTimezone(timezone: String?) {
-        sp.put(USER_TIMEZONE, timezone)
-    }
-
-    fun getUserTimezone(): String? {
-        return sp.getString(USER_TIMEZONE, null)
     }
 }

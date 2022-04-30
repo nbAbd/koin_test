@@ -40,10 +40,6 @@ class InsertEventFragment(
 
     private val profileViewModel: ProfileViewModel by viewModel()
 
-    private val timezone: Timezone? by lazy {
-        Timezone.findByName(timezone = profileViewModel.getUserTimezone() ?: "")
-    }
-
     private val viewModel: EventViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,8 +88,8 @@ class InsertEventFragment(
 
             // If date is null set current date/time
             Date().apply {
-                eventModel.date = formatToServerDateDefaults(timezone)
-                eventModel.time = formatToServerTimeDefaults(timezone)
+                eventModel.date = viewModel.getFormattedUserDate()
+                eventModel.time = viewModel.getFormattedUserTime()
             }
         }
 
@@ -196,6 +192,8 @@ class InsertEventFragment(
     private fun fillUI(event: Event) = with(binding) {
         with(event) {
             dateTxt.show()
+            dateTxt.editText.alpha = 0.5F
+            eventStatus.editText.alpha = 0.5F
             eventStatus.show()
             dateTxt.editText.setText("$date $time")
             eventStatus.editText.setText(eventCode?.toReadable())
@@ -235,6 +233,7 @@ class InsertEventFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        onCancelled(false)
         viewModel.resetInserting()
         _binding = null
     }

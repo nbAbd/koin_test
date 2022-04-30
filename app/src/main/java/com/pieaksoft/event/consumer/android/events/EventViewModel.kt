@@ -15,9 +15,7 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
-import com.pieaksoft.event.consumer.android.utils.put
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -194,8 +192,14 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         Storage.eventListGroupByDate = calculateEvents()
         eventList.value = events
         eventListByDate.value = calculateEvents()
+        val currentDate = getFormattedUserDate()
         eventListRequiresCertification.value =
-            Storage.eventList.filter { it.certifyDate != null && it.certifyDate!!.isEmpty() }
+            Storage.eventList.filter {
+                it.certifyDate != null &&
+                        it.certifyDate!!.isEmpty() &&
+                        it.date != null &&
+                        it.date!! < currentDate
+            }
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {

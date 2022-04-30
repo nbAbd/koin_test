@@ -37,10 +37,6 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RulesViewHolder, position: Int) {
-        if (position == rules.size - 1) {
-            holder.bindLasItem((rules[position] as RulesData.Content).rules)
-            return
-        }
         when (val rulesData = rules[position]) {
             is RulesData.Header -> holder.bindHeader(rulesData.titles)
             is RulesData.Content -> holder.bind(rulesData.rules)
@@ -93,31 +89,5 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
                     (textView as AppCompatTextView).text = titles[index]
                 }
         }
-
-        fun bindLasItem(content: Rules) = with(binding) {
-
-            root.apply {
-                background = GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE
-                    setStroke(1,root.context.getColor(R.color.secondary_gray))
-                    cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, 12f, 12f, 12f, 12f)
-                }
-
-                dividerDrawable = ShapeDrawable(RectShape()).apply {
-                    intrinsicWidth = 1
-                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
-                }
-            }
-            root.apply {
-                dividerDrawable = ShapeDrawable(RectShape()).apply {
-                    intrinsicWidth = 1
-                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
-                }
-            }
-            root.setBackgroundColor(root.context.getColor(R.color.black_bars_light))
-            rulesTime.text = content.rulesTime
-            rulesType.text = content.rulesType
-        }
-
     }
 }

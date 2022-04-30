@@ -140,10 +140,13 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                         eventViewModel.setEventInsertCode(code = it)
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
-                            if (isCanceled) navigateTo(status = eventList.lastItemEventCode)
+                            if (isCanceled) navigateTo(
+                                status = eventList.lastItemEventCode,
+                                back = true
+                            )
                             else navigateTo(status = eventDutyStatus)
                         }
-                    }
+                    } else navigateTo()
                 }
             }
         }
@@ -163,12 +166,18 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         }
     }
 
-    fun navigateTo(id: Int = R.id.eventCalculationFragment, status: EventCode? = null) {
-        status?.let {
-            eventViewModel.storeCurrentDutyStatus(status = status)
-            status.itemId?.let {
-                if (it != binding.bottomNavigation.root.checkedButtonId) {
-                    binding.bottomNavigation.root.check(it)
+    fun navigateTo(
+        id: Int = R.id.eventCalculationFragment,
+        status: EventCode? = null,
+        back: Boolean = false
+    ) {
+        if (back) {
+            status?.let {
+                eventViewModel.storeCurrentDutyStatus(status = status)
+                status.itemId?.let {
+                    if (it != binding.bottomNavigation.root.checkedButtonId) {
+                        binding.bottomNavigation.root.check(it)
+                    }
                 }
             }
         }
