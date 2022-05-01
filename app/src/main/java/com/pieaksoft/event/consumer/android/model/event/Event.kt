@@ -8,6 +8,7 @@ import com.pieaksoft.event.consumer.android.enums.dutyStatuses
 import com.pieaksoft.event.consumer.android.enums.toInsertType
 import com.pieaksoft.event.consumer.android.utils.Storage.eventListGroupByDate
 import java.io.Serializable
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -85,11 +86,13 @@ fun Event.isDutyStatusChanged() = eventType?.toInsertType() in dutyStatuses
 
 fun Event.getStartTime(): Event? {
     val givenEventTime = LocalTime.parse(this.time)
-    if (givenEventTime != LocalTime.MIN) return this
+    val givenEventDate = LocalDate.parse(this.date)
+    if (givenEventTime.isAfter(LocalTime.MIN)) return this
     eventListGroupByDate.keys.reversed().forEach { index ->
-        if (index < this.date.toString()) {
+        val indexDate = LocalDate.parse(index)
+        if (indexDate.isBefore(givenEventDate)) {
             eventListGroupByDate[index]?.last().also {
-                if (LocalTime.parse(it?.time) != LocalTime.MIN)
+                if (LocalTime.parse(it?.time).isAfter(LocalTime.MIN))
                     return it
             }
         }

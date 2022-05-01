@@ -197,8 +197,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             Storage.eventList.filter {
                 it.certifyDate != null &&
                         it.certifyDate!!.isEmpty() &&
-                        it.date != null &&
-                        it.date!! < currentDate
+                        LocalDate.parse(it.date)
+                            .isBefore(LocalDate.parse(currentDate))
             }
     }
 
