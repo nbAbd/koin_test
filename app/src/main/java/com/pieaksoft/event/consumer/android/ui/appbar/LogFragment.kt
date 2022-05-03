@@ -82,7 +82,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override fun setupView() {
-        profileViewModel.getProfile(fromDB = true)
         binding.apply {
             closeLog.setOnClickListener { findNavController().popBackStack() }
 
@@ -157,10 +156,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             setEvents()
         }
 
-        profileViewModel.currentDriverProfile.observe(viewLifecycleOwner) {
-            eventListAdapter.truckName = if (it.isNotEmpty())
-                it.last().vehicle?.name else ""
-        }
+        eventListAdapter.truckName = "Volvo X560"
         viewModel.eventListByDate.observe(this) {
             setEvents()
         }

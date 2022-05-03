@@ -5,5 +5,5 @@ private val headerTitles = listOf("Clocks", "Times")
 
 sealed class RulesData {
     class Header(var titles: List<String> = headerTitles) : RulesData()
-    class Content(var rules: Rules) : RulesData()
+    class Content(var rule: Rule) : RulesData()
 }

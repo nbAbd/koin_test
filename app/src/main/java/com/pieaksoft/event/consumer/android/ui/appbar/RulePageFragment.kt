@@ -42,7 +42,7 @@ class RulePageFragment(private val rules: List<RulesData>) :
 
         val divider = ShapeDrawable(RectShape()).apply {
             intrinsicHeight = 2
-            paint.color = ContextCompat.getColor(requireContext(), R.color.rules_separator)
+            paint.color = ContextCompat.getColor(requireContext(), R.color.separator)
         }
 
         decoration.setDrawable(divider)

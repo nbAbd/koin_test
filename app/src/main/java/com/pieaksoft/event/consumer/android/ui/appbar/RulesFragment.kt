@@ -4,11 +4,10 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentRulesBinding
-import com.pieaksoft.event.consumer.android.model.rules.Rules
+import com.pieaksoft.event.consumer.android.model.rules.Rule
 import com.pieaksoft.event.consumer.android.model.rules.RulesData
 import com.pieaksoft.event.consumer.android.ui.appbar.adapter.RulesPagerAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
-import java.util.*
 
 class RulesFragment : BaseFragment<FragmentRulesBinding>() {
 
@@ -21,20 +20,20 @@ class RulesFragment : BaseFragment<FragmentRulesBinding>() {
 
     private val usaRulesList = mutableListOf<RulesData>().apply {
         add(RulesData.Header())
-        add(RulesData.Content(Rules("Available driving", "08:00")))
-        add(RulesData.Content(Rules("Rest break", "08:00")))
-        add(RulesData.Content(Rules("Driving", "08:00")))
-        add(RulesData.Content(Rules("On-Duty", "08:00")))
-        add(RulesData.Content(Rules("Weekly", "08:00")))
+        add(RulesData.Content(Rule("Available driving", "08:00")))
+        add(RulesData.Content(Rule("Rest break", "08:00")))
+        add(RulesData.Content(Rule("Driving", "08:00")))
+        add(RulesData.Content(Rule("On-Duty", "08:00")))
+        add(RulesData.Content(Rule("Weekly", "08:00")))
     }
 
     private val canadaRulesList = mutableListOf<RulesData>().apply {
         add(RulesData.Header())
-        add(RulesData.Content(Rules("Available driving", "08:00")))
-        add(RulesData.Content(Rules("Rest break", "12:00")))
-        add(RulesData.Content(Rules("Driving", "23:00")))
-        add(RulesData.Content(Rules("On-Duty", "05:00")))
-        add(RulesData.Content(Rules("Weekly", "09:00")))
+        add(RulesData.Content(Rule("Available driving", "08:00")))
+        add(RulesData.Content(Rule("Rest break", "12:00")))
+        add(RulesData.Content(Rule("Driving", "23:00")))
+        add(RulesData.Content(Rule("On-Duty", "05:00")))
+        add(RulesData.Content(Rule("Weekly", "09:00")))
     }
 
     override fun setupView() = with(binding) {

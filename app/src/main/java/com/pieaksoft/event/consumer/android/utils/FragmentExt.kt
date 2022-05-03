@@ -14,5 +14,5 @@ fun DialogFragment.hideSystemUI() {
 }
 
 fun <T> T.performStatusChange(to: EventCode = Storage.eventList.lastItemEventCode) where T : Modifier, T : Fragment {
-    (requireActivity() as MainActivity).navigateTo(status = to,back = true)
+    (requireActivity() as MainActivity).navigateTo(status = to)
 }

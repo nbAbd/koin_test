@@ -141,8 +141,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
                             if (isCanceled) navigateTo(
-                                status = eventList.lastItemEventCode,
-                                back = true
+                                status = eventList.lastItemEventCode
                             )
                             else navigateTo(status = eventDutyStatus)
                         }
@@ -168,20 +167,16 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     fun navigateTo(
         id: Int = R.id.eventCalculationFragment,
-        status: EventCode? = null,
-        back: Boolean = false
+        status: EventCode? = null
     ) {
-        if (back) {
-            status?.let {
-                eventViewModel.storeCurrentDutyStatus(status = status)
-                status.itemId?.let {
-                    if (it != binding.bottomNavigation.root.checkedButtonId) {
-                        binding.bottomNavigation.root.check(it)
-                    }
+        status?.let {
+            eventViewModel.storeCurrentDutyStatus(status = status)
+            status.itemId?.let {
+                if (it != binding.bottomNavigation.root.checkedButtonId) {
+                    binding.bottomNavigation.root.check(it)
                 }
             }
         }
-
         navController.navigate(id)
     }
 

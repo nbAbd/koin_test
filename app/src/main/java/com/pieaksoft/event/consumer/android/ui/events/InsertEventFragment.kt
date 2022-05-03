@@ -87,10 +87,8 @@ class InsertEventFragment(
             }
 
             // If date is null set current date/time
-            Date().apply {
-                eventModel.date = viewModel.getFormattedUserDate()
-                eventModel.time = viewModel.getFormattedUserTime()
-            }
+            eventModel.date = viewModel.getFormattedUserDate()
+            eventModel.time = viewModel.getFormattedUserTime()
         }
 
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
@@ -145,7 +143,6 @@ class InsertEventFragment(
 
         // if user editing existing event
         event?.let {
-            Log.e("time", eventModel.date.toString() + " " + eventModel.time.toString())
             eventModel = event
             fillUI(event)
         }
@@ -233,7 +230,6 @@ class InsertEventFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        onCancelled(false)
         viewModel.resetInserting()
         _binding = null
     }

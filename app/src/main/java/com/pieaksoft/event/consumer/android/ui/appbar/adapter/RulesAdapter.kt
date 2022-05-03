@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.databinding.RulesRecyclerItemBinding
-import com.pieaksoft.event.consumer.android.model.rules.Rules
+import com.pieaksoft.event.consumer.android.databinding.ItemRuleBinding
+import com.pieaksoft.event.consumer.android.model.rules.Rule
 import com.pieaksoft.event.consumer.android.model.rules.RulesData
 
 class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
@@ -28,7 +28,7 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
         viewType: Int
     ): RulesViewHolder {
         return RulesViewHolder(
-            RulesRecyclerItemBinding.inflate(
+            ItemRuleBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -39,25 +39,25 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
     override fun onBindViewHolder(holder: RulesViewHolder, position: Int) {
         when (val rulesData = rules[position]) {
             is RulesData.Header -> holder.bindHeader(rulesData.titles)
-            is RulesData.Content -> holder.bind(rulesData.rules)
+            is RulesData.Content -> holder.bind(rulesData.rule)
         }
     }
 
     override fun getItemCount(): Int = rules.size
 
-    inner class RulesViewHolder(val binding: RulesRecyclerItemBinding) :
+    inner class RulesViewHolder(val binding: ItemRuleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(content: Rules) = with(binding) {
+        fun bind(content: Rule) = with(binding) {
             root.apply {
                 dividerDrawable = ShapeDrawable(RectShape()).apply {
                     intrinsicWidth = 1
-                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
+                    paint.color = ContextCompat.getColor(context, R.color.separator)
                 }
+                setBackgroundColor(context.getColor(R.color.black_bars_light))
             }
-            root.setBackgroundColor(root.context.getColor(R.color.black_bars_light))
-            rulesTime.text = content.rulesTime
-            rulesType.text = content.rulesType
+            time.text = content.Time
+            type.text = content.Type
         }
 
         fun bindHeader(titles: List<String>) = with(binding) {
@@ -71,22 +71,16 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
 
                 dividerDrawable = ShapeDrawable(RectShape()).apply {
                     intrinsicWidth = 1
-                    paint.color = ContextCompat.getColor(context, R.color.rules_separator)
+                    paint.color = ContextCompat.getColor(context, R.color.separator)
                 }
-            }
-            rulesType.apply {
-                setTypeface(rulesTime.typeface, Typeface.BOLD)
-                setTextColor(root.context.getColor(R.color.secondary_gray))
-            }
-            rulesTime.apply {
-                setTypeface(rulesTime.typeface, Typeface.BOLD)
-                setTextColor(root.context.getColor(R.color.secondary_gray))
             }
 
             root.children
-                .filter { it is AppCompatTextView }
+                .filterIsInstance(AppCompatTextView::class.java)
                 .forEachIndexed { index, textView ->
-                    (textView as AppCompatTextView).text = titles[index]
+                    textView.text = titles[index]
+                    textView.setTypeface(type.typeface, Typeface.BOLD)
+                    textView.setTextColor(root.context.getColor(R.color.secondary_gray))
                 }
         }
     }

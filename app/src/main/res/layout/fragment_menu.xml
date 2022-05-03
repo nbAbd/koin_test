@@ -60,7 +60,7 @@
                 android:paddingEnd="22dp">
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/toggleGroupTop"
+                    android:id="@+id/toggleGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/menu_item_separator"

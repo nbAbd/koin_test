@@ -9,7 +9,6 @@ import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.profile.Profile
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(val app: Application, private val profileRepository: ProfileRepository) :
@@ -21,7 +20,6 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
         profileRepository.getAdditionalProfiles().asLiveData()
 
     val needUpdateObservable = SingleLiveEvent<Boolean>()
-    val currentDriverProfile = SingleLiveEvent<List<Profile>>()
 
     val doesNoticeExistingProfile: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -30,7 +28,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
     }
 
 
-    fun getProfile(isAdditional: Boolean = false, fromDB: Boolean = false) {
+    fun getProfile(isAdditional: Boolean = false) {
         launch {
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
@@ -40,55 +38,51 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
                     SHARED_PREFERENCES_CURRENT_USER_ID, ""
                 )
             )
-            if (!fromDB) {
-                when (val response = profileRepository.getProfile(token ?: "")) {
-                    is Success -> {
-                        response.data.let {
-                            if (isAdditional) {
-                                // Return if additional profile is the same with primary
-                                if (primaryDriver.value.takeIf { list -> list?.isNotEmpty() == true }
-                                        ?.last()?.id == it.id) {
-                                    doesNoticeExistingProfile.value = true
-                                    return@let
-                                }
 
-                                // if there any additional profile delete them
-                                if (profileRepository.getAdditionalProfiles()
+            when (val response = profileRepository.getProfile(token ?: "")) {
+                is Success -> {
+                    response.data.let {
+                        if (isAdditional) {
+                            // Return if additional profile is the same with primary
+                            if (primaryDriver.value.takeIf { list -> list?.isNotEmpty() == true }
+                                    ?.last()?.id == it.id) {
+                                doesNoticeExistingProfile.value = true
+                                return@let
+                            }
+
+                            // if there any additional profile delete them
+                            if (profileRepository.getAdditionalProfiles()
+                                    .asLiveData().value?.isNotEmpty() == true
+                            ) {
+                                profileRepository.deleteAdditionalProfiles()
+                            }
+
+                            // change profile status to additional profile
+                            val additionalProfile = it.copy(isAdditional = true)
+                            profileRepository.saveProfile(profile = additionalProfile)
+                        } else {
+
+                            // if primary profile exists, then update it
+                            if (profileRepository.isProfileExists(id = it.id)) {
+                                profileRepository.update(profile = it)
+                            } else {
+                                if (profileRepository.getPrimaryProfiles()
                                         .asLiveData().value?.isNotEmpty() == true
                                 ) {
-                                    profileRepository.deleteAdditionalProfiles()
+                                    profileRepository.deletePrimaryProfiles()
                                 }
 
-                                // change profile status to additional profile
-                                val additionalProfile = it.copy(isAdditional = true)
-                                profileRepository.saveProfile(profile = additionalProfile)
-                            } else {
-                                // if primary profile exists, then update it
-                                if (profileRepository.isProfileExists(id = it.id)) {
-                                    profileRepository.update(profile = it)
-                                } else {
-                                    if (profileRepository.getPrimaryProfiles()
-                                            .asLiveData().value?.isNotEmpty() == true
-                                    ) {
-                                        profileRepository.deletePrimaryProfiles()
-                                    }
+                                // save profile
+                                profileRepository.saveProfile(it)
 
-                                    // save profile
-                                    profileRepository.saveProfile(it)
-
-                                    // save timezone
-                                    saveUserTimezone(timezone = it.user.homeTerminalTimezone)
-                                }
+                                // save timezone
+                                saveUserTimezone(timezone = it.user.homeTerminalTimezone)
                             }
                         }
                     }
-                    is Failure -> {
-                        _error.value = response.error
-                    }
                 }
-            } else {
-                profileRepository.getPrimaryProfiles().collect {
-                    currentDriverProfile.postValue(it)
+                is Failure -> {
+                    _error.value = response.error
                 }
             }
         }

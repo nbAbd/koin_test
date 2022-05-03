@@ -97,7 +97,7 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
-                binding.toggleGroupTop.check(R.id.md_fragment)
+                binding.toggleGroup.check(R.id.md_fragment)
                 binding.itemMd.isChecked = true
             }.create()
 

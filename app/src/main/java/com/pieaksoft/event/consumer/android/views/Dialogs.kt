@@ -53,19 +53,10 @@ object Dialogs {
             Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
 
         val zoneId = ZoneId.of(timezoneId.value)
-        val timezone = TimeZone.getTimeZone(zoneId.id)
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
         val dateSdf = sdf.parse(LocalDateTime.now(zoneId).toString()) ?: Date()
 
-        val startDate = if (eventList.lastItemStartDate != null) {
-            eventList.lastItemStartDate!!.addMinutes(1)
-        } else run {
-            Log.w(
-                "Dialogs",
-                "eventList.lastItemStartDate is null, so we'll use $dateSdf"
-            )
-            dateSdf
-        }
+        val startDate = eventList.lastItemStartDate?.addMinutes(1) ?: dateSdf
 
         SingleDateAndTimePickerDialog.Builder(context)
             .customLocale(Locale.US)

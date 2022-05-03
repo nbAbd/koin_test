@@ -95,9 +95,9 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
                 }
             }
             binding.root.children
-                .filter { it is AppCompatTextView }
+                .filterIsInstance(AppCompatTextView::class.java)
                 .forEachIndexed { index, textView ->
-                    (textView as AppCompatTextView).text = titles[index]
+                    textView.text = titles[index]
                 }
         }
     }
