@@ -12,6 +12,7 @@ import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
@@ -189,17 +190,20 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     private fun handleEvents(events: List<Event>) {
         Storage.eventList = events.filter { it.isDutyStatusChanged() }
-        Storage.eventListGroupByDate = calculateEvents()
-        eventList.value = events
-        eventListByDate.value = calculateEvents()
-        val currentDate = getFormattedUserDate()
-        eventListRequiresCertification.value =
-            Storage.eventList.filter {
-                it.certifyDate != null &&
-                        it.certifyDate!!.isEmpty() &&
-                        LocalDate.parse(it.date)
-                            .isBefore(LocalDate.parse(currentDate))
+        calculateEvents().also {
+            Storage.eventListGroupByDate = it
+            eventListByDate.value = it
+
+            val list = mutableListOf<Event>()
+            it.keys.forEach { date ->
+                it[date]?.filterNot { event -> event.certifiedDates.containsDate(date) }
+                    ?.let { dayEvents ->
+                        list.addAll(dayEvents)
+                    }
             }
+            eventListRequiresCertification.value = list
+        }
+        eventList.value = events
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
@@ -332,8 +336,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // В случии повторного открытия страницы insert должны сбросить значение
-    ///////////////////////////////////////////////////////////////////////////
+// В случии повторного открытия страницы insert должны сбросить значение
+///////////////////////////////////////////////////////////////////////////
     fun resetInserting() {
         _event.value = null
         _localEvent.value = null

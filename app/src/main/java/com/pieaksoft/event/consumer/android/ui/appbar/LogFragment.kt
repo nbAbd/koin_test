@@ -158,7 +158,8 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         }
 
         profileViewModel.currentDriverProfile.observe(viewLifecycleOwner) {
-            eventListAdapter.truckName = it.vehicle?.name
+            eventListAdapter.truckName = if (it.isNotEmpty())
+                it.last().vehicle?.name else ""
         }
         viewModel.eventListByDate.observe(this) {
             setEvents()

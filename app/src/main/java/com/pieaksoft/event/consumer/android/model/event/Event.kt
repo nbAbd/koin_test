@@ -3,6 +3,7 @@ package com.pieaksoft.event.consumer.android.model.event
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.SerializedName
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
 import com.pieaksoft.event.consumer.android.enums.dutyStatuses
 import com.pieaksoft.event.consumer.android.enums.toInsertType
@@ -37,7 +38,8 @@ data class Event(
     @TypeConverters(Certification::class)
     var certification: Certification? = null,
     @TypeConverters(CertificationListConverter::class)
-    var certifyDate: List<Certification>? = emptyList(),
+    @SerializedName("certifyDate")
+    var certifiedDates: List<Certification>? = emptyList(),
     val recordOrigin: String? = "",
     val createdAt: String? = "",
     val distanceSinceLastValidCoordinates: String? = "",
@@ -98,4 +100,8 @@ fun Event.getStartTime(): Event? {
         }
     }
     return null
+}
+
+fun List<Certification>?.containsDate(date: String): Boolean {
+    return this?.map { it.date }?.contains(date) ?: false
 }
