@@ -5,21 +5,15 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pieaksoft.event.consumer.android.databinding.FragmentRecordsCertificationBinding
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
-import com.pieaksoft.event.consumer.android.enums.EventRecordStatusType
+import com.pieaksoft.event.consumer.android.enums.*
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.activities.main.IMainAction
 import com.pieaksoft.event.consumer.android.ui.base.BaseAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.events.adapter.EventCertificationAdapter
-import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
-import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
 import com.pieaksoft.event.consumer.android.utils.toast
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 class RecordsCertificationFragment :
@@ -35,7 +29,10 @@ class RecordsCertificationFragment :
             date = viewModel.getFormattedUserDate(),
             time = viewModel.getFormattedUserTime(),
             eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
-            eventRecordStatus = EventRecordStatusType.ACTIVE.type
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType
+                .NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type
         )
     }
 

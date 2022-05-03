@@ -7,10 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.enums.Timezone
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
-import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
-import com.pieaksoft.event.consumer.android.utils.isNetworkAvailable
-import com.pieaksoft.event.consumer.android.utils.put
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,12 +55,12 @@ abstract class BaseViewModel(context: Application) : AndroidViewModel(context), 
         return Timezone.findByName(sp.getString(USER_TIMEZONE, "")!!)
     }
 
-    fun getFormattedUserDate(notConfigDate: Boolean = false): String {
-        return Date().formatToServerDateDefaults(if (!notConfigDate) getUserTimezone() else null)
+    fun getFormattedUserDate(configTimezone: Boolean = true): String {
+        return Date().formatToServerDateDefaults(if (configTimezone) getUserTimezone() else null)
     }
 
-    fun getFormattedUserTime(notConfigTime: Boolean = false): String {
-        return Date().formatToServerDateDefaults(if (!notConfigTime) getUserTimezone() else null)
+    fun getFormattedUserTime(configTimezone: Boolean = true): String {
+        return Date().formatToServerTimeDefaults(if (configTimezone) getUserTimezone() else null)
     }
 
     fun saveUserTimezone(timezone: String?) {
