@@ -60,7 +60,7 @@
                 android:paddingEnd="22dp">
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/toggleGroupTop"
+                    android:id="@+id/toggleGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/menu_item_separator"
@@ -68,15 +68,6 @@
                     android:showDividers="middle"
                     app:selectionRequired="true"
                     app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_usa_rules"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/usa_rules"
-                        app:icon="@drawable/ic_usa"
-                        app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Top" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_md"
@@ -96,28 +87,6 @@
                         app:icon="@drawable/setting_icon"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Bottom" />
 
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/toggleGroupBottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:divider="@drawable/menu_item_separator"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/item_faq"
-                        style="@style/MenuItem.MaterialButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/faq"
-                        app:icon="@drawable/ic_faq"
-                        app:shapeAppearanceOverlay="@style/MenuMaterialButton.ShapeAppearance.Top" />
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/item_logout"
                         style="@style/MenuItem.MaterialButton"
@@ -126,8 +95,8 @@
                         android:text="@string/logout"
                         app:icon="@drawable/ic_logout"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Bottom" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
 
+                </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <Space
                     android:layout_width="match_parent"
@@ -149,6 +118,6 @@
             app:layout_constraintStart_toEndOf="@id/scrollable_list_menu"
             app:layout_constraintTop_toBottomOf="@id/btn_close"
             app:navGraph="@navigation/nav_graph_menu"
-            tools:layout="@layout/fragment_empty_menu" />
+            tools:layout="@layout/fragment_md" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -121,6 +121,8 @@
     <string name="current_driver">Current driver</string>
     <string name="no_access_to_edit_autorecorded_event">You are not able to edit event which is automatically recorded by ELD</string>
     <string name="yard_mv">Yard move</string>
+    <string name="usa">Usa</string>
+    <string name="canada">Canada</string>
 
     <string-array name="countries">
         <item>Canada</item>

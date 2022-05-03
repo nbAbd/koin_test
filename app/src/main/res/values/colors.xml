@@ -6,8 +6,15 @@
     <color name="green">#25CB55</color>
     <color name="green2">#27AE60</color>
     <color name="green_a700">#25CB55</color>
+    <color name="mirage_second">#2E2E2E</color>
     <color name="grey">#3A3D48</color>
+    <color name="dark_grey">#2C2D2F</color>
+    <color name="half_dark_grey">#444547</color>
+    <color name="white_grey">#767680</color>
+    <color name="grey_type">#636366</color>
+    <color name="half_blue">#47516C</color>
     <color name="secondary_gray">#9BAEC8</color>
+    <color name="black_bars_light">#161923</color>
     <color name="grey_opacity">#869DBC</color>
     <color name="indigo_200">#9BAEC8</color>
     <color name="item_color_active">#FFFFFFFF</color>

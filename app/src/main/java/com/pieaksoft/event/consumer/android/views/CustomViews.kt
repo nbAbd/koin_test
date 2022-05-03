@@ -142,6 +142,10 @@ class DropdownSpinnerWithTitle(context: Context, attrs: AttributeSet) :
                 }
             }
         }
+
+        getString(R.styleable.DropdownSpinnerWithTitle_text).also {
+            spinner.setText(it)
+        }
     }
 
     fun getSpinner() = spinner

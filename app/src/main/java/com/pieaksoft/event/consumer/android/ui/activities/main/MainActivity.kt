@@ -138,13 +138,14 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 eventDutyStatus?.let {
                     if (checkedId != eventList.lastItemEventCode.itemId) {
                         eventViewModel.setEventInsertCode(code = it)
-                        eventViewModel.setEventInsertDate(Date())
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
-                            if (isCanceled) navigateTo(status = eventList.lastItemEventCode)
+                            if (isCanceled) navigateTo(
+                                status = eventList.lastItemEventCode
+                            )
                             else navigateTo(status = eventDutyStatus)
                         }
-                    }
+                    } else navigateTo()
                 }
             }
         }
@@ -164,7 +165,10 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         }
     }
 
-    fun navigateTo(id: Int = R.id.eventCalculationFragment, status: EventCode? = null) {
+    fun navigateTo(
+        id: Int = R.id.eventCalculationFragment,
+        status: EventCode? = null
+    ) {
         status?.let {
             eventViewModel.storeCurrentDutyStatus(status = status)
             status.itemId?.let {
@@ -173,7 +177,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 }
             }
         }
-
         navController.navigate(id)
     }
 

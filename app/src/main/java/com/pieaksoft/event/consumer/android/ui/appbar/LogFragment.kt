@@ -42,6 +42,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.pieaksoft.event.consumer.android.enums.EventRecordOriginType
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.getStartTime
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.graph.YAxisRenderer
 import com.pieaksoft.event.consumer.android.utils.graph.yAxis
 
@@ -51,6 +52,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override val viewModel: EventViewModel by sharedViewModel()
+    private val profileViewModel: ProfileViewModel by sharedViewModel()
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
@@ -154,6 +156,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             setEvents()
         }
 
+        eventListAdapter.truckName = "Volvo X560"
         viewModel.eventListByDate.observe(this) {
             setEvents()
         }
@@ -374,7 +377,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
                 if (value == 0F) return ""
 
                 val eventsByYAxis = events.groupBy { it.yAxis() }
-                val eventsByCurrentAxisValue = eventsByYAxis.getOrElse(value, { emptyList() })
+                val eventsByCurrentAxisValue = eventsByYAxis.getOrElse(value) { emptyList() }
                 eventsByCurrentAxisValue.forEach {
                     it.endTime?.let { endTime ->
                         if (endTime.contentEquals("25:00")) {
@@ -448,5 +451,4 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
         }
         return colors
     }
-
 }

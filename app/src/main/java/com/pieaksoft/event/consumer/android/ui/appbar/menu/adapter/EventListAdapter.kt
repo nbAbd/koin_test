@@ -1,7 +1,6 @@
 package com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -28,6 +27,13 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
+            notifyDataSetChanged()
+        }
+
+    var truckName: String? = "none"
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = if (value.isNullOrEmpty()) truckName else value
             notifyDataSetChanged()
         }
 
@@ -89,9 +95,9 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
                 }
             }
             binding.root.children
-                .filter { it is AppCompatTextView }
+                .filterIsInstance(AppCompatTextView::class.java)
                 .forEachIndexed { index, textView ->
-                    (textView as AppCompatTextView).text = titles[index]
+                    textView.text = titles[index]
                 }
         }
     }
@@ -126,10 +132,10 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
 
             eventDuration.text = event.formatDuration()
 
-            "none".also {
-                eventTr.text = it
-                eventSh.text = it
-            }
+            eventSh.text =
+                if (event.shippingDocumentNumber.isNullOrBlank()) "none" else event.shippingDocumentNumber
+
+            eventTr.text = truckName
         }
     }
 

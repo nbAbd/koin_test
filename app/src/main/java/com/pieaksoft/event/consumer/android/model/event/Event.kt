@@ -3,11 +3,13 @@ package com.pieaksoft.event.consumer.android.model.event
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.SerializedName
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
 import com.pieaksoft.event.consumer.android.enums.dutyStatuses
 import com.pieaksoft.event.consumer.android.enums.toInsertType
 import com.pieaksoft.event.consumer.android.utils.Storage.eventListGroupByDate
 import java.io.Serializable
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -36,7 +38,8 @@ data class Event(
     @TypeConverters(Certification::class)
     var certification: Certification? = null,
     @TypeConverters(CertificationListConverter::class)
-    var certifyDate: List<Certification>? = emptyList(),
+    @SerializedName("certifyDate")
+    var certifiedDates: List<Certification>? = emptyList(),
     val recordOrigin: String? = "",
     val createdAt: String? = "",
     val distanceSinceLastValidCoordinates: String? = "",
@@ -85,14 +88,20 @@ fun Event.isDutyStatusChanged() = eventType?.toInsertType() in dutyStatuses
 
 fun Event.getStartTime(): Event? {
     val givenEventTime = LocalTime.parse(this.time)
-    if (givenEventTime != LocalTime.MIN) return this
+    val givenEventDate = LocalDate.parse(this.date)
+    if (givenEventTime.isAfter(LocalTime.MIN)) return this
     eventListGroupByDate.keys.reversed().forEach { index ->
-        if (index < this.date.toString()) {
+        val indexDate = LocalDate.parse(index)
+        if (indexDate.isBefore(givenEventDate)) {
             eventListGroupByDate[index]?.last().also {
-                if (LocalTime.parse(it?.time) != LocalTime.MIN)
+                if (LocalTime.parse(it?.time).isAfter(LocalTime.MIN))
                     return it
             }
         }
     }
     return null
+}
+
+fun List<Certification>?.containsDate(date: String): Boolean {
+    return this?.map { it.date }?.contains(date) ?: false
 }

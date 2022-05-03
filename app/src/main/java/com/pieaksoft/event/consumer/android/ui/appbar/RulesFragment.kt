@@ -1,65 +1,53 @@
 package com.pieaksoft.event.consumer.android.ui.appbar
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.Rect
-import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentRulesBinding
-import com.pieaksoft.event.consumer.android.ui.appbar.menu.adapter.UsaRulesAdapter
+import com.pieaksoft.event.consumer.android.model.rules.Rule
+import com.pieaksoft.event.consumer.android.model.rules.RulesData
+import com.pieaksoft.event.consumer.android.ui.appbar.adapter.RulesPagerAdapter
 import com.pieaksoft.event.consumer.android.ui.base.BaseFragment
 
 class RulesFragment : BaseFragment<FragmentRulesBinding>() {
-    private val ruleData: Map<String, String> by lazy {
-        mapOf(
-            "Available driving" to "08:00",
-            "Rest break" to "08:00",
-            "Driving" to "11:00",
-            "On-Duty" to "14:00",
-            "Weekly" to "70:00",
-            "Shift hours" to "----",
-            "Day off remaining" to "----",
+
+    private val tabTitles: List<String> by lazy {
+        listOf(
+            binding.root.context.getString(R.string.usa),
+            binding.root.context.getString(R.string.canada)
         )
     }
-    private val usaRulesAdapter: UsaRulesAdapter by lazy { UsaRulesAdapter() }
 
-    override fun setupView() {
-        usaRulesAdapter.rules = ruleData
+    private val usaRulesList = mutableListOf<RulesData>().apply {
+        add(RulesData.Header())
+        add(RulesData.Content(Rule("Available driving", "08:00")))
+        add(RulesData.Content(Rule("Rest break", "08:00")))
+        add(RulesData.Content(Rule("Driving", "08:00")))
+        add(RulesData.Content(Rule("On-Duty", "08:00")))
+        add(RulesData.Content(Rule("Weekly", "08:00")))
+    }
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            val decoration = object : DividerItemDecoration(requireContext(), VERTICAL) {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    val itemPosition = parent.getChildAdapterPosition(view)
-                    // hide divider for the last child
-                    if (itemPosition == state.itemCount.minus(1)) {
-                        outRect.setEmpty()
-                    } else {
-                        super.getItemOffsets(outRect, view, parent, state)
-                    }
-                }
-            }.also {
-                it.drawable?.colorFilter = PorterDuffColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-            }
-            addItemDecoration(decoration)
+    private val canadaRulesList = mutableListOf<RulesData>().apply {
+        add(RulesData.Header())
+        add(RulesData.Content(Rule("Available driving", "08:00")))
+        add(RulesData.Content(Rule("Rest break", "12:00")))
+        add(RulesData.Content(Rule("Driving", "23:00")))
+        add(RulesData.Content(Rule("On-Duty", "05:00")))
+        add(RulesData.Content(Rule("Weekly", "09:00")))
+    }
+
+    override fun setupView() = with(binding) {
+        val usaRulesAdapter = RulesPagerAdapter(
+            this@RulesFragment, usaRulesList, canadaRulesList
+        )
+        viewPagerRules.apply {
             adapter = usaRulesAdapter
         }
+        val mediator = TabLayoutMediator(tabLayout, viewPagerRules) { tab, position ->
+            tab.text = tabTitles[position]
+        }
+        if (!mediator.isAttached) mediator.attach()
 
-        binding.btnClose.setOnClickListener { findNavController().popBackStack() }
+        btnClose.setOnClickListener { findNavController().popBackStack() }
     }
 }

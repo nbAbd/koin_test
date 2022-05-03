@@ -26,6 +26,7 @@
 
     <declare-styleable name="DropdownSpinnerWithTitle">
         <attr name="title" />
+        <attr name="text" format="string" />
         <attr name="minimumHeight" />
     </declare-styleable>
 

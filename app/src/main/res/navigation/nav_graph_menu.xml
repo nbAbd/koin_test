@@ -3,19 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_nav_graph"
-    app:startDestination="@id/empty_menu_fragment">
-
-    <fragment
-        android:id="@+id/empty_menu_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.EmptyFragment"
-        android:label="Empty fragment"
-        tools:layout="@layout/fragment_empty_menu" />
-
-    <fragment
-        android:id="@+id/usa_rules_fragment"
-        android:name="com.pieaksoft.event.consumer.android.ui.appbar.menu.fragment.UsaRulesFragment"
-        android:label="USA Rules"
-        tools:layout="@layout/fragment_usa_rules" />
+    app:startDestination="@id/md_fragment">
 
     <fragment
         android:id="@+id/md_fragment"

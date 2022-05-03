@@ -2,9 +2,11 @@ package com.pieaksoft.event.consumer.android.ui.events
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventBinding
@@ -38,10 +40,6 @@ class InsertEventFragment(
 
     private val profileViewModel: ProfileViewModel by viewModel()
 
-    private val timezone: Timezone? by lazy {
-        Timezone.findByName(timezone = profileViewModel.getUserTimezone() ?: "")
-    }
-
     private val viewModel: EventViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,19 +64,31 @@ class InsertEventFragment(
     }
 
     private fun observe() {
+        KeyboardHeightProvider(
+            requireContext(),
+            requireActivity().windowManager,
+            binding.root
+        ) { keyboardHeight, isOpen ->
+            if (isOpen) {
+                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
+            } else {
+                binding.scrollContainer.updatePadding(bottom = 0)
+            }
+        }
+
         viewModel.eventInsertDate.observe(viewLifecycleOwner) {
+            if (event != null) return@observe
+
             // If date is not null, then set date/time
             it?.let {
-                eventModel.date = it.formatToServerDateDefaults(timezone)
-                eventModel.time = it.formatToServerTimeDefaults(timezone)
+                eventModel.date = it.formatToServerDateDefaults()
+                eventModel.time = it.formatToServerTimeDefaults()
                 return@observe
             }
 
             // If date is null set current date/time
-            Date().apply {
-                eventModel.date = formatToServerDateDefaults(timezone)
-                eventModel.time = formatToServerTimeDefaults(timezone)
-            }
+            eventModel.date = viewModel.getFormattedUserDate()
+            eventModel.time = viewModel.getFormattedUserTime()
         }
 
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
@@ -179,6 +189,8 @@ class InsertEventFragment(
     private fun fillUI(event: Event) = with(binding) {
         with(event) {
             dateTxt.show()
+            dateTxt.editText.alpha = 0.5F
+            eventStatus.editText.alpha = 0.5F
             eventStatus.show()
             dateTxt.editText.setText("$date $time")
             eventStatus.editText.setText(eventCode?.toReadable())

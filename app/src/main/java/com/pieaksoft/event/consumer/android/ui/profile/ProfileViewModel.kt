@@ -97,12 +97,4 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
         sp.edit().putString(SHARED_PREFERENCES_MAIN_USER_ID, additionalToken).apply()
         needUpdateObservable.postValue(true)
     }
-
-    private fun saveUserTimezone(timezone: String?) {
-        sp.put(USER_TIMEZONE, timezone)
-    }
-
-    fun getUserTimezone(): String? {
-        return sp.getString(USER_TIMEZONE, null)
-    }
 }

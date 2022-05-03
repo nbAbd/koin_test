@@ -12,12 +12,11 @@ import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
 import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
-import com.pieaksoft.event.consumer.android.utils.put
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,7 +50,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     private val _eventInsertCode = MutableLiveData<EventCode?>()
     val eventInsertCode: LiveData<EventCode?> = _eventInsertCode
 
-    private val _eventInsertDate = MutableLiveData<Date?>()
+    private val _eventInsertDate = MutableLiveData<Date?>(null)
     val eventInsertDate: LiveData<Date?> = _eventInsertDate
 
     private val _event = MutableLiveData<Event?>(null)
@@ -191,11 +190,20 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     private fun handleEvents(events: List<Event>) {
         Storage.eventList = events.filter { it.isDutyStatusChanged() }
-        Storage.eventListGroupByDate = calculateEvents()
+        calculateEvents().also {
+            Storage.eventListGroupByDate = it
+            eventListByDate.value = it
+
+            val list = mutableListOf<Event>()
+            it.keys.forEach { date ->
+                it[date]?.filterNot { event -> event.certifiedDates.containsDate(date) }
+                    ?.let { dayEvents ->
+                        list.addAll(dayEvents)
+                    }
+            }
+            eventListRequiresCertification.value = list
+        }
         eventList.value = events
-        eventListByDate.value = calculateEvents()
-        eventListRequiresCertification.value =
-            Storage.eventList.filter { it.certifyDate != null && it.certifyDate!!.isEmpty() }
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
@@ -328,8 +336,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // В случии повторного открытия страницы insert должны сбросить значение
-    ///////////////////////////////////////////////////////////////////////////
+// В случии повторного открытия страницы insert должны сбросить значение
+///////////////////////////////////////////////////////////////////////////
     fun resetInserting() {
         _event.value = null
         _localEvent.value = null
