@@ -56,8 +56,8 @@ class RulesAdapter : RecyclerView.Adapter<RulesAdapter.RulesViewHolder>() {
                 }
                 setBackgroundColor(context.getColor(R.color.black_bars_light))
             }
-            time.text = content.Time
-            type.text = content.Type
+            time.text = content.time
+            type.text = content.type
         }
 
         fun bindHeader(titles: List<String>) = with(binding) {
