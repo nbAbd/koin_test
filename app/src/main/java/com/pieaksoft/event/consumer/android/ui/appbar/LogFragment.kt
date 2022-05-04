@@ -52,14 +52,11 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
     }
 
     override val viewModel: EventViewModel by sharedViewModel()
-    private val profileViewModel: ProfileViewModel by sharedViewModel()
 
     private val eventListAdapter by lazy {
         EventListAdapter { event ->
             if (event.eventRecordOrigin == EventRecordOriginType.EDITED_OR_ENTERED_BY_THE_DRIVER.type) {
-                event.getStartTime()?.let {
-                    showInsertEventDialogFragment(childFragmentManager, it)
-                }
+                showInsertEventDialogFragment(childFragmentManager, event.getStartTime())
             } else toast(getString(R.string.no_access_to_edit_autorecorded_event))
         }
     }
@@ -156,7 +153,6 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
             setEvents()
         }
 
-        eventListAdapter.truckName = "Volvo X560"
         viewModel.eventListByDate.observe(this) {
             setEvents()
         }

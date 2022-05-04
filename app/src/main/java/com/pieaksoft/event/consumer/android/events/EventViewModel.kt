@@ -195,7 +195,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             eventListByDate.value = it
 
             val list = mutableListOf<Event>()
-            it.keys.forEach { date ->
+            it.keys.toList().dropLast(1).forEach { date ->
                 it[date]?.filterNot { event -> event.certifiedDates.containsDate(date) }
                     ?.let { dayEvents ->
                         list.addAll(dayEvents)

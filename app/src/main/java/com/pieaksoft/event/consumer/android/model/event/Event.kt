@@ -1,5 +1,6 @@
 package com.pieaksoft.event.consumer.android.model.event
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
@@ -7,11 +8,10 @@ import com.google.gson.annotations.SerializedName
 import com.pieaksoft.event.consumer.android.db.converters.CertificationListConverter
 import com.pieaksoft.event.consumer.android.enums.dutyStatuses
 import com.pieaksoft.event.consumer.android.enums.toInsertType
-import com.pieaksoft.event.consumer.android.utils.Storage.eventListGroupByDate
+import com.pieaksoft.event.consumer.android.model.profile.Vehicle
+import com.pieaksoft.event.consumer.android.utils.eventList
 import java.io.Serializable
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
@@ -47,6 +47,8 @@ data class Event(
     var endDate: String? = "",
     var endTime: String? = "25:00",
     var durationInMillis: Long = 0L,
+    @Embedded
+    val vehicle: Vehicle? = null,
     var toAddress: String? = "",
     var fromAddress: String? = "",
     var trailer: String? = "",
@@ -86,20 +88,8 @@ fun Event.isLocationSet() = coordinates.latitude != null && coordinates.longitud
 
 fun Event.isDutyStatusChanged() = eventType?.toInsertType() in dutyStatuses
 
-fun Event.getStartTime(): Event? {
-    val givenEventTime = LocalTime.parse(this.time)
-    val givenEventDate = LocalDate.parse(this.date)
-    if (givenEventTime.isAfter(LocalTime.MIN)) return this
-    eventListGroupByDate.keys.reversed().forEach { index ->
-        val indexDate = LocalDate.parse(index)
-        if (indexDate.isBefore(givenEventDate)) {
-            eventListGroupByDate[index]?.last().also {
-                if (LocalTime.parse(it?.time).isAfter(LocalTime.MIN))
-                    return it
-            }
-        }
-    }
-    return null
+fun Event.getStartTime(): Event {
+    return eventList.first { it.id == this.id }
 }
 
 fun List<Certification>?.containsDate(date: String): Boolean {
