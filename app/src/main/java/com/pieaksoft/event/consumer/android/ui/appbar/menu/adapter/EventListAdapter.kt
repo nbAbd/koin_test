@@ -30,13 +30,6 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
             notifyDataSetChanged()
         }
 
-    var truckName: String? = "none"
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = if (value.isNullOrEmpty()) truckName else value
-            notifyDataSetChanged()
-        }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_event_list_header -> {
@@ -135,7 +128,7 @@ class EventListAdapter(private val editCallback: (Event) -> Unit) :
             eventSh.text =
                 if (event.shippingDocumentNumber.isNullOrBlank()) "none" else event.shippingDocumentNumber
 
-            eventTr.text = truckName
+            eventTr.text = if (event.vehicle?.name.isNullOrEmpty()) "none" else event.vehicle?.name
         }
     }
 
