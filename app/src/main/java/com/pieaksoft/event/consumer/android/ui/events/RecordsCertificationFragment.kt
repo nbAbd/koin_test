@@ -1,6 +1,7 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,12 +83,12 @@ class RecordsCertificationFragment :
         }
 
         viewModel.certifiedDate.observe(this) { date ->
-            if (certificationAdapter.dateList.isNotEmpty()) certificationAdapter.dateList.removeFirst()
-            if (certificationAdapter.dateList.isEmpty()) {
-                date?.let {
-                    certificationAdapter.list.filter { it != date }.also { events ->
-                        if (events.isEmpty()) findNavController().popBackStack()
-                        else certificationAdapter.update(ArrayList(events))
+            date?.let {
+                certificationAdapter.list.filter { it != date }.also { events ->
+                    if (events.isEmpty()) {
+                        findNavController().popBackStack()
+                    } else {
+                        certificationAdapter.update(ArrayList(events))
                     }
                 }
             }
