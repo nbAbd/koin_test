@@ -24,6 +24,7 @@ class InsertEventFragment(
     private var _binding: FragmentInsertEventBinding? = null
     private val binding get() = _binding!!
     private var isChecked = true
+    private var isEditingLastEvent = false
 
     private var eventModel =
         Event(
@@ -77,6 +78,7 @@ class InsertEventFragment(
             it?.let {
                 eventModel.date = it.formatToServerDateDefaults()
                 eventModel.time = it.formatToServerTimeDefaults()
+                isEditingLastEvent = true
                 return@observe
             }
 
@@ -106,6 +108,7 @@ class InsertEventFragment(
         viewModel.event.observe(this) {
             it?.let {
                 viewModel.getEventList()
+                checkForIntermediateLog(it)
                 dialog?.dismiss()
             }
         }
@@ -115,6 +118,25 @@ class InsertEventFragment(
                 viewModel.getEventList()
                 dialog?.dismiss()
             }
+        }
+    }
+
+    private fun checkForIntermediateLog(event: Event) {
+        if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
+            when {
+                isEditingLastEvent -> {
+                }
+                else -> {
+                    IntermediateLogBroadcastReceiver.startSendingIntermediateLog(
+                        event,
+                        requireActivity(),
+                        60000L,
+                        viewModel.getUserTimezone().value
+                    )
+                }
+            }
+        } else {
+            IntermediateLogBroadcastReceiver.stopSendingIntermediateLog()
         }
     }
 

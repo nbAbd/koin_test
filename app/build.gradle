@@ -137,4 +137,7 @@ dependencies {
     // Fixed timezone
     //noinspection GradleDynamicVersion
     implementation 'com.github.yeojoy:SingleDateAndTimePicker:+'
+
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+
 }

@@ -116,11 +116,14 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     fun certifyEvent(date: String, event: Event) {
-        event.certification = Certification(date = date, status = STATUS_CERTIFIED)
         showProgress()
+        val eventToSave = event.copy(
+            certification = Certification(date = date, status = STATUS_CERTIFIED)
+        )
         launch {
             if (isNetworkAvailable) {
-                val result = withContext(Dispatchers.IO) { repository.certifyEvent(event = event) }
+                val result =
+                    withContext(Dispatchers.IO) { repository.certifyEvent(event = eventToSave) }
 
                 hideProgress()
 

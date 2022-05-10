@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
 @Parcelize
 data class Vehicle(
@@ -13,4 +14,4 @@ data class Vehicle(
 
     @ColumnInfo(name = "vehicle_name")
     val name: String?
-) : Parcelable
+) : Parcelable, Serializable
