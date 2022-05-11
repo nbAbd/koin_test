@@ -418,7 +418,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 }
             }
         } else {
-            IntermediateLogHandler.stopSendingIntermediateLog()
+            IntermediateLogHandler.stopSendingIntermediateLog(activity,context)
         }
     }
 

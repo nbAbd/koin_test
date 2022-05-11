@@ -1,6 +1,5 @@
 package com.pieaksoft.event.consumer.android.ui.events
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -37,7 +36,12 @@ object IntermediateLogHandler {
         timeZoneId: String,
     ) {
         activity.apply {
-            createPendingIntent(activity, event, timeZoneId)
+            val notifyIntent = createNotifyIntent(activity, event, timeZoneId)
+            alarmManager = getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+            notifyPendingIntent = PendingIntent.getBroadcast(
+                applicationContext, REQUEST_CODE, notifyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
             alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis().plus(
@@ -49,32 +53,36 @@ object IntermediateLogHandler {
         }
     }
 
-    fun stopSendingIntermediateLog() {
-        if (this::notifyPendingIntent.isInitialized && this::alarmManager.isInitialized) {
-            alarmManager.cancel(notifyPendingIntent)
-        }
+    fun stopSendingIntermediateLog(activity: Activity, context: Context) {
+        val intent = Intent(activity, IntermediateLogReceiver::class.java)
+        intent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
+        notifyPendingIntent = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        notifyPendingIntent.cancel()
+        alarmManager = activity.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(notifyPendingIntent)
     }
 
-    private fun createPendingIntent(activity: Activity, event: Event, timeZoneId: String) {
+    private fun createNotifyIntent(activity: Activity, event: Event, timeZoneId: String): Intent {
         activity.apply {
             val notifyIntent = Intent(this, IntermediateLogReceiver::class.java)
             notifyIntent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
             notifyIntent.putExtra(EVENT_CODE, event.serialize())
             notifyIntent.putExtra(TIMEZONE_ID, timeZoneId)
-            alarmManager = getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
-            notifyPendingIntent = PendingIntent.getBroadcast(
-                applicationContext, REQUEST_CODE, notifyIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            return notifyIntent
         }
     }
 
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    fun checkForAlarmSet(context: Context): Boolean {
+    fun checkForAlarmSet(context: Context, activity: Activity): Boolean {
+        val intent = Intent(activity, IntermediateLogReceiver::class.java)
+        intent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
         return PendingIntent.getBroadcast(
             context, REQUEST_CODE,
-            Intent(ACTION_INTERMEDIATE_LOG_BROADCAST),
+            intent,
             PendingIntent.FLAG_NO_CREATE
         ) != null
     }

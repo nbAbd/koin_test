@@ -216,7 +216,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         }
 
         eventViewModel.eventList.observe(this) {
-            if (IntermediateLogHandler.checkForAlarmSet(applicationContext)) {
+            if (IntermediateLogHandler.checkForAlarmSet(applicationContext, this)) {
                 eventViewModel.syncRemainingIntermediateLogs(activity = this)
             }
         }
