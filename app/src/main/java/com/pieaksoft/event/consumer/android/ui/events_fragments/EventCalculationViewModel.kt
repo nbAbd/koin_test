@@ -1,15 +1,14 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.enums.*
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -19,7 +18,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
+class EventCalculationViewModel(val app: Application, private val eventViewModel: EventViewModel) :
+    BaseViewModel(app) {
     companion object {
         private val MINUTE = TimeUnit.MINUTES.toMillis(1)
 
@@ -55,7 +55,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
      * @property isNeedBreak is boolean to sign break status
      */
 
-    var maxOnDutyMillis: Long = 70L.toMillis()
+    private var maxOnDutyMillis: Long = 70L.toMillis()
 
     var onDutyMillis: Long = 14L.toMillis()
 
@@ -67,7 +67,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
 
     var needResetMaxOnDutyMillis: Long = 34L.toMillis()
 
-    var needResetMaxOnDutyInEightDays: Long = 8
+    var needResetCycleDays: Long = 8
 
     var thirtyMinutesInMillis: Long = 30 * 60 * 1000
 
@@ -113,7 +113,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
                             // 34h
                             resetMaxOffDutyHours()
                             // 70h 14h 11h 8h
-                            sendCycleResetRequest()
+                            sendResetCycleRequest()
                             // break loop
                             return@forEachIndexed
                         }
@@ -179,7 +179,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
                     }
 
                     EventCode.CYCLE_RESET -> {
-                        resetMillis()
+                        resetTimer()
                     }
                     else -> Unit
                 }
@@ -202,6 +202,17 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
         then()
     }
 
+
+    fun checkResetDate() {
+        sp.getResetCycleStartDate()?.let { startDateString ->
+            val zoneId = ZoneId.of(getUserTimezone().value)
+            val numberOfDays = daysBetweenDates(start = startDateString, zoneId = zoneId).toLong()
+
+            if (numberOfDays == needResetCycleDays) {
+                sendResetCycleRequest()
+            }
+        }
+    }
 
     private val Event.isNotOffDuty: Boolean
         get() = EventCode.findByCode(code = eventCode ?: "") !in OFF_DUTY_CODES
@@ -244,18 +255,40 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     }
 
 
-    fun resetMillis() {
+    fun resetTimer() {
         resetTotalOnDutyCycleHours()
         resetOnDutyCycleHours()
     }
 
-    private fun sendCycleResetRequest() {
-        Event().also {
-            it.eventType = EventInsertType.CYCLE_RESET.type
-            it.eventCode = EventCode.CYCLE_RESET.code
-            // TODO send request here
-        }
-        resetMillis()
+    private fun sendResetCycleRequest() {
+        val event = Event(
+            eventType = EventInsertType.CYCLE_RESET.type,
+            eventCode = EventCode.CYCLE_RESET.code,
+            date = getFormattedUserDate(true),
+            time = getFormattedUserTime(true),
+            totalEngineMiles = null,
+            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
+            driverLocationDescription = null,
+            dutyStatus = null,
+            certification = null,
+            certifiedDates = null,
+            recordOrigin = null,
+            createdAt = null,
+            distanceSinceLastValidCoordinates = null,
+            eventSequenceId = null,
+            endDate = null,
+            endTime = null,
+            toAddress = null,
+            fromAddress = null,
+            trailer = null,
+            comment = null,
+            isSyncWithServer = true,
+        )
+
+        eventViewModel.insertEvent(e = event)
     }
 
     private fun Long.toMillis() = this * 60 * 60 * 1000
@@ -270,7 +303,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     }
 
     private fun Event.prepareEndDateTime() {
-        if (this.endDate == null) {
+        if (endDate == null || endDate.contentEquals("")) {
             val timezone = Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
             val zoneId = ZoneId.of(timezone.value)
 

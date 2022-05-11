@@ -2,7 +2,12 @@ package com.pieaksoft.event.consumer.android.utils
 
 import android.annotation.SuppressLint
 import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 
@@ -55,6 +60,32 @@ fun Date.addSeconds(seconds: Int): Date {
 fun String.getDateFromString(): Date {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     return dateFormat.parse(this)!!
+}
+
+/**
+ * Method calculates number of days between two dates
+ *
+ * @param [start]  Start date
+ * @param [zoneId] ZoneId used to determine user's timezone
+ * @param [end] End date
+ *
+ * @return [Int] number of days between days
+ */
+fun daysBetweenDates(
+    start: String,
+    end: String? = null,
+    zoneId: ZoneId
+): Int {
+    val formatter = DateTimeFormatter.ofPattern(EventViewModel.DATE_FORMAT_yyyy_MM_dd)
+    val startDate = LocalDate.parse(start, formatter)
+
+    // If end date is null, we assume that we should get current date
+    val endDate = if (end == null) {
+        LocalDate.now(zoneId)
+    } else {
+        LocalDate.parse(end, formatter)
+    }
+    return ChronoUnit.DAYS.between(startDate, endDate).toInt()
 }
 
 fun Date.formatToServerDateDefaults2(): String {
