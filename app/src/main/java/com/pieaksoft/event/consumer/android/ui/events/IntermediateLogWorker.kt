@@ -7,7 +7,8 @@ import com.google.gson.Gson
 import com.pieaksoft.event.consumer.android.events.EventsRepository
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.utils.isNetworkAvailable
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -17,15 +18,15 @@ class IntermediateLogWorker(context: Context, params: WorkerParameters) :
 
     private val repo: EventsRepository by inject()
 
-    override suspend fun doWork(): Result = coroutineScope {
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val event = Gson().fromJson(
-            inputData.getString(IntermediateLogBroadcastReceiver.EVENT_CODE),
+            inputData.getString(IntermediateLogHandler.EVENT_CODE),
             Event::class.java
         )
         if (applicationContext.isNetworkAvailable()) {
             repo.insertEvent(event)
         }
         repo.insertEventToDB(event)
-        return@coroutineScope Result.success()
+        return@withContext Result.success()
     }
 }

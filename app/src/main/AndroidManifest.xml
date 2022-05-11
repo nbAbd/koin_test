@@ -4,7 +4,7 @@
     package="com.pieaksoft.event.consumer.android">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
@@ -45,12 +45,7 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".ui.events.IntermediateLogBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="TODO"
-            tools:ignore="ExportedReceiver" />
+        <receiver android:name=".ui.events.IntermediateLogReceiver" />
 
         <activity
             android:name="com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity"

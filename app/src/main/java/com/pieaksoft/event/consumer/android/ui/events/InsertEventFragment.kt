@@ -14,6 +14,7 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -24,7 +25,6 @@ class InsertEventFragment(
     private var _binding: FragmentInsertEventBinding? = null
     private val binding get() = _binding!!
     private var isChecked = true
-    private var isEditingLastEvent = false
 
     private var eventModel =
         Event(
@@ -78,7 +78,7 @@ class InsertEventFragment(
             it?.let {
                 eventModel.date = it.formatToServerDateDefaults()
                 eventModel.time = it.formatToServerTimeDefaults()
-                isEditingLastEvent = true
+                viewModel.isEditedLastEvent = true
                 return@observe
             }
 
@@ -108,7 +108,7 @@ class InsertEventFragment(
         viewModel.event.observe(this) {
             it?.let {
                 viewModel.getEventList()
-                checkForIntermediateLog(it)
+                viewModel.checkForIntermediateLog(it, requireActivity() as MainActivity)
                 dialog?.dismiss()
             }
         }
@@ -116,27 +116,9 @@ class InsertEventFragment(
         viewModel.localEvent.observe(this) {
             it?.let {
                 viewModel.getEventList()
+                viewModel.checkForIntermediateLog(it, requireActivity() as MainActivity)
                 dialog?.dismiss()
             }
-        }
-    }
-
-    private fun checkForIntermediateLog(event: Event) {
-        if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
-            when {
-                isEditingLastEvent -> {
-                }
-                else -> {
-                    IntermediateLogBroadcastReceiver.startSendingIntermediateLog(
-                        event,
-                        requireActivity(),
-                        60000L,
-                        viewModel.getUserTimezone().value
-                    )
-                }
-            }
-        } else {
-            IntermediateLogBroadcastReceiver.stopSendingIntermediateLog()
         }
     }
 

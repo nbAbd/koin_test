@@ -1,5 +1,7 @@
 package com.pieaksoft.event.consumer.android.events
 
+import android.app.Activity
+import android.app.AlarmManager
 import android.app.Application
 import android.util.Log
 import androidx.core.content.edit
@@ -7,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
@@ -15,8 +18,13 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
+import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
+import com.pieaksoft.event.consumer.android.utils.Storage
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.lastItemEventCode
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +46,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
         const val CURRENT_DUTY_STATUS = "current_duty_status"
     }
+
+    var isEditedLastEvent = false
 
     val certifiedDate = MutableLiveData<String?>()
     val eventList = MutableLiveData<List<Event>>()
@@ -383,5 +393,90 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             hideProgress()
             true
         } else false
+    }
+
+    fun checkForIntermediateLog(event: Event, activity: MainActivity) {
+        if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
+            when {
+                isEditedLastEvent -> {
+                    calculateAndSend(event).also {
+                        IntermediateLogHandler.startSendingIntermediateLog(
+                            event,
+                            activity,
+                            it.toLong(),
+                            getUserTimezone().value
+                        )
+                    }
+                }
+                else -> {
+                    IntermediateLogHandler.startSendingIntermediateLog(
+                        event,
+                        activity,
+                        AlarmManager.INTERVAL_HOUR,
+                        getUserTimezone().value,
+                    )
+                }
+            }
+        } else {
+            IntermediateLogHandler.stopSendingIntermediateLog()
+        }
+    }
+
+
+    fun syncRemainingIntermediateLogs(event: Event? = null, activity: Activity) {
+        event?.let {
+            calculateAndSend(event).also {
+                startSendingLog(event, it.toLong(), activity)
+            }
+        }
+        when (Storage.eventList.lastItemEventCode) {
+
+            EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION,
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
+                val lastEvent = Storage.eventList.last {
+                    it.eventCode == EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code
+                            || it.eventCode == EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code
+                }
+                calculateAndSend(lastEvent).also {
+                    startSendingLog(lastEvent, it.toLong(), activity)
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    private fun startSendingLog(lastEvent: Event, firstTrigger: Long, activity: Activity) {
+        IntermediateLogHandler.startSendingIntermediateLog(
+            lastEvent,
+            activity,
+            firstTrigger,
+            getUserTimezone().value
+        )
+    }
+
+    private fun calculateAndSend(event: Event): Int {
+        var eventDateTime = LocalDateTime.parse(
+            event.date + " " + event.time,
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        )
+
+        val currentDateTime =
+            LocalDateTime.now(ZoneId.of(getUserTimezone().value))
+        val difference = eventDateTime.until(currentDateTime, ChronoUnit.MINUTES)
+        var startMinutes = eventDateTime.minute
+
+        while (startMinutes + 60 < difference) {
+            eventDateTime = eventDateTime.plusHours(1)
+            if (event.eventType == EventInsertType.DUTY_STATUS_CHANGE.type) {
+                IntermediateLogHandler.fillUpIntermediateEvent(event)
+            }
+            event.apply {
+                date = eventDateTime.format(DateTimeFormatter.ISO_DATE_TIME)
+                time = eventDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            }
+            insertEvent(event)
+            startMinutes += 60
+        }
+        return 60 - eventDateTime.minute
     }
 }
