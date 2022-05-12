@@ -127,13 +127,13 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     fun certifyEvent(date: String, event: Event) {
         showProgress()
-        val eventToSave = event.copy(
+        val certifiedEvent = event.copy(
             certification = Certification(date = date, status = STATUS_CERTIFIED)
         )
         launch {
             if (isNetworkAvailable) {
                 val result =
-                    withContext(Dispatchers.IO) { repository.certifyEvent(event = eventToSave) }
+                    withContext(Dispatchers.IO) { repository.certifyEvent(event = certifiedEvent) }
 
                 hideProgress()
 
@@ -395,20 +395,25 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         } else false
     }
 
+
+    // todo documentation
     fun checkForIntermediateLog(event: Event, activity: MainActivity) {
         if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
             when {
                 isEditedLastEvent -> {
-                    calculateAndSend(event).also {
-                        IntermediateLogHandler.startSendingIntermediateLog(
-                            event,
-                            activity,
-                            it.toLong(),
-                            getUserTimezone().value
-                        )
-                    }
+                    sendRemainingLogs(event)
+
+                    // todo documentation
+                    IntermediateLogHandler.startSendingIntermediateLog(
+                        event,
+                        activity,
+                        event.remainingMinutes,
+                        getUserTimezone().value
+                    )
+
                 }
                 else -> {
+                    // todo documentation
                     IntermediateLogHandler.startSendingIntermediateLog(
                         event,
                         activity,
@@ -423,11 +428,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
+    // todo documentation
     fun syncRemainingIntermediateLogs(event: Event? = null, activity: Activity) {
         event?.let {
-            calculateAndSend(event).also {
-                startSendingLog(event, it.toLong(), activity)
-            }
+            sendRemainingLogs(event)
+            startSendingLog(event, it.remainingMinutes, activity)
         }
         when (Storage.eventList.lastItemEventCode) {
 
@@ -437,14 +442,15 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     it.eventCode == EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code
                             || it.eventCode == EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code
                 }
-                calculateAndSend(lastEvent).also {
-                    startSendingLog(lastEvent, it.toLong(), activity)
-                }
+                sendRemainingLogs(lastEvent)
+                startSendingLog(lastEvent, lastEvent.remainingMinutes, activity)
             }
             else -> Unit
         }
     }
 
+
+    // todo documentation
     private fun startSendingLog(lastEvent: Event, firstTrigger: Long, activity: Activity) {
         IntermediateLogHandler.startSendingIntermediateLog(
             lastEvent,
@@ -454,29 +460,81 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         )
     }
 
-    private fun calculateAndSend(event: Event): Int {
-        var eventDateTime = LocalDateTime.parse(
-            event.date + " " + event.time,
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        )
 
-        val currentDateTime =
-            LocalDateTime.now(ZoneId.of(getUserTimezone().value))
-        val difference = eventDateTime.until(currentDateTime, ChronoUnit.MINUTES)
+    // todo documentation
+    private fun sendRemainingLogs(event: Event) {
+        val events = getRemainingIntermediateLogs(event)
+        events.forEach(::insertEvent)
+    }
+
+
+    // todo documentation
+    fun getRemainingIntermediateLogs(event: Event): List<Event> {
+        val intermediateEvents = mutableListOf<Event>()
+        var eventDateTime = dateTimeOf(event = event)
+        val zoneId = getUserTimezone().value
+        val difference = differenceOf(eventDateTime, zoneId = zoneId)
         var startMinutes = 0
+
+        if (event.eventType == EventInsertType.DUTY_STATUS_CHANGE.type) {
+            IntermediateLogHandler.fillUpIntermediateEvent(event)
+        }
 
         while (startMinutes + 60 < difference) {
             eventDateTime = eventDateTime.plusHours(1)
-            if (event.eventType == EventInsertType.DUTY_STATUS_CHANGE.type) {
-                IntermediateLogHandler.fillUpIntermediateEvent(event)
-            }
+
             event.apply {
                 date = eventDateTime.format(DateTimeFormatter.ISO_DATE_TIME)
                 time = eventDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
             }
-            insertEvent(event)
+
+            intermediateEvents.add(event)
             startMinutes += 60
         }
-        return 60 - eventDateTime.minute
+
+        return intermediateEvents
     }
+
+
+    /**
+     * This method calculates difference of two dates in minutes
+     *
+     * @param [from] Start [LocalDateTime]
+     * @param [to] End [LocalDateTime]. If it's null we assume [to] as a current [LocalDateTime]
+     * @param [zoneId] TimeZone id of user
+     *
+     * @return [Long] Difference in minutes
+     */
+    fun differenceOf(
+        from: LocalDateTime,
+        to: LocalDateTime? = null,
+        zoneId: String? = null
+    ): Long {
+        return if (to == null) {
+            val currentDateTime = LocalDateTime.now(ZoneId.of(zoneId))
+            from.until(currentDateTime, ChronoUnit.MINUTES)
+        } else {
+            from.until(to, ChronoUnit.MINUTES)
+        }
+    }
+
+
+
+    // todo documentation
+    fun dateTimeOf(event: Event): LocalDateTime {
+        return LocalDateTime.parse(
+            "${event.date} ${event.time}",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        )
+    }
+
+
+
+    // todo documentation
+    private val Event.remainingMinutes: Long
+        get() {
+            val hm = time?.split(":")
+            val minutes = hm?.get(1)?.toLong() ?: 0
+            return 60 - minutes
+        }
 }

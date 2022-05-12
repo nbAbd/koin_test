@@ -77,7 +77,7 @@ object IntermediateLogHandler {
         }
     }
 
-    fun checkForAlarmSet(context: Context, activity: Activity): Boolean {
+    fun isAlarmSet(context: Context, activity: Activity): Boolean {
         val intent = Intent(activity, IntermediateLogReceiver::class.java)
         intent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
         return PendingIntent.getBroadcast(
