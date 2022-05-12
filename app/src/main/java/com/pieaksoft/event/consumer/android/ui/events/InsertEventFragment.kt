@@ -57,67 +57,6 @@ class InsertEventFragment(
         }
     }
 
-    private fun observe() {
-        KeyboardHeightProvider(
-            requireContext(),
-            requireActivity().windowManager,
-            binding.root
-        ) { keyboardHeight, isOpen ->
-            if (isOpen) {
-                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
-            } else {
-                binding.scrollContainer.updatePadding(bottom = 0)
-            }
-        }
-
-        viewModel.eventInsertDate.observe(viewLifecycleOwner) {
-            if (event != null) return@observe
-
-            // If date is not null, then set date/time
-            it?.let {
-                eventModel.date = it.formatToServerDateDefaults()
-                eventModel.time = it.formatToServerTimeDefaults()
-                return@observe
-            }
-
-            // If date is null set current date/time
-            eventModel.date = viewModel.getFormattedUserDate()
-            eventModel.time = viewModel.getFormattedUserTime()
-        }
-
-        viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
-            eventCode?.let {
-                when (eventCode) {
-                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
-                    }
-
-                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
-                    }
-                    else -> Unit
-                }
-                eventModel.eventCode = it.code
-            }
-        }
-
-        viewModel.event.observe(this) {
-            it?.let {
-                viewModel.getEventList()
-                dialog?.dismiss()
-            }
-        }
-
-        viewModel.localEvent.observe(this) {
-            it?.let {
-                viewModel.getEventList()
-                dialog?.dismiss()
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -176,6 +115,67 @@ class InsertEventFragment(
                 }
             }
             isChecked = !isChecked
+        }
+    }
+
+    private fun observe() {
+        KeyboardHeightProvider(
+            requireContext(),
+            requireActivity().windowManager,
+            binding.root
+        ) { keyboardHeight, isOpen ->
+            if (isOpen) {
+                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
+            } else {
+                binding.scrollContainer.updatePadding(bottom = 0)
+            }
+        }
+
+        viewModel.eventInsertDate.observe(viewLifecycleOwner) {
+            if (event != null) return@observe
+
+            // If date is not null, then set date/time
+            it?.let {
+                eventModel.date = it.formatToServerDateDefaults()
+                eventModel.time = it.formatToServerTimeDefaults()
+                return@observe
+            }
+
+            // If date is null set current date/time
+            eventModel.date = viewModel.getFormattedUserDate()
+            eventModel.time = viewModel.getFormattedUserTime()
+        }
+
+        viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
+            eventCode?.let {
+                when (eventCode) {
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
+                    }
+
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
+                    }
+                    else -> Unit
+                }
+                eventModel.eventCode = it.code
+            }
+        }
+
+        viewModel.event.observe(this) {
+            it?.let {
+                viewModel.getEventList()
+                dialog?.dismiss()
+            }
+        }
+
+        viewModel.localEvent.observe(this) {
+            it?.let {
+                viewModel.getEventList()
+                dialog?.dismiss()
+            }
         }
     }
 

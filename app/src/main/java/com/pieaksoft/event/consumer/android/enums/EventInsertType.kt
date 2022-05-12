@@ -1,5 +1,7 @@
 package com.pieaksoft.event.consumer.android.enums
 
+import com.pieaksoft.event.consumer.android.enums.EventInsertType.*
+
 enum class EventInsertType(val type: String) {
     DUTY_STATUS_CHANGE("DUTY_STATUS_CHANGE"),
     IMMEDIATE_LOG("IMMEDIATE_LOG"),
@@ -14,10 +16,10 @@ enum class EventInsertType(val type: String) {
 
 val dutyStatuses: Array<EventInsertType>
     get() = arrayOf(
-        EventInsertType.DUTY_STATUS_CHANGE,
-        EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES
+        DUTY_STATUS_CHANGE,
+        CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES
     )
 
 fun String.toInsertType(): EventInsertType {
-    return EventInsertType.values().first { it.type.contentEquals(this) }
+    return values().firstOrNull { it.type.contentEquals(this) } ?: NONE
 }

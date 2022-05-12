@@ -3,13 +3,11 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.enums.*
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.Storage
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.*
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -19,10 +17,13 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
+class EventCalculationViewModel(val app: Application, private val eventViewModel: EventViewModel) :
+    BaseViewModel(app) {
     companion object {
+        // Minute in millis
         private val MINUTE = TimeUnit.MINUTES.toMillis(1)
 
+        // Off duty statuses
         private val OFF_DUTY_CODES = arrayOf(
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY,
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_SLEEPER_BERTH,
@@ -30,76 +31,124 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
         )
     }
 
+
     /**
-     * @property maxOnDutyMillis is 70 hours in millis
+     * Max on duty in millis per week
      *
+     * [maxOnDutyMillis] - is 70 hours in millis
+     */
+    private var maxOnDutyMillis: Long = 70L.toMillis()
+
+
+    /**
      * Max on duty in millis per day
-     * @property onDutyMillis is 14 hours in millis
      *
+     * [onDutyMillis] - is 14 hours in millis
+     */
+    private var onDutyMillis: Long = 14L.toMillis()
+
+
+    /**
      * Driving limit per day. And it's in 14h on duty
-     * @property onDutyDrivingLimitMillis 11 hours in millis
      *
+     * [onDutyDrivingLimitMillis] - 11 hours in millis
+     */
+    private var onDutyDrivingLimitMillis: Long = 11L.toMillis()
+
+
+    /**
      * Millis where driver can drive nonstop
-     * @property onDutyBreakInMillis is 8 hours in millis
      *
+     * [onDutyBreakInMillis] - is 8 hours in millis
+     */
+    private var onDutyBreakInMillis: Long = 8L.toMillis()
+
+
+    /**
      * When driver's status/statuses are consecutively in off duty and it's greater than 10 h
      * we should reset 14h
-     * @property needResetOnDutyMillis is 10 hours in millis.
      *
+     * [needResetOnDutyMillis] - is 10 hours in millis.
+     */
+    private var needResetOnDutyMillis: Long = 10L.toMillis()
+
+
+    /**
      * When driver's status/statuses are consecutively in off duty and it's greater than 34 h
      * we should reset 70h
-     * @property needResetMaxOnDutyMillis is 34 hours in millis
      *
-     * @property thirtyMinutesInMillis is 30 min to check whether driver is driving without rest
-     *
-     * @property isNeedBreak is boolean to sign break status
+     * [needResetMaxOnDutyMillis] - is 34 hours in millis
      */
-
-    var maxOnDutyMillis: Long = 70L.toMillis()
-
-    var onDutyMillis: Long = 14L.toMillis()
-
-    var onDutyDrivingLimitMillis: Long = 11L.toMillis()
-
-    var onDutyBreakInMillis: Long = 8L.toMillis()
-
-    var needResetOnDutyMillis: Long = 10L.toMillis()
-
     var needResetMaxOnDutyMillis: Long = 34L.toMillis()
 
-    var needResetMaxOnDutyInEightDays: Long = 8
 
-    var thirtyMinutesInMillis: Long = 30 * 60 * 1000
+    /**
+     * Number of days to reset cycle
+     *
+     * [needResetCycleDays] - 8 days
+     */
+    private var needResetCycleDays: Long = 8
 
+    /**
+     * [thirtyMinutesInMillis] - 30 minutes in millis
+     *
+     * Driver should take at least
+     * 30 min break after nonstop 8h driving
+     */
+    private var thirtyMinutesInMillis: Long = 30 * 60 * 1000
+
+
+    /**
+     * Indicator whether driver should take break
+     */
     var isNeedBreak: Boolean = false
 
 
+    /**
+     * 70 hours
+     */
     private val _maxOnDuty: MutableLiveData<Long> = MutableLiveData()
     val maxOnDuty: LiveData<Long> = _maxOnDuty
 
+    /**
+     * 14 hours
+     */
     private val _onDuty: MutableLiveData<Long> = MutableLiveData()
     val onDuty: LiveData<Long> = _onDuty
 
+    /**
+     * 11 hours
+     */
     private val _onDutyDrivingLimit: MutableLiveData<Long> = MutableLiveData()
     val onDutyDrivingLimit: LiveData<Long> = _onDutyDrivingLimit
 
+
+    /**
+     * 8 hours
+     */
     private val _onDutyBreakIn: MutableLiveData<Long> = MutableLiveData()
     val onDutyBreakIn: LiveData<Long> = _onDutyBreakIn
 
 
-    // This the warning boolean, which indicates that on duty cycle is more than 70h
+    /**
+     * Warning boolean, which indicates that on duty cycle is more than 70h
+     */
     private val _maxOnDutyExceedingTheLimitWarning = MutableLiveData<Boolean>()
     val maxOnDutyExceedingTheLimitWarning = _maxOnDutyExceedingTheLimitWarning
 
+
+    /**
+     * Warning boolean, which indicates that on duty cycle is more than 14h
+     */
     private val _onDutyExceedingTheLimitWarning = MutableLiveData<Boolean>()
     val onDutyExceedingTheLimitWarning = _onDutyExceedingTheLimitWarning
 
 
     fun calculate(then: () -> Unit) {
-        val eventList = Storage.eventList
+        val eventList = EventManager.eventList
 
         eventList.forEachIndexed { index, currentEvent ->
-            currentEvent.prepareEndDateTime()
+            currentEvent.setEndDateTime()
             val duration = currentEvent.durationInMillis()
 
             currentEvent.eventCode?.let { eventCode ->
@@ -113,7 +162,7 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
                             // 34h
                             resetMaxOffDutyHours()
                             // 70h 14h 11h 8h
-                            sendCycleResetRequest()
+                            sendResetCycleRequest()
                             // break loop
                             return@forEachIndexed
                         }
@@ -203,6 +252,17 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     }
 
 
+    fun checkResetCycleDate() {
+        sp.getResetCycleStartDate()?.let { startDateString ->
+            val zoneId = ZoneId.of(getUserTimezone().value)
+            val numberOfDays = daysBetweenDates(start = startDateString, zoneId = zoneId).toLong()
+
+            if (numberOfDays == needResetCycleDays) {
+                sendResetCycleRequest()
+            }
+        }
+    }
+
     private val Event.isNotOffDuty: Boolean
         get() = EventCode.findByCode(code = eventCode ?: "") !in OFF_DUTY_CODES
 
@@ -249,17 +309,48 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
         resetOnDutyCycleHours()
     }
 
-    private fun sendCycleResetRequest() {
-        Event().also {
-            it.eventType = EventInsertType.CYCLE_RESET.type
-            it.eventCode = EventCode.CYCLE_RESET.code
-            // TODO send request here
-        }
-        resetMillis()
+    private fun sendResetCycleRequest() {
+        val event = Event(
+            eventType = EventInsertType.CYCLE_RESET.type,
+            eventCode = EventCode.CYCLE_RESET.code,
+            date = getFormattedUserDate(true),
+            time = getFormattedUserTime(true),
+            totalEngineMiles = null,
+            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
+            driverLocationDescription = null,
+            dutyStatus = null,
+            certification = null,
+            certifiedDates = null,
+            recordOrigin = null,
+            createdAt = null,
+            distanceSinceLastValidCoordinates = null,
+            eventSequenceId = null,
+            endDate = null,
+            endTime = null,
+            toAddress = null,
+            fromAddress = null,
+            trailer = null,
+            comment = null,
+            isSyncWithServer = true,
+        )
+
+        eventViewModel.insertEvent(e = event)
     }
 
+    /**
+     * Converts given minutes to millis
+     * @return [Long] - Minutes in millis
+     */
     private fun Long.toMillis() = this * 60 * 60 * 1000
 
+
+    /**
+     * Calculates duration of event in millis
+     * @return [Long] - duration in millis
+     */
     private fun Event.durationInMillis(): Long {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val dateTimeString = "$date $time"
@@ -269,8 +360,13 @@ class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
         return startDateTime.until(endDateTime, ChronoUnit.MILLIS)
     }
 
-    private fun Event.prepareEndDateTime() {
-        if (this.endDate == null) {
+
+    /**
+     * Method checks if [Event] object has end date and time.
+     * If it is missing current date/time i should be set
+     */
+    private fun Event.setEndDateTime() {
+        if (endDate == null || endDate.contentEquals("")) {
             val timezone = Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
             val zoneId = ZoneId.of(timezone.value)
 

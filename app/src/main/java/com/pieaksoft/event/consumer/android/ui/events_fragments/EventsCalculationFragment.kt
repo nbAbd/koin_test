@@ -1,11 +1,16 @@
 package com.pieaksoft.event.consumer.android.ui.events_fragments
 
+import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
+import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
+import com.pieaksoft.event.consumer.android.model.event.Event
+import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
@@ -23,6 +28,11 @@ class EventsCalculationFragment :
     private val eventViewModel: EventViewModel by sharedViewModel()
     private var eventStatusCode: EventCode? = null
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initialize()
+    }
+
 
     override fun setupView() {
         eventStatusCode = eventViewModel.getCurrentDutyStatus()
@@ -30,7 +40,7 @@ class EventsCalculationFragment :
 
     override fun onResume() {
         super.onResume()
-        eventViewModel.getEventList()
+        viewModel.checkResetCycleDate()
     }
 
     override fun observe() {
@@ -92,52 +102,102 @@ class EventsCalculationFragment :
             ).show()
         }
 
-        eventViewModel.eventList.observe(this) {
-            if (eventStatusCode != Storage.eventList.lastItemEventCode) {
+
+        // Called only once when RESET_CYCLE request called
+        eventViewModel.event.observeOnce(viewLifecycleOwner) {
+            eventViewModel.getEventList()
+        }
+
+        eventViewModel.localEvent.observeOnce(viewLifecycleOwner) {
+            eventViewModel.getEventList()
+        }
+    }
+
+
+    private fun initialize() {
+        eventViewModel.eventList.observe(viewLifecycleOwner) { events ->
+            // Check last selected status
+            if (eventStatusCode != EventManager.eventList.lastItemEventCode) {
                 performStatusChange()
                 return@observe
             }
 
-            viewModel.apply {
-                resetMillis()
-                calculate {
-                    if (eventStatusCode != null) {
-                        when (eventStatusCode) {
-                            EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                                // Cancel
-                                cancelTotalOnDutyCounter()
-                                cancelOnDutyCounter()
-                                cancelDrivingLimitCounter()
-                                cancelBreakInCounter()
+            // Reset timer
+            viewModel.resetMillis()
 
-                                // Count
-                                startTotalOnDutyCounter()
-                                startOnDutyCounter()
-                            }
+            // Store first event date
+            EventManager.eventList.elementAtOrNull(0)?.let {
+                viewModel.sp.storeResetCycleStartDate(it.date)
+            }
 
-                            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
-                                // Cancel
-                                cancelTotalOnDutyCounter()
-                                cancelOnDutyCounter()
-                                cancelDrivingLimitCounter()
-                                cancelBreakInCounter()
+            // Checking for CYCLE_RESET event
+            checkCycleReset(events = events)
 
-                                // Count
-                                startTotalOnDutyCounter()
-                                startOnDutyCounter()
-                                startDrivingLimitCounter()
-                                startBreakInCounter()
-                            }
-                            else -> Unit
-                        }
-                    }
+            calculate()
+        }
+    }
+
+    private fun calculate() {
+        viewModel.calculate { startTimer() }
+    }
+
+    private fun startTimer() = with(viewModel) {
+        if (eventStatusCode != null) {
+            // Stop countdown after changing status
+            stopCountdown()
+
+            when (eventStatusCode) {
+                EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                    startTotalOnDutyCounter()
+                    startOnDutyCounter()
                 }
+
+                EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
+                    startTotalOnDutyCounter()
+                    startOnDutyCounter()
+                    startDrivingLimitCounter()
+                    startBreakInCounter()
+                }
+                else -> Unit
             }
         }
     }
 
+    /**
+     * Checks reset cycle event, then splits list from that index
+     *
+     * @param [events] List of events from API/DB
+     */
+    private fun checkCycleReset(events: List<Event>) {
+        var resetCycleIndex = 0
+        events.forEachIndexed { index, event ->
+            if (event.eventType == EventInsertType.CYCLE_RESET.type) {
+                resetCycleIndex = index
+
+                // Store CYCLE_RESET event date
+                viewModel.sp.storeResetCycleStartDate(event.date)
+            }
+        }
+
+
+        // Split list from resetCycleIndex.
+        // List contains all events without filter
+        val eventsAfterResetCycle = events.subList(resetCycleIndex, events.size)
+
+        // Filter list only for duty status change
+        EventManager.eventList = eventsAfterResetCycle.filter { it.isDutyStatusChanged() }
+    }
+
     override fun onStop() {
         super.onStop()
+        stopCountdown()
+    }
+
+
+    /**
+     * Call this method to stop count down
+     */
+    private fun stopCountdown() {
         viewModel.apply {
             cancelTotalOnDutyCounter()
             cancelOnDutyCounter()
@@ -145,4 +205,6 @@ class EventsCalculationFragment :
             cancelBreakInCounter()
         }
     }
+
+
 }

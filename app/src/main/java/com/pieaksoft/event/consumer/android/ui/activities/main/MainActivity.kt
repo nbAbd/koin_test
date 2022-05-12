@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.Window
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isGone
@@ -23,11 +22,10 @@ import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
 import com.pieaksoft.event.consumer.android.utils.*
-import com.pieaksoft.event.consumer.android.utils.Storage.eventList
-import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
+import com.pieaksoft.event.consumer.android.utils.EventManager.eventList
+import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.lang.Error
 import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),

@@ -40,6 +40,6 @@ val AppModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EventViewModel(get(), get()) }
-    viewModel { EventCalculationViewModel(get()) }
+    viewModel { EventCalculationViewModel(get(), get()) }
     viewModel { MenuViewModel(get(), get()) }
 }

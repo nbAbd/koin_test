@@ -51,7 +51,7 @@ abstract class BaseViewModel(context: Application) : AndroidViewModel(context), 
         _progress.postValue(false)
     }
 
-    private fun getUserTimezone(): Timezone {
+    fun getUserTimezone(): Timezone {
         return Timezone.findByName(sp.getString(USER_TIMEZONE, "")!!)
     }
 
