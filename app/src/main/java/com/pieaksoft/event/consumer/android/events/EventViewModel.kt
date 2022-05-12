@@ -418,7 +418,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 }
             }
         } else {
-            IntermediateLogHandler.stopSendingIntermediateLog(activity,context)
+            IntermediateLogHandler.stopSendingIntermediateLog(activity, context)
         }
     }
 
@@ -463,7 +463,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         val currentDateTime =
             LocalDateTime.now(ZoneId.of(getUserTimezone().value))
         val difference = eventDateTime.until(currentDateTime, ChronoUnit.MINUTES)
-        var startMinutes = eventDateTime.minute
+        var startMinutes = 0
 
         while (startMinutes + 60 < difference) {
             eventDateTime = eventDateTime.plusHours(1)
