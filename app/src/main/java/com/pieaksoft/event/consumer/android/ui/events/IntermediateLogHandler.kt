@@ -14,6 +14,7 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.utils.deserialize
 import com.pieaksoft.event.consumer.android.utils.formatToServerDateDefaults
 import com.pieaksoft.event.consumer.android.utils.formatToServerTimeDefaults
+import com.pieaksoft.event.consumer.android.utils.receivers.IntermediateLogReceiver
 import com.pieaksoft.event.consumer.android.utils.serialize
 import java.util.*
 
@@ -29,6 +30,9 @@ object IntermediateLogHandler {
     private lateinit var alarmManager: AlarmManager
 
 
+    /**
+     * Configures Alarm manager with ability to send broadcast every 1 hour
+     */
     fun startSendingIntermediateLog(
         event: Event,
         activity: Activity,
@@ -53,6 +57,9 @@ object IntermediateLogHandler {
         }
     }
 
+    /**
+     * Stops sending alarms from alarm manager by removing it(existing alarm)
+     */
     fun stopSendingIntermediateLog(activity: Activity, context: Context) {
         val intent = Intent(activity, IntermediateLogReceiver::class.java)
         intent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
@@ -77,16 +84,9 @@ object IntermediateLogHandler {
         }
     }
 
-    fun isAlarmSet(context: Context, activity: Activity): Boolean {
-        val intent = Intent(activity, IntermediateLogReceiver::class.java)
-        intent.action = ACTION_INTERMEDIATE_LOG_BROADCAST
-        return PendingIntent.getBroadcast(
-            context, REQUEST_CODE,
-            intent,
-            PendingIntent.FLAG_NO_CREATE
-        ) != null
-    }
-
+    /**
+     * Handles Intermediate Log BroadCast receiver
+     */
     fun handleLog(context: Context, intent: Intent) {
         val event = intent.getByteArrayExtra(EVENT_CODE)?.deserialize() as Event
         val timeZone =
@@ -106,6 +106,9 @@ object IntermediateLogHandler {
         WorkManager.getInstance(context).enqueue(worker.build())
     }
 
+    /**
+     * fills up given event as a Intermediate log
+     */
     fun fillUpIntermediateEvent(event: Event) {
         event.apply {
             eventType = EventInsertType.INTERMEDIATE_LOG.type

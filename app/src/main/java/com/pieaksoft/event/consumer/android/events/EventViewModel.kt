@@ -396,14 +396,16 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
-    // todo documentation
+    /**
+     * Checks for remaining intermediate logs
+     */
     fun checkForIntermediateLog(event: Event, activity: MainActivity) {
         if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
             when {
                 isEditedLastEvent -> {
                     sendRemainingLogs(event)
 
-                    // todo documentation
+                    // starts sending intermediate logs
                     IntermediateLogHandler.startSendingIntermediateLog(
                         event,
                         activity,
@@ -413,7 +415,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
                 }
                 else -> {
-                    // todo documentation
+
                     IntermediateLogHandler.startSendingIntermediateLog(
                         event,
                         activity,
@@ -428,7 +430,9 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
-    // todo documentation
+    /**
+     * This method runs(synchronizes remaining intermediate logs with server) when user opens this application first time after reboot
+     */
     fun syncRemainingIntermediateLogs(event: Event? = null, activity: Activity) {
         event?.let {
             sendRemainingLogs(event)
@@ -450,7 +454,9 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
-    // todo documentation
+    /**
+     * Starts sending logs by setting first trigger time
+     */
     private fun startSendingLog(lastEvent: Event, firstTrigger: Long, activity: Activity) {
         IntermediateLogHandler.startSendingIntermediateLog(
             lastEvent,
@@ -461,15 +467,20 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
-    // todo documentation
+    /**
+     * Sends all remaining logs to server
+     */
     private fun sendRemainingLogs(event: Event) {
         val events = getRemainingIntermediateLogs(event)
         events.forEach(::insertEvent)
     }
 
 
-    // todo documentation
-    fun getRemainingIntermediateLogs(event: Event): List<Event> {
+    /**
+     * Returns List of Intermediate Log events in the period of given
+     * event's time to current time. Interval between events is 1 hour
+     */
+    private fun getRemainingIntermediateLogs(event: Event): List<Event> {
         val intermediateEvents = mutableListOf<Event>()
         var eventDateTime = dateTimeOf(event = event)
         val zoneId = getUserTimezone().value
@@ -519,18 +530,19 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
 
-
-    // todo documentation
-    fun dateTimeOf(event: Event): LocalDateTime {
+    /**
+     * Returns date and time of event as formatted to type of LocalDateTime
+     */
+    private fun dateTimeOf(event: Event): LocalDateTime {
         return LocalDateTime.parse(
             "${event.date} ${event.time}",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         )
     }
 
-
-
-    // todo documentation
+    /**
+     * Returns remaining minutes in type of Long
+     */
     private val Event.remainingMinutes: Long
         get() {
             val hm = time?.split(":")

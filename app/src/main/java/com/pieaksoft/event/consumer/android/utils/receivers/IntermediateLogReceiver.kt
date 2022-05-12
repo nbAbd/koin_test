@@ -1,8 +1,9 @@
-package com.pieaksoft.event.consumer.android.ui.events
+package com.pieaksoft.event.consumer.android.utils.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
 import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler.ACTION_INTERMEDIATE_LOG_BROADCAST
 
 class IntermediateLogReceiver : BroadcastReceiver() {

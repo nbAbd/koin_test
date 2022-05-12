@@ -21,10 +21,10 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
-import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.utils.Storage.eventList
 import com.pieaksoft.event.consumer.android.utils.Storage.isNetworkEnable
+import com.pieaksoft.event.consumer.android.utils.receivers.PhoneRebootReceiver
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -216,7 +216,10 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         }
 
         eventViewModel.eventList.observe(this) {
-            if (IntermediateLogHandler.isAlarmSet(applicationContext, this)) {
+            val isPhoneRebooted =
+                eventViewModel.sp.getBoolean(PhoneRebootReceiver.IS_PHONE_REBOOTED,false)
+            if (isPhoneRebooted) {
+                eventViewModel.sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
                 eventViewModel.syncRemainingIntermediateLogs(activity = this)
             }
         }
