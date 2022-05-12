@@ -69,7 +69,7 @@ fun String.getDateFromString(): Date {
  * @param [zoneId] ZoneId used to determine user's timezone
  * @param [end] End date
  *
- * @return [Int] number of days between days
+ * @return [Int] - number of days between dates
  */
 fun daysBetweenDates(
     start: String,
