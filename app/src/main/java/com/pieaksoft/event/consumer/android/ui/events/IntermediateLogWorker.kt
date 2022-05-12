@@ -25,8 +25,8 @@ class IntermediateLogWorker(context: Context, params: WorkerParameters) :
         )
         if (applicationContext.isNetworkAvailable()) {
             repo.insertEvent(event)
-        }
-        repo.insertEventToDB(event)
+        } else repo.insertEventToDB(event)
+
         return@withContext Result.success()
     }
 }

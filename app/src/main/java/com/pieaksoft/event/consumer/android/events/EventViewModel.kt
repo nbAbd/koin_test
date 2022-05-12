@@ -402,7 +402,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     /**
      * Checks for remaining intermediate logs
      */
-    fun checkForIntermediateLog(event: Event, activity: MainActivity) {
+    fun checkForIntermediateLog(event: Event, activity: Activity) {
         if (event.eventCode.equals(EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code)) {
             when {
                 isEditedLastEvent -> {
