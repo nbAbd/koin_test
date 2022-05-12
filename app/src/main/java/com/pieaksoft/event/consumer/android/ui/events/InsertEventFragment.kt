@@ -14,7 +14,6 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -55,70 +54,6 @@ class InsertEventFragment(
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
-    }
-
-    private fun observe() {
-        KeyboardHeightProvider(
-            requireContext(),
-            requireActivity().windowManager,
-            binding.root
-        ) { keyboardHeight, isOpen ->
-            if (isOpen) {
-                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
-            } else {
-                binding.scrollContainer.updatePadding(bottom = 0)
-            }
-        }
-
-        viewModel.eventInsertDate.observe(viewLifecycleOwner) {
-            if (event != null) return@observe
-
-            // If date is not null, then set date/time
-            it?.let {
-                eventModel.date = it.formatToServerDateDefaults()
-                eventModel.time = it.formatToServerTimeDefaults()
-                viewModel.isEditedLastEvent = true
-                return@observe
-            }
-
-            // If date is null set current date/time
-            eventModel.date = viewModel.getFormattedUserDate()
-            eventModel.time = viewModel.getFormattedUserTime()
-        }
-
-        viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
-            eventCode?.let {
-                when (eventCode) {
-                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
-                    }
-
-                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
-                    }
-                    else -> Unit
-                }
-                eventModel.eventCode = it.code
-            }
-        }
-
-        viewModel.event.observe(this) {
-            it?.let {
-                viewModel.getEventList()
-                viewModel.checkForIntermediateLog(it, requireActivity() as MainActivity)
-                dialog?.dismiss()
-            }
-        }
-
-        viewModel.localEvent.observe(this) {
-            it?.let {
-                viewModel.getEventList()
-                viewModel.checkForIntermediateLog(it, requireActivity() as MainActivity)
-                dialog?.dismiss()
-            }
         }
     }
 
@@ -180,6 +115,67 @@ class InsertEventFragment(
                 }
             }
             isChecked = !isChecked
+        }
+    }
+
+    private fun observe() {
+        KeyboardHeightProvider(
+            requireContext(),
+            requireActivity().windowManager,
+            binding.root
+        ) { keyboardHeight, isOpen ->
+            if (isOpen) {
+                binding.scrollContainer.updatePadding(bottom = keyboardHeight)
+            } else {
+                binding.scrollContainer.updatePadding(bottom = 0)
+            }
+        }
+
+        viewModel.eventInsertDate.observe(viewLifecycleOwner) {
+            if (event != null) return@observe
+
+            // If date is not null, then set date/time
+            it?.let {
+                eventModel.date = it.formatToServerDateDefaults()
+                eventModel.time = it.formatToServerTimeDefaults()
+                return@observe
+            }
+
+            // If date is null set current date/time
+            eventModel.date = viewModel.getFormattedUserDate()
+            eventModel.time = viewModel.getFormattedUserTime()
+        }
+
+        viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
+            eventCode?.let {
+                when (eventCode) {
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
+                    }
+
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                        binding.personalUserOrYardMvBtn.show()
+                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
+                    }
+                    else -> Unit
+                }
+                eventModel.eventCode = it.code
+            }
+        }
+
+        viewModel.event.observe(this) {
+            it?.let {
+                viewModel.getEventList()
+                dialog?.dismiss()
+            }
+        }
+
+        viewModel.localEvent.observe(this) {
+            it?.let {
+                viewModel.getEventList()
+                dialog?.dismiss()
+            }
         }
     }
 

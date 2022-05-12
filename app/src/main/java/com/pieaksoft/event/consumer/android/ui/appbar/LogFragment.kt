@@ -144,6 +144,7 @@ class LogFragment : BaseMVVMFragment<FragmentLogBinding, EventViewModel>() {
 
     private fun setEvents() {
         sliderPosition = viewModel.getEventsGroupByDate().toList().lastIndex
+
         // Initial update of UI
         updateUI()
     }

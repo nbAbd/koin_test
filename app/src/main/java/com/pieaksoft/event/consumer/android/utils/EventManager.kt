@@ -6,7 +6,7 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import java.text.SimpleDateFormat
 import java.util.*
 
-object Storage {
+object EventManager {
     var eventList: List<Event> = emptyList()
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
@@ -36,4 +36,4 @@ val List<Event>.lastItemStartDate: Date?
         return null
     }
 
-val eventList = Storage.eventList
+val eventList = EventManager.eventList
