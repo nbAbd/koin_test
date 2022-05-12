@@ -16,7 +16,9 @@ import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.EventManager
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -153,7 +155,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                         handleEvents(events = result.data)
                         withContext(Dispatchers.IO) {
                             repository.deleteAllEvents()
-                            repository.saveEventListToDB(eventList = Storage.eventList)
+                            repository.saveEventListToDB(eventList = EventManager.eventList)
                         }
                     }
                     is Failure -> _error.value = result.error
@@ -189,9 +191,9 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        Storage.eventList = events.filter { it.isDutyStatusChanged() }
+        EventManager.eventList = events.filter { it.isDutyStatusChanged() }
         calculateEvents().also {
-            Storage.eventListGroupByDate = it
+            EventManager.eventListGroupByDate = it
             eventListByDate.value = it
 
             val list = mutableListOf<Event>()
@@ -207,7 +209,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     fun getEventsGroupByDate(): Map<String, List<Event>> {
-        return Storage.eventListGroupByDate
+        return EventManager.eventListGroupByDate
     }
 
     private fun calculateEvents(): Map<String, List<Event>> {
@@ -216,7 +218,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
         val calculatedEvents = mutableListOf<Event>()
 
-        Storage.eventList.forEachIndexed { index, event ->
+        EventManager.eventList.forEachIndexed { index, event ->
             val startDate =
                 LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             val endDate =
@@ -259,9 +261,9 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     if (day == numberOfDaysBetweenDates) {
                         // If current index is not last index,
                         // then end date/time of current event should be next event's start date/time
-                        if (index < Storage.eventList.lastIndex) {
-                            nextGraphEvent.endDate = Storage.eventList.elementAt(index + 1).date
-                            nextGraphEvent.endTime = Storage.eventList.elementAt(index + 1).time
+                        if (index < EventManager.eventList.lastIndex) {
+                            nextGraphEvent.endDate = EventManager.eventList.elementAt(index + 1).date
+                            nextGraphEvent.endTime = EventManager.eventList.elementAt(index + 1).time
                         } else { // If current index is last index, then end date/time is current date/time
                             val timezone =
                                 Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
@@ -282,7 +284,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             }
         }
         val map = calculatedEvents.groupBy { it.date ?: "" }.toMutableMap()
-        for (i in Storage.eventListMock) {
+        for (i in EventManager.eventListMock) {
             if (!map.containsKey(i)) {
                 map[i] = emptyList()
             }
@@ -292,8 +294,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     fun setEventsMock() {
         val currentDay = LocalDate.now()
-        Storage.eventList.groupBy { it.date ?: "" }
-        Storage.eventListMock.add(
+        EventManager.eventList.groupBy { it.date ?: "" }
+        EventManager.eventListMock.add(
             currentDay.format(
                 DateTimeFormatter.ofPattern(
                     DATE_FORMAT_yyyy_MM_dd
@@ -304,15 +306,15 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             val date =
                 currentDay.minusDays(i.toLong())
                     .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-            Storage.eventListMock.add(date)
+            EventManager.eventListMock.add(date)
         }
     }
 
     private fun calculateEndTime() {
-        Storage.eventList.forEachIndexed { index, event ->
-            if (index < Storage.eventList.size - 1) {
-                event.endDate = Storage.eventList[index + 1].date
-                event.endTime = Storage.eventList[index + 1].time
+        EventManager.eventList.forEachIndexed { index, event ->
+            if (index < EventManager.eventList.size - 1) {
+                event.endDate = EventManager.eventList[index + 1].date
+                event.endTime = EventManager.eventList[index + 1].time
             } else {
                 val timezone =
                     Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")

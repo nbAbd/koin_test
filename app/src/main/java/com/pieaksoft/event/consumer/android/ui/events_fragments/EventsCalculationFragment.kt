@@ -40,7 +40,7 @@ class EventsCalculationFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.checkResetDate()
+        viewModel.checkResetCycleDate()
     }
 
     override fun observe() {
@@ -103,9 +103,7 @@ class EventsCalculationFragment :
         }
 
 
-        /**
-         * Called only once when RESET_CYCLE request called
-         */
+        // Called only once when RESET_CYCLE request called
         eventViewModel.event.observeOnce(viewLifecycleOwner) {
             eventViewModel.getEventList()
         }
@@ -119,16 +117,16 @@ class EventsCalculationFragment :
     private fun initialize() {
         eventViewModel.eventList.observe(viewLifecycleOwner) { events ->
             // Check last selected status
-            if (eventStatusCode != Storage.eventList.lastItemEventCode) {
+            if (eventStatusCode != EventManager.eventList.lastItemEventCode) {
                 performStatusChange()
                 return@observe
             }
 
             // Reset timer
-            viewModel.resetTimer()
+            viewModel.resetMillis()
 
             // Store first event date
-            Storage.eventList.elementAtOrNull(0)?.let {
+            EventManager.eventList.elementAtOrNull(0)?.let {
                 viewModel.sp.storeResetCycleStartDate(it.date)
             }
 
@@ -145,27 +143,16 @@ class EventsCalculationFragment :
 
     private fun startTimer() = with(viewModel) {
         if (eventStatusCode != null) {
+            // Stop countdown after changing status
+            stopCountdown()
+
             when (eventStatusCode) {
                 EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                    // Cancel
-                    cancelTotalOnDutyCounter()
-                    cancelOnDutyCounter()
-                    cancelDrivingLimitCounter()
-                    cancelBreakInCounter()
-
-                    // Count
                     startTotalOnDutyCounter()
                     startOnDutyCounter()
                 }
 
                 EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
-                    // Cancel
-                    cancelTotalOnDutyCounter()
-                    cancelOnDutyCounter()
-                    cancelDrivingLimitCounter()
-                    cancelBreakInCounter()
-
-                    // Count
                     startTotalOnDutyCounter()
                     startOnDutyCounter()
                     startDrivingLimitCounter()
@@ -193,16 +180,24 @@ class EventsCalculationFragment :
         }
 
 
-        // Split list from resetCycleIndex
+        // Split list from resetCycleIndex.
         // List contains all events without filter
         val eventsAfterResetCycle = events.subList(resetCycleIndex, events.size)
 
         // Filter list only for duty status change
-        Storage.eventList = eventsAfterResetCycle.filter { it.isDutyStatusChanged() }
+        EventManager.eventList = eventsAfterResetCycle.filter { it.isDutyStatusChanged() }
     }
 
     override fun onStop() {
         super.onStop()
+        stopCountdown()
+    }
+
+
+    /**
+     * Call this method to stop count down
+     */
+    private fun stopCountdown() {
         viewModel.apply {
             cancelTotalOnDutyCounter()
             cancelOnDutyCounter()
@@ -210,4 +205,6 @@ class EventsCalculationFragment :
             cancelBreakInCounter()
         }
     }
+
+
 }
