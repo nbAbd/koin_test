@@ -98,12 +98,7 @@ object IntermediateLogHandler {
             date = currentDate.formatToServerDateDefaults(Timezone.findByName(timeZone))
             time = currentDate.formatToServerTimeDefaults(Timezone.findByName(timeZone))
         }
-        val builder: Constraints.Builder = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-
         val worker = OneTimeWorkRequest.Builder(IntermediateLogWorker::class.java)
-            .setConstraints(builder.build())
-
         val data = Data.Builder()
         data.putString(EVENT_CODE, Gson().toJson(event))
         worker.setInputData(data.build())
