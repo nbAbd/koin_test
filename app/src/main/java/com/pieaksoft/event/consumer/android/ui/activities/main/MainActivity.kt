@@ -24,9 +24,9 @@ import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.utils.EventManager.eventList
 import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
+import com.pieaksoft.event.consumer.android.utils.receivers.PhoneRebootReceiver
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
     IMainAction {
@@ -208,20 +208,36 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun bindViewModel() {
-        eventViewModel.eventListRequiresCertification.observe(this, { events ->
+        eventViewModel.eventListRequiresCertification.observe(this) { events ->
             when (events.isNotEmpty()) {
                 true -> showCertificationNeedView()
                 else -> hideCertificationNeedView()
             }
-        })
+        }
 
-        eventViewModel.progress.observe(this, {
+        eventViewModel.eventList.observe(this) {
+            val isPhoneRebooted =
+                eventViewModel.sp.getBoolean(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
+            if (isPhoneRebooted) {
+                eventViewModel.apply {
+                    sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
+                    getLastDrivingLogEvent(it)?.let { it1 ->
+                        syncRemainingIntermediateLogs(
+                            it1,
+                            this@MainActivity
+                        )
+                    }
+                }
+            }
+        }
+
+        eventViewModel.progress.observe(this) {
             setProgressVisible(it)
-        })
+        }
 
-        eventViewModel.error.observe(this, {
+        eventViewModel.error.observe(this) {
             ErrorHandler.showError(binding.root, it)
-        })
+        }
     }
 
     private fun showPermissionsDialog() {

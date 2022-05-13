@@ -24,6 +24,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.facebook.drawee.view.SimpleDraweeView
 import com.pieaksoft.event.consumer.android.R
+import com.pieaksoft.event.consumer.android.model.event.Event
+import java.io.*
 
 
 private var toast: Toast? = null
@@ -38,6 +40,21 @@ fun Fragment.toast(text: String) {
 
 fun Activity.toast(text: String) {
     toast(this, text)
+}
+
+@Throws(IOException::class)
+fun Event.serialize(): ByteArray {
+    val out = ByteArrayOutputStream()
+    val os = ObjectOutputStream(out)
+    os.writeObject(this)
+    return out.toByteArray()
+}
+
+@Throws(IOException::class, ClassNotFoundException::class)
+fun ByteArray.deserialize(): Any {
+    val `in` = ByteArrayInputStream(this)
+    val `is` = ObjectInputStream(`in`)
+    return `is`.readObject()
 }
 
 private fun toast(context: Context, text: String) {

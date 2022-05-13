@@ -167,6 +167,7 @@ class InsertEventFragment(
         viewModel.event.observe(this) {
             it?.let {
                 viewModel.getEventList()
+                viewModel.checkForIntermediateLog(it, requireActivity())
                 dialog?.dismiss()
             }
         }
@@ -174,6 +175,7 @@ class InsertEventFragment(
         viewModel.localEvent.observe(this) {
             it?.let {
                 viewModel.getEventList()
+                viewModel.checkForIntermediateLog(it, requireActivity())
                 dialog?.dismiss()
             }
         }
