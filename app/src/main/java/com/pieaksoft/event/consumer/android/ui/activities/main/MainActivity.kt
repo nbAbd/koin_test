@@ -221,7 +221,12 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             if (isPhoneRebooted) {
                 eventViewModel.apply {
                     sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
-                    syncRemainingIntermediateLogs(getLastDrivingLogEvent(it), this@MainActivity)
+                    getLastDrivingLogEvent(it)?.let { it1 ->
+                        syncRemainingIntermediateLogs(
+                            it1,
+                            this@MainActivity
+                        )
+                    }
                 }
             }
         }

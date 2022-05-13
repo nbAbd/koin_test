@@ -450,11 +450,18 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     /**
-     * Returns last event with eventType of duty status change or Intermediate log
+     * Returns last event if it's eventCode of Driving or Intermediate log, otherwise null
      */
-    fun getLastDrivingLogEvent(events: List<Event>): Event {
-        return events.last {
-            it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
+    fun getLastDrivingLogEvent(events: List<Event>): Event? {
+        val event = events.last {
+            it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type
+                    || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
+                    || it.eventType == EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+        }
+        return when (event.eventCode) {
+            EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code,
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code -> event
+            else -> null
         }
     }
 
@@ -545,14 +552,4 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         )
     }
-
-    /**
-     * Returns remaining minutes in type of Long
-     */
-    private val Event.remainingMinutes: Long
-        get() {
-            val hm = time?.split(":")
-            val minutes = hm?.get(1)?.toLong() ?: 0
-            return 60 - minutes
-        }
 }
