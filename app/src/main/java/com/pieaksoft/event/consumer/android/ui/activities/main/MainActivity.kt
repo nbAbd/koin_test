@@ -27,7 +27,6 @@ import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
 import com.pieaksoft.event.consumer.android.utils.receivers.PhoneRebootReceiver
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::inflate),
     IMainAction {
@@ -220,8 +219,10 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             val isPhoneRebooted =
                 eventViewModel.sp.getBoolean(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
             if (isPhoneRebooted) {
-                eventViewModel.sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
-                eventViewModel.syncRemainingIntermediateLogs(activity = this)
+                eventViewModel.apply {
+                    sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
+                    syncRemainingIntermediateLogs(getLastDrivingLogEvent(it), this@MainActivity)
+                }
             }
         }
 

@@ -50,6 +50,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     var isEditedLastEvent = false
 
+    private var remainingMinutes = 0L
+
     val certifiedDate = MutableLiveData<String?>()
     val eventList = MutableLiveData<List<Event>>()
     val eventListByDate = MutableLiveData<Map<String, List<Event>>>()
@@ -412,7 +414,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     IntermediateLogHandler.startSendingIntermediateLog(
                         event,
                         activity,
-                        event.remainingMinutes,
+                        remainingMinutes,
                         getUserTimezone().value
                     )
 
@@ -436,23 +438,23 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     /**
      * This method runs(synchronizes remaining intermediate logs with server) when user opens this application first time after reboot
      */
-    fun syncRemainingIntermediateLogs(event: Event? = null, activity: Activity) {
-        event?.let {
-            sendRemainingLogs(event)
-            startSendingLog(event, it.remainingMinutes, activity)
-        }
-        when (EventManager.eventList.lastItemEventCode) {
-
-            EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION,
-            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> {
-                val lastEvent = EventManager.eventList.last {
-                    it.eventCode == EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code
-                            || it.eventCode == EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code
-                }
-                sendRemainingLogs(lastEvent)
-                startSendingLog(lastEvent, lastEvent.remainingMinutes, activity)
+    fun syncRemainingIntermediateLogs(event: Event, activity: Activity) {
+        when (event.eventCode) {
+            EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code,
+            EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code -> {
+                sendRemainingLogs(event)
+                startSendingLog(event, remainingMinutes, activity)
             }
             else -> Unit
+        }
+    }
+
+    /**
+     * Returns last event with eventType of duty status change or Intermediate log
+     */
+    fun getLastDrivingLogEvent(events: List<Event>): Event {
+        return events.last {
+            it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
         }
     }
 
@@ -506,6 +508,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             startMinutes += 60
         }
 
+        remainingMinutes = 60 - (difference - startMinutes)
         return intermediateEvents
     }
 
