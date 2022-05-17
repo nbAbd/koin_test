@@ -21,6 +21,7 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.utils.EventManager.eventList
 import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
@@ -41,6 +42,8 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     lateinit var navController: NavController
 
     private val eventViewModel: EventViewModel by viewModel()
+
+    private val profileViewModel: ProfileViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -69,6 +72,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     override fun setupView() {
         eventViewModel.setEventsMock()
+        getDriversInfo()
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
@@ -93,6 +97,17 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         binding.bottomNavigation.root.isSingleSelection = true
         binding.bottomNavigation.root.check(R.id.offFragment)
         setupNavController()
+    }
+
+    private fun getDriversInfo() {
+        profileViewModel.getProfile()
+        if (isCooDriverExist()) {
+            profileViewModel.getProfile(true)
+        }
+    }
+
+    private fun isCooDriverExist(): Boolean {
+        return sharedPrefs.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
     }
 
     private fun setupNavController() {

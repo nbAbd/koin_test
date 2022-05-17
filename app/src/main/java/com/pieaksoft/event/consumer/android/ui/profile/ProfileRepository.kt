@@ -12,9 +12,9 @@ interface ProfileRepository {
 
     suspend fun update(profile: Profile)
 
-    fun getPrimaryProfiles(): Flow<List<Profile>>
+    suspend fun getPrimaryProfile(): Profile?
 
-    fun getAdditionalProfiles(): Flow<List<Profile>>
+    suspend fun getAdditionalProfile(): Profile?
 
     fun getProfileById(id: String): Flow<Profile>
 
