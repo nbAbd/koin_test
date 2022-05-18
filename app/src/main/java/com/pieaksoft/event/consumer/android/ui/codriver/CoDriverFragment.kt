@@ -54,7 +54,7 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
             }
 
             loginBtn.setOnClickListener {
-                if (primaryDriver.binding.loginValue.text.equals(loginValue)) {
+                if (primaryDriver.binding.loginValue.text.trim() == loginValue?.trim()) {
                     toast(getString(R.string.error_current_driver_can_not_be_additional))
                 } else loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
             }
