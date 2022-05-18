@@ -552,4 +552,25 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         )
     }
+
+    /**
+     *  Sends driver’s login/logout activity to server
+     */
+    fun sendLoginEvent() {
+        insertEvent(newLoginEvent())
+    }
+
+    /**
+     * Returns new instance of Event with login request fields
+     */
+    private fun newLoginEvent():Event{
+        return Event(
+            eventType = EventInsertType.DRIVERS_LOGIN_LOGOUT_ACTIVITY.type,
+            eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGIN_ACTIVITY.code,
+            date = getFormattedUserDate(),
+            time = getFormattedUserTime(),
+            totalEngineMiles = 0,
+            totalEngineHours = 0,
+        )
+    }
 }

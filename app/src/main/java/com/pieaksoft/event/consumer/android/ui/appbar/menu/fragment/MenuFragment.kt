@@ -13,6 +13,7 @@ import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMenuBinding
+import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
@@ -31,6 +32,7 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
     }
 
     override val viewModel: ProfileViewModel by sharedViewModel()
+    private val eventViewModel: EventViewModel by sharedViewModel()
 
     private lateinit var navController: NavController
 
@@ -82,8 +84,10 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
 
     private fun logout() {
         sharedPrefs.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, "").apply()
-        startActivity(LoginActivity.newInstance(requireContext()))
-        requireActivity().finish()
+        eventViewModel.sendLoginEvent().also {
+            startActivity(LoginActivity.newInstance(requireContext()))
+            requireActivity().finish()
+        }
     }
 
     private fun showLogoutDialog() {

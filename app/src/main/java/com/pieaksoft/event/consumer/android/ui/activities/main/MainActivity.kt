@@ -68,7 +68,9 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun setupView() {
+        eventViewModel.sendLoginEvent()
         eventViewModel.setEventsMock()
+
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
