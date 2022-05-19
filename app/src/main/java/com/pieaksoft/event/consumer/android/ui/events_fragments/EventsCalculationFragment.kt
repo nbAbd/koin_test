@@ -76,8 +76,6 @@ class EventsCalculationFragment :
         viewModel.maxOnDuty.observe(this) {
             if (it < 0) {
                 binding.progressBar3.progressBarColor =
-                    ContextCompat.getColor(requireContext(), R.color.blue)
-                binding.progressBar3.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
                 binding.progressBar3.setProgressWithAnimation(100f, 1000)
             } else {

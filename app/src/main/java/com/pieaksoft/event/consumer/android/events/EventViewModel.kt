@@ -205,7 +205,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        EventManager.eventList = events.filter { it.isDutyStatusChanged() }
+        EventManager.eventList =
+            events.filter { it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type }
         calculateEvents().also {
             EventManager.eventListGroupByDate = it
             eventListByDate.value = it
@@ -232,73 +233,77 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
         val calculatedEvents = mutableListOf<Event>()
 
-        EventManager.eventList.forEachIndexed { index, event ->
-            val startDate =
-                LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-            val endDate =
-                LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-
-            val numberOfDaysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate).toInt()
-
-            // If start date and end date in the same day
-            if (numberOfDaysBetweenDates == 0) {
-                // Add current event to list
-                calculatedEvents.add(event)
-
-                // If start date and end date are different dates
-            } else if (numberOfDaysBetweenDates > 0) {
-
-                // Add event till the end of the graph
-                event.copy(
-                    endDate = event.date,
-                    endTime = context.getString(R.string.twenty_four_hours)
-                ).also {
-                    calculatedEvents.add(it)
-                }
-
-                for (day in 1..numberOfDaysBetweenDates) {
-                    val startDateOfNextGraphEvent = startDate.plusDays(day.toLong())
-                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-
-                    val endDateOfNextGraphEvent = startDate.plusDays(day.toLong())
-                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-
-                    // By default it's line should be drew till the end of the graph
-                    val nextGraphEvent = event.copy(
-                        date = startDateOfNextGraphEvent,
-                        endDate = endDateOfNextGraphEvent,
-                        time = context.getString(R.string.zero_hours),
-                        endTime = context.getString(R.string.twenty_four_hours)
+        EventManager.eventList.dropWhile { it.eventType == EventInsertType.CYCLE_RESET.type }
+            .forEachIndexed { index, event ->
+                val startDate =
+                    LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+                val endDate =
+                    LocalDate.parse(
+                        event.endDate,
+                        DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd)
                     )
 
-                    // Check if this end day
-                    if (day == numberOfDaysBetweenDates) {
-                        // If current index is not last index,
-                        // then end date/time of current event should be next event's start date/time
-                        if (index < EventManager.eventList.lastIndex) {
-                            nextGraphEvent.endDate =
-                                EventManager.eventList.elementAt(index + 1).date
-                            nextGraphEvent.endTime =
-                                EventManager.eventList.elementAt(index + 1).time
-                        } else { // If current index is last index, then end date/time is current date/time
-                            val timezone =
-                                Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
+                val numberOfDaysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate).toInt()
 
-                            val zoneId = ZoneId.of(timezone.value)
+                // If start date and end date in the same day
+                if (numberOfDaysBetweenDates == 0) {
+                    // Add current event to list
+                    calculatedEvents.add(event)
 
-                            nextGraphEvent.endDate =
-                                LocalDateTime.now(zoneId)
-                                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+                    // If start date and end date are different dates
+                } else if (numberOfDaysBetweenDates > 0) {
 
-                            nextGraphEvent.endTime =
-                                LocalDateTime.now(zoneId)
-                                    .format(DateTimeFormatter.ofPattern(TIME_FORMAT_HH_mm))
-                        }
+                    // Add event till the end of the graph
+                    event.copy(
+                        endDate = event.date,
+                        endTime = context.getString(R.string.twenty_four_hours)
+                    ).also {
+                        calculatedEvents.add(it)
                     }
-                    calculatedEvents.add(nextGraphEvent)
+
+                    for (day in 1..numberOfDaysBetweenDates) {
+                        val startDateOfNextGraphEvent = startDate.plusDays(day.toLong())
+                            .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+
+                        val endDateOfNextGraphEvent = startDate.plusDays(day.toLong())
+                            .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+
+                        // By default it's line should be drew till the end of the graph
+                        val nextGraphEvent = event.copy(
+                            date = startDateOfNextGraphEvent,
+                            endDate = endDateOfNextGraphEvent,
+                            time = context.getString(R.string.zero_hours),
+                            endTime = context.getString(R.string.twenty_four_hours)
+                        )
+
+                        // Check if this end day
+                        if (day == numberOfDaysBetweenDates) {
+                            // If current index is not last index,
+                            // then end date/time of current event should be next event's start date/time
+                            if (index < EventManager.eventList.lastIndex) {
+                                nextGraphEvent.endDate =
+                                    EventManager.eventList.elementAt(index + 1).date
+                                nextGraphEvent.endTime =
+                                    EventManager.eventList.elementAt(index + 1).time
+                            } else { // If current index is last index, then end date/time is current date/time
+                                val timezone =
+                                    Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
+
+                                val zoneId = ZoneId.of(timezone.value)
+
+                                nextGraphEvent.endDate =
+                                    LocalDateTime.now(zoneId)
+                                        .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+
+                                nextGraphEvent.endTime =
+                                    LocalDateTime.now(zoneId)
+                                        .format(DateTimeFormatter.ofPattern(TIME_FORMAT_HH_mm))
+                            }
+                        }
+                        calculatedEvents.add(nextGraphEvent)
+                    }
                 }
             }
-        }
         val map = calculatedEvents.groupBy { it.date ?: "" }.toMutableMap()
         for (i in EventManager.eventListMock) {
             if (!map.containsKey(i)) {
@@ -563,7 +568,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     /**
      * Returns new instance of Event with login request fields
      */
-    private fun newLoginEvent():Event{
+    private fun newLoginEvent(): Event {
         return Event(
             eventType = EventInsertType.DRIVERS_LOGIN_LOGOUT_ACTIVITY.type,
             eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGIN_ACTIVITY.code,
