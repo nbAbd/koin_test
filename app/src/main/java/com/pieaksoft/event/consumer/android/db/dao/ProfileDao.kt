@@ -12,11 +12,11 @@ interface ProfileDao {
     @Update
     suspend fun updateProfile(profile: Profile)
 
-    @Query("SELECT *FROM PROFILE")
-    fun getPrimaryProfiles(): Flow<List<Profile>>
+    @Query("SELECT * FROM PROFILE where isAdditional =0 LIMIT 1")
+    fun getPrimaryProfile(): Profile?
 
-    @Query("SELECT *FROM PROFILE WHERE isAdditional = 1")
-    fun getAdditionalProfiles(): Flow<List<Profile>>
+    @Query("SELECT * FROM PROFILE WHERE isAdditional = 1 LIMIT 1")
+    fun getAdditionalProfile(): Profile?
 
     @Query("SELECT *FROM PROFILE WHERE profile_id = :id")
     fun getProfileById(id: String): Flow<Profile>

@@ -123,6 +123,7 @@
     <string name="yard_mv">Yard move</string>
     <string name="usa">Usa</string>
     <string name="canada">Canada</string>
+    <string name="error_current_driver_can_not_be_additional">Current driver can not be additional</string>
 
     <string-array name="countries">
         <item>Canada</item>

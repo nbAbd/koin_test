@@ -6,13 +6,17 @@ import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_ADDITIONAL_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
-import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_MAIN_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class LoginViewModel(val app: Application, private val loginRepo: LoginRepo) : BaseViewModel(app) {
+class LoginViewModel(
+    val app: Application,
+    private val loginRepo: LoginRepo,
+    private val profileViewModel: ProfileViewModel
+) : BaseViewModel(app) {
     companion object {
         const val DRIVER = "DRIVER"
     }
@@ -34,6 +38,7 @@ class LoginViewModel(val app: Application, private val loginRepo: LoginRepo) : B
                                     response.data.jwtToken
                                 )
                                 .apply()
+                            profileViewModel.getProfile(true)
                         } else {
                             sp.edit()
                                 .putString(
@@ -41,12 +46,7 @@ class LoginViewModel(val app: Application, private val loginRepo: LoginRepo) : B
                                     response.data.jwtToken
                                 )
                                 .apply()
-                            sp.edit()
-                                .putString(
-                                    SHARED_PREFERENCES_MAIN_USER_ID,
-                                    response.data.jwtToken
-                                )
-                                .apply()
+                            profileViewModel.getProfile()
                         }
                         _isSuccessLogin.value = Pair(true, null)
 

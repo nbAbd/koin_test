@@ -15,7 +15,7 @@ import com.pieaksoft.event.consumer.android.utils.setImageWithPlaceHolder
 import com.pieaksoft.event.consumer.android.utils.visible
 
 class DriverCardView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
-    private var binding: ItemDriverBinding
+    var binding: ItemDriverBinding
 
     init {
         inflate(context, R.layout.item_driver, this).also {

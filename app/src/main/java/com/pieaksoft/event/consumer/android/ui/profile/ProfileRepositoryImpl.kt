@@ -30,12 +30,12 @@ class ProfileRepositoryImpl(
         appDataBase.getProfileDao().updateProfile(profile = profile)
     }
 
-    override fun getPrimaryProfiles(): Flow<List<Profile>> {
-        return appDataBase.getProfileDao().getPrimaryProfiles()
+    override suspend fun getPrimaryProfile(): Profile? {
+        return appDataBase.getProfileDao().getPrimaryProfile()
     }
 
-    override fun getAdditionalProfiles(): Flow<List<Profile>> {
-        return appDataBase.getProfileDao().getAdditionalProfiles()
+    override suspend fun getAdditionalProfile(): Profile? {
+        return appDataBase.getProfileDao().getAdditionalProfile()
     }
 
     override fun getProfileById(id: String): Flow<Profile> {
