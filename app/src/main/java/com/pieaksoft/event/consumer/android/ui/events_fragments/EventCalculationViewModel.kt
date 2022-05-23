@@ -13,7 +13,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -136,6 +135,11 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
     private val _maxOnDutyExceedingTheLimitWarning = MutableLiveData<Boolean>()
     val maxOnDutyExceedingTheLimitWarning = _maxOnDutyExceedingTheLimitWarning
 
+    /**
+     * Warning boolean, which indicates that on driving duty is more than 8 hours
+     */
+    private val _onDutyBreakInTheLimitWarning = MutableLiveData<Boolean>()
+    val onDutyBreakInTheLimitWarning = _onDutyBreakInTheLimitWarning
 
     /**
      * Warning boolean, which indicates that on duty cycle is more than 14h
@@ -161,6 +165,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
                         if (needResetMaxOnDutyMillis <= 0) {
                             // 34h
                             resetMaxOffDutyHours()
+
                             // 70h 14h 11h 8h
                             sendResetCycleRequest()
                             // break loop
@@ -209,7 +214,10 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
                         onDutyDrivingLimitMillis -= duration
 
 
-                        isNeedBreak = duration >= (30 * 60 * 1000)
+                        //
+                        if (onDutyBreakInMillis <= 0) {
+                            isNeedBreak = true
+                        }
                     }
 
                     EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING,
@@ -243,6 +251,10 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
             _onDutyExceedingTheLimitWarning.value = true
         }
 
+        if (isNeedBreak) {
+            _onDutyBreakInTheLimitWarning.value = true
+        }
+
         _maxOnDuty.postValue(maxOnDutyMillis)
         _onDuty.postValue(onDutyMillis)
         _onDutyDrivingLimit.postValue(onDutyDrivingLimitMillis)
@@ -253,12 +265,19 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
 
 
     fun checkResetCycleDate() {
-        sp.getResetCycleStartDate()?.let { startDateString ->
+        sp.getResetCycleStartDateTime()?.let { startDateTime ->
             val zoneId = ZoneId.of(getUserTimezone().value)
-            val numberOfDays = daysBetweenDates(start = startDateString, zoneId = zoneId).toLong()
+
+            val numberOfDays = daysBetweenDates(start = startDateTime, zoneId = zoneId).toLong()
 
             if (numberOfDays == needResetCycleDays) {
                 sendResetCycleRequest()
+            } else if (numberOfDays > needResetCycleDays) {
+                val formatter =
+                    DateTimeFormatter.ofPattern("${EventViewModel.DATE_FORMAT_yyyy_MM_dd} ${EventViewModel.TIME_FORMAT_HH_mm}")
+                var startDate = LocalDateTime.parse(startDateTime, formatter)
+                startDate = startDate.plusDays(7)
+                sendResetCycleRequest(startDate)
             }
         }
     }
@@ -268,7 +287,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
 
 
     private fun resetNonstopCycleHours() {
-        thirtyMinutesInMillis = 30 * 60 * 1000
+        thirtyMinutesInMillis = (30 * 60 * 1000).toLong()
         onDutyBreakInMillis = 8L.toMillis()
     }
 
@@ -309,37 +328,27 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
         resetOnDutyCycleHours()
     }
 
-    private fun sendResetCycleRequest() {
+    private fun sendResetCycleRequest(startDateTime: LocalDateTime? = null) {
         val event = Event(
             eventType = EventInsertType.CYCLE_RESET.type,
             eventCode = EventCode.CYCLE_RESET.code,
             date = getFormattedUserDate(true),
             time = getFormattedUserTime(true),
-            totalEngineMiles = null,
             eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
             eventRecordStatus = EventRecordStatusType.ACTIVE.type,
             malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
             dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
-            driverLocationDescription = null,
-            dutyStatus = null,
-            certification = null,
-            certifiedDates = null,
-            recordOrigin = null,
-            createdAt = null,
-            distanceSinceLastValidCoordinates = null,
-            eventSequenceId = null,
-            endDate = null,
-            endTime = null,
-            toAddress = null,
-            fromAddress = null,
-            trailer = null,
-            comment = null,
-            isSyncWithServer = true,
         )
+
+        startDateTime?.let {
+            event.date = it.format(DateTimeFormatter.ISO_LOCAL_DATE)
+            event.time = it.format(DateTimeFormatter.ofPattern(EventViewModel.TIME_FORMAT_HH_mm))
+        }
 
         eventViewModel.insertEvent(e = event)
     }
 
+    //here
     /**
      * Converts given minutes to millis
      * @return [Long] - Minutes in millis

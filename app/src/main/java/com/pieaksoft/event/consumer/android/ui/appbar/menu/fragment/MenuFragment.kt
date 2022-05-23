@@ -84,7 +84,7 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
 
     private fun logout() {
         sharedPrefs.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, "").apply()
-        eventViewModel.sendLoginEvent().also {
+        eventViewModel.sendLogoutEvent().also {
             startActivity(LoginActivity.newInstance(requireContext()))
             requireActivity().finish()
         }

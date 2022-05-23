@@ -7,11 +7,8 @@ import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.enums.*
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
@@ -19,12 +16,10 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
 import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
 import com.pieaksoft.event.consumer.android.utils.EventManager
-import com.pieaksoft.event.consumer.android.utils.lastItemEventCode
 import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -458,12 +453,17 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      * Returns last event if it's eventCode of Driving or Intermediate log, otherwise null
      */
     fun getLastDrivingLogEvent(events: List<Event>): Event? {
-        val event = events.last {
-            it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type
-                    || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
-                    || it.eventType == EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+        var event: Event? = null
+        try {
+            event = events.last {
+                it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type
+                        || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
+                        || it.eventType == EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+            }
+        } catch (e: NoSuchElementException) {
+            Log.e("status", "No status has been selected yet")
         }
-        return when (event.eventCode) {
+        return when (event?.eventCode) {
             EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code,
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code -> event
             else -> null
@@ -559,9 +559,18 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     /**
-     *  Sends driver’s login/logout activity to server
+     *  Sends driver’s login activity to server
      */
     fun sendLoginEvent() {
+        insertEvent(newLoginEvent())
+    }
+
+    /**
+     *  Sends driver’s logout activity to server
+     */
+    fun sendLogoutEvent() {
+        val event = newLoginEvent()
+        event.eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
         insertEvent(newLoginEvent())
     }
 
@@ -576,6 +585,10 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             time = getFormattedUserTime(),
             totalEngineMiles = 0,
             totalEngineHours = 0,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type
         )
     }
 }

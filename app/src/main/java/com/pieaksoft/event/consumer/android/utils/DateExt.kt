@@ -76,7 +76,8 @@ fun daysBetweenDates(
     end: String? = null,
     zoneId: ZoneId
 ): Int {
-    val formatter = DateTimeFormatter.ofPattern(EventViewModel.DATE_FORMAT_yyyy_MM_dd)
+    val formatter =
+        DateTimeFormatter.ofPattern("${EventViewModel.DATE_FORMAT_yyyy_MM_dd} ${EventViewModel.TIME_FORMAT_HH_mm}")
     val startDate = LocalDate.parse(start, formatter)
 
     // If end date is null, we assume that we should get current date

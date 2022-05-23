@@ -9,8 +9,6 @@ import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculation
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.event.Event
-import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
@@ -59,30 +57,29 @@ class EventsCalculationFragment :
 
         viewModel.onDuty.observe(this) {
             if (it < 0) {
-                binding.progressBar2.progressBarColor =
+                binding.onDutyLimitDayPr.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.progressBar2.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitDayPr.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.progressBar2.progressBarColor =
+                binding.onDutyLimitDayPr.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
-                binding.progressBar2.progress =
+                binding.onDutyLimitDayPr.progress =
                     ((it.toFloat() / 60000 / ON_DUTY_WINDOW_MINUTES) * 100)
             }
-
 
             binding.onValue.text = hmsTimeFormatter(it)
         }
 
         viewModel.maxOnDuty.observe(this) {
             if (it < 0) {
-                binding.progressBar3.progressBarColor =
+                binding.onDutyLimitMonthPr.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.progressBar3.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitMonthPr.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.progressBar3.progressBarColor =
+                binding.onDutyLimitMonthPr.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
 
-                binding.progressBar3.progress =
+                binding.onDutyLimitMonthPr.progress =
                     ((it.toFloat() / 1000 / 60 / 60) * 100)
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
@@ -92,7 +89,7 @@ class EventsCalculationFragment :
             binding.drivingLimit.text = hmsTimeFormatter2(it)
         }
 
-        viewModel.onDutyExceedingTheLimitWarning.observe(this) {
+        viewModel.onDutyExceedingTheLimitWarning.observeOnce(this) {
             Toast.makeText(
                 requireContext(),
                 "Warning!\n You continuously on duty more 14 hour",
@@ -100,20 +97,38 @@ class EventsCalculationFragment :
             ).show()
         }
 
-
-        // Called only once when RESET_CYCLE request called
-        eventViewModel.event.observeOnce(viewLifecycleOwner) {
-            eventViewModel.getEventList()
+        viewModel.maxOnDutyExceedingTheLimitWarning.observeOnce(this) {
+            Toast.makeText(
+                requireContext(),
+                "Warning!\n You are on duty more 70 hours",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        eventViewModel.localEvent.observeOnce(viewLifecycleOwner) {
-            eventViewModel.getEventList()
+        viewModel.onDutyBreakInTheLimitWarning.observeOnce(this) {
+            Toast.makeText(
+                requireContext(),
+                "Warning!\n You are driving more than 8 hours, you must take a break",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        // Called only once when RESET_CYCLE request called
+        eventViewModel.event.observe(viewLifecycleOwner) {
+            it?.let {
+                eventViewModel.getEventList()
+            }
+        }
+
+        eventViewModel.localEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                eventViewModel.getEventList()
+            }
         }
     }
 
-
     private fun initialize() {
-        eventViewModel.eventList.observe(viewLifecycleOwner) { events ->
+        eventViewModel.eventList.observe(viewLifecycleOwner) {
             // Check last selected status
             if (eventStatusCode != EventManager.eventList.lastItemEventCode) {
                 performStatusChange()
@@ -125,11 +140,11 @@ class EventsCalculationFragment :
 
             // Store first event date
             EventManager.eventList.elementAtOrNull(0)?.let {
-                viewModel.sp.storeResetCycleStartDate(it.date)
+                viewModel.sp.storeResetCycleStartDateTime(it.date, it.time)
             }
 
             // Checking for CYCLE_RESET event
-            checkCycleReset(events = events)
+            checkCycleReset()
 
             calculate()
         }
@@ -163,27 +178,21 @@ class EventsCalculationFragment :
 
     /**
      * Checks reset cycle event, then splits list from that index
-     *
-     * @param [events] List of events from API/DB
      */
-    private fun checkCycleReset(events: List<Event>) {
+    private fun checkCycleReset() {
         var resetCycleIndex = 0
-        events.forEachIndexed { index, event ->
+        EventManager.eventList.forEachIndexed { index, event ->
             if (event.eventType == EventInsertType.CYCLE_RESET.type) {
                 resetCycleIndex = index
 
                 // Store CYCLE_RESET event date
-                viewModel.sp.storeResetCycleStartDate(event.date)
+                viewModel.sp.storeResetCycleStartDateTime(event.date, event.time)
             }
         }
 
-
-        // Split list from resetCycleIndex.
-        // List contains all events without filter
-        val eventsAfterResetCycle = events.subList(resetCycleIndex, events.size)
-
         // Filter list only for duty status change
-        EventManager.eventList = eventsAfterResetCycle.filter { it.isDutyStatusChanged() }
+        EventManager.eventList =
+            EventManager.eventList.subList(resetCycleIndex, EventManager.eventList.size)
     }
 
     override fun onStop() {
@@ -203,6 +212,4 @@ class EventsCalculationFragment :
             cancelBreakInCounter()
         }
     }
-
-
 }

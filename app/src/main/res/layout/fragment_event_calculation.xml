@@ -51,7 +51,7 @@
             app:cpb_progressbar_width="10dp"
             app:cpb_round_border="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/progress_bar2"
+            app:layout_constraintEnd_toStartOf="@+id/on_duty_limit_day_pr"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -95,7 +95,7 @@
 
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/progress_bar2"
+            android:id="@+id/on_duty_limit_day_pr"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:rotation="90"
@@ -108,7 +108,7 @@
             app:cpb_progressbar_width="10dp"
             app:cpb_round_border="true"
             app:layout_constraintBottom_toBottomOf="@+id/break_progress_bar"
-            app:layout_constraintEnd_toStartOf="@+id/progress_bar3"
+            app:layout_constraintEnd_toStartOf="@+id/on_duty_limit_month_pr"
             app:layout_constraintStart_toEndOf="@+id/break_progress_bar" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -120,9 +120,9 @@
             android:textColor="@color/white"
             android:textSize="37sp"
             app:layout_constraintBottom_toTopOf="@+id/separator2"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar2" />
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_day_pr" />
 
         <View
             android:id="@+id/separator2"
@@ -132,10 +132,10 @@
             android:layout_marginTop="19dp"
             android:layout_marginEnd="36dp"
             android:background="@drawable/gradient_separator2"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar2" />
+            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_day_pr" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/h_window"
@@ -145,13 +145,13 @@
             android:text="@string/h_window"
             android:textColor="@color/white"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_pr"
             app:layout_constraintTop_toBottomOf="@+id/separator2" />
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/progress_bar3"
+            android:id="@+id/on_duty_limit_month_pr"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:rotation="90"
@@ -163,9 +163,9 @@
             app:cpb_progressbar_color="@color/blue"
             app:cpb_progressbar_width="10dp"
             app:cpb_round_border="true"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
+            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_pr"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/progress_bar2" />
+            app:layout_constraintStart_toEndOf="@+id/on_duty_limit_day_pr" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dutyCycle"
@@ -176,9 +176,9 @@
             android:textColor="@color/white"
             android:textSize="37sp"
             app:layout_constraintBottom_toTopOf="@+id/separator3"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar3" />
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_month_pr" />
 
         <View
             android:id="@+id/separator3"
@@ -188,10 +188,10 @@
             android:layout_marginTop="19dp"
             android:layout_marginEnd="36dp"
             android:background="@drawable/gradient_separator2"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_bar3"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar3" />
+            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_month_pr" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/duty_cycle"
@@ -201,9 +201,9 @@
             android:text="@string/duty_cycle"
             android:textColor="@color/white"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_bar3"
-            app:layout_constraintEnd_toEndOf="@+id/progress_bar3"
-            app:layout_constraintStart_toStartOf="@+id/progress_bar3"
+            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_pr"
+            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_pr"
             app:layout_constraintTop_toBottomOf="@+id/separator3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
