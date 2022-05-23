@@ -571,7 +571,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     fun sendLogoutEvent() {
         val event = newLoginEvent()
         event.eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
-        insertEvent(newLoginEvent())
+        insertEvent(event)
     }
 
     /**

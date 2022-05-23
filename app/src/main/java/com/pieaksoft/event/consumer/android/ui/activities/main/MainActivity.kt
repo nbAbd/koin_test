@@ -335,4 +335,9 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
             else -> null
         }
+
+    override fun onDestroy() {
+        eventViewModel.sendLogoutEvent()
+        super.onDestroy()
+    }
 }
