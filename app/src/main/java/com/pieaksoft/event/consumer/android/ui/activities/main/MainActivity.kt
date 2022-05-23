@@ -21,6 +21,7 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.utils.EventManager.uiEvents
 import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
@@ -41,6 +42,8 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     lateinit var navController: NavController
 
     private val eventViewModel: EventViewModel by viewModel()
+
+    private val profileViewModel: ProfileViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -69,7 +72,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     override fun setupView() {
         eventViewModel.sendLoginEvent()
-
+        profileViewModel.getDriversInfo()
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
@@ -243,9 +246,9 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         PermissionDialog().apply { show(supportFragmentManager, PermissionDialog::class.java.name) }
     }
 
-    //  Пока бул нени кайтарышын билбейм, карап кором бирок
     private val driverSwapReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            eventViewModel.removeCurrentDutyStatus()
             eventViewModel.getEventList()
         }
     }

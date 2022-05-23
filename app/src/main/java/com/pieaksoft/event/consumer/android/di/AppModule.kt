@@ -37,7 +37,7 @@ val AppModule = module {
     single<MenuRepository> { MenuRepositoryImpl(get()) }
     single<EventsRepository> { EventsRepositoryImpl(get(), get()) }
 
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EventViewModel(get(), get()) }
     viewModel { EventCalculationViewModel(get(), get()) }

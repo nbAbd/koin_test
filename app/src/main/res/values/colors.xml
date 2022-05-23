@@ -45,4 +45,10 @@
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#FFFFFF</color>
     <color name="blue_indigo">#47516C</color>
     <color name="ufo_green">#33C872</color>
+
+    <!--Connect to truck colors-->
+    <color name="bg_root">#050608</color>
+    <color name="bg_content">#11141B</color>
+    <color name="bg_content_secondary">#161923</color>
+    <color name="content_secondary_outline">#232731</color>
 </resources>

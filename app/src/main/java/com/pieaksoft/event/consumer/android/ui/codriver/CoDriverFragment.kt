@@ -3,8 +3,8 @@ package com.pieaksoft.event.consumer.android.ui.codriver
 import android.content.Intent
 import androidx.core.widget.addTextChangedListener
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
-import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
@@ -24,7 +24,7 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
     private var passwordValue: String? = null
 
     override fun setupView() {
-        getDriversInfo()
+        viewModel.getDriversInfo()
 
         with(binding) {
             additionalDriver.setEmpty(true)
@@ -53,9 +53,10 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
                 }
             }
 
-
             loginBtn.setOnClickListener {
-                loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
+                if (primaryDriver.binding.loginValue.text.trim() == loginValue?.trim()) {
+                    toast(getString(R.string.error_current_driver_can_not_be_additional))
+                } else loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
             }
 
             cancelBtn.setOnClickListener {
@@ -67,83 +68,70 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
         }
     }
 
-    private fun getDriversInfo() {
-        viewModel.getProfile()
-        if (isCooDriverExist()) {
-            viewModel.getProfile(true)
-        }
-    }
-
     private fun isEnableButton(): Boolean {
         return loginValue != null && passwordValue != null
     }
 
-    private fun isCooDriverExist(): Boolean {
-        return sharedPrefs.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
-    }
-
     override fun observe() {
-        loginViewModel.progress.observe(this, {
+        loginViewModel.progress.observe(this) {
             (activity as MainActivity).setProgressVisible(it)
-        })
+        }
 
-        loginViewModel.error.observe(this, { message ->
+        loginViewModel.error.observe(this) { message ->
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, requireContext()))
             }
-        })
+        }
 
-        loginViewModel.isSuccessLogin.observe(this, { success ->
+        loginViewModel.isSuccessLogin.observe(this) { success ->
             val (isSuccess, errorMessage) = success
             when {
                 isSuccess -> {
                     launch {
                         binding.loginContainer.hide()
                         binding.driversContainer.show()
-                        getDriversInfo()
+                        viewModel.getDriversInfo()
                     }
                 }
                 errorMessage != null -> {
                     toast(getString(errorMessage))
                 }
             }
-        })
+        }
 
-        viewModel.primaryDriver.observe(this, {
-            if (it.isEmpty()) return@observe
-            launch {
-                binding.primaryDriver.setDriverInfo(it.last())
+        viewModel.primaryDriver.observe(this) {
+            it?.let {
+                launch {
+                    binding.primaryDriver.setDriverInfo(it)
+                }
             }
-        })
+        }
 
-        viewModel.additionalDriver.observe(this, {
-            if (it.isEmpty()) return@observe
-            launch {
-                binding.additionalDriver.setDriverInfo(it.last(), false)
-                binding.additionalDriver.setEmpty(false)
-                binding.additionalDriver.setOnClickListener {
-                    Dialogs.showSwapDriversDialog(requireActivity()) {
-                        viewModel.swapDrivers()
+        viewModel.additionalDriver.observe(this) {
+            it?.let {
+                launch {
+                    binding.additionalDriver.setDriverInfo(it, false)
+                    binding.additionalDriver.setEmpty(false)
+                    binding.additionalDriver.setOnClickListener {
+                        Dialogs.showSwapDriversDialog(requireActivity()) {
+                            viewModel.swapDrivers()
+                        }
                     }
                 }
             }
-        })
+        }
 
-        viewModel.needUpdateObservable.observe(this, {
-            getDriversInfo()
+        viewModel.needUpdateObservable.observe(this) {
+            viewModel.getDriversInfo()
             LocalBroadcastManager
                 .getInstance(requireContext())
                 .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))
-        })
+        }
 
-        viewModel.doesNoticeExistingProfile.observe(this, {
-            toast("You cannot add same account as a co-driver")
-        })
-
-        viewModel.error.observe(this, { message ->
+        viewModel.error.observe(this) { message ->
             message?.let {
                 toast(ErrorHandler.getErrorMessage(it, requireContext()))
             }
-        })
+        }
     }
 }

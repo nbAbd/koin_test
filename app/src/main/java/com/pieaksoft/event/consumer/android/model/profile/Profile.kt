@@ -13,6 +13,10 @@ data class Profile(
     @ColumnInfo(name = "profile_id")
     val id: String,
 
+    @SerializedName(value = "token")
+    @ColumnInfo(name = "token")
+    var token: String?,
+
     @Embedded
     val user: User,
 
@@ -28,5 +32,5 @@ data class Profile(
     val vehicle: Vehicle?,
 
     @ColumnInfo(defaultValue = "0")
-    val isAdditional: Boolean?
+    var isAdditional: Boolean?
 ) : Parcelable

@@ -9,92 +9,115 @@ import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.profile.Profile
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(val app: Application, private val profileRepository: ProfileRepository) :
     BaseViewModel(app) {
 
-    val primaryDriver: LiveData<List<Profile>> = profileRepository.getPrimaryProfiles().asLiveData()
+    val primaryDriver: MutableLiveData<Profile?> = MutableLiveData<Profile?>()
 
-    val additionalDriver: LiveData<List<Profile>> =
-        profileRepository.getAdditionalProfiles().asLiveData()
+    val additionalDriver: MutableLiveData<Profile?> = MutableLiveData<Profile?>()
 
     val needUpdateObservable = SingleLiveEvent<Boolean>()
-
-    val doesNoticeExistingProfile: MutableLiveData<Boolean> = MutableLiveData()
 
     fun isAuth(): Boolean {
         return sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "") != ""
     }
 
-
-    fun getProfile(isAdditional: Boolean = false) {
-        launch {
+    fun getProfile(isAdditional: Boolean = false, fromLocal: Boolean = false) {
+        launch(Dispatchers.IO) {
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
                 ""
             ) else sp.getString(
-                SHARED_PREFERENCES_MAIN_USER_ID, sp.getString(
-                    SHARED_PREFERENCES_CURRENT_USER_ID, ""
-                )
+                SHARED_PREFERENCES_CURRENT_USER_ID, ""
             )
+            if (isNetworkAvailable && !fromLocal) {
+                when (val response = profileRepository.getProfile(token ?: "")) {
+                    is Success -> {
+                        response.data.let {
+                            if (isAdditional) {
 
-            when (val response = profileRepository.getProfile(token ?: "")) {
-                is Success -> {
-                    response.data.let {
-                        if (isAdditional) {
-                            // Return if additional profile is the same with primary
-                            if (primaryDriver.value.takeIf { list -> list?.isNotEmpty() == true }
-                                    ?.last()?.id == it.id) {
-                                doesNoticeExistingProfile.value = true
-                                return@let
-                            }
-
-                            // if there any additional profile delete them
-                            if (profileRepository.getAdditionalProfiles()
-                                    .asLiveData().value?.isNotEmpty() == true
-                            ) {
-                                profileRepository.deleteAdditionalProfiles()
-                            }
-
-                            // change profile status to additional profile
-                            val additionalProfile = it.copy(isAdditional = true)
-                            profileRepository.saveProfile(profile = additionalProfile)
-                        } else {
-
-                            // if primary profile exists, then update it
-                            if (profileRepository.isProfileExists(id = it.id)) {
-                                profileRepository.update(profile = it)
-                            } else {
-                                if (profileRepository.getPrimaryProfiles()
-                                        .asLiveData().value?.isNotEmpty() == true
+                                // if there any additional profile delete them
+                                if (profileRepository.getAdditionalProfile() != null
                                 ) {
-                                    profileRepository.deletePrimaryProfiles()
+                                    profileRepository.deleteAdditionalProfiles()
                                 }
 
-                                // save profile
-                                profileRepository.saveProfile(it)
+                                // change profile status to additional profile
+                                val additionalProfile = it.copy(isAdditional = true)
+                                token?.let { token -> additionalProfile.token = token }
 
-                                // save timezone
-                                saveUserTimezone(timezone = it.user.homeTerminalTimezone)
+                                additionalDriver.postValue(additionalProfile)
+                                profileRepository.saveProfile(profile = additionalProfile)
+                            } else {
+
+                                // if primary profile exists, then update it
+                                if (profileRepository.isProfileExists(id = it.id)) {
+                                    profileRepository.update(profile = it)
+                                } else {
+                                    if (profileRepository.getPrimaryProfile() != null
+                                    ) {
+                                        profileRepository.deletePrimaryProfiles()
+                                    }
+
+                                    token?.let { token -> it.token = token }
+
+                                    // save profile
+                                    profileRepository.saveProfile(it)
+
+                                    primaryDriver.postValue(it)
+
+                                    // save timezone
+                                    saveUserTimezone(timezone = it.user.homeTerminalTimezone)
+                                }
                             }
                         }
                     }
+                    is Failure -> {
+                        _error.value = response.error
+                    }
                 }
-                is Failure -> {
-                    _error.value = response.error
-                }
+            } else {
+                if (isAdditional) {
+                    additionalDriver.postValue(profileRepository.getAdditionalProfile())
+                } else primaryDriver.postValue(profileRepository.getPrimaryProfile())
             }
         }
     }
 
     fun swapDrivers() {
-        val mainToken = sp.getString(SHARED_PREFERENCES_MAIN_USER_ID, "")
-        val additionalToken = sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "")
+        launch(Dispatchers.IO) {
+            val currentToken = sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "")
+            val additionalToken = sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "")
 
-        sp.edit().putString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, mainToken).apply()
-        sp.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken).apply()
-        sp.edit().putString(SHARED_PREFERENCES_MAIN_USER_ID, additionalToken).apply()
-        needUpdateObservable.postValue(true)
+            sp.put(SHARED_PREFERENCES_ADDITIONAL_USER_ID, currentToken)
+            sp.put(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken)
+
+            profileRepository.getAdditionalProfile()?.let {
+                it.isAdditional = false
+                profileRepository.saveProfile(it)
+            }
+
+            profileRepository.getPrimaryProfile()?.let {
+                it.isAdditional = true
+                profileRepository.saveProfile(it)
+            }
+
+            getDriversInfo()
+            needUpdateObservable.postValue(true)
+        }
+    }
+
+    fun getDriversInfo() {
+        getProfile()
+        if (isCooDriverExist()) {
+            getProfile(true)
+        }
+    }
+
+    private fun isCooDriverExist(): Boolean {
+        return sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
     }
 }

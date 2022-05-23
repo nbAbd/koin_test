@@ -11,8 +11,8 @@ import java.util.*
 
 object EventManager {
     var calculationEvents: List<Event> = emptyList()
-    val uiEvents: List<Event>
-        get() = calculationEvents.filterNot { it.eventCode == EventCode.CYCLE_RESET.code }
+    var uiEvents: List<Event> = emptyList()
+    // get() = calculationEvents.filterNot { it.eventCode == EventCode.CYCLE_RESET.code }
 
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
