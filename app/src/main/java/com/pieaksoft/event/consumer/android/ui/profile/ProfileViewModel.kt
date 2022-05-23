@@ -106,6 +106,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
             }
 
             getDriversInfo()
+            needUpdateObservable.postValue(true)
         }
     }
 
