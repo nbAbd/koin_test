@@ -130,7 +130,7 @@ class EventsCalculationFragment :
     private fun initialize() {
         eventViewModel.eventList.observe(viewLifecycleOwner) {
             // Check last selected status
-            if (eventStatusCode != EventManager.eventList.lastItemEventCode) {
+            if (eventStatusCode != EventManager.uiEvents.lastItemEventCode) {
                 performStatusChange()
                 return@observe
             }
@@ -139,7 +139,7 @@ class EventsCalculationFragment :
             viewModel.resetMillis()
 
             // Store first event date
-            EventManager.eventList.elementAtOrNull(0)?.let {
+            EventManager.uiEvents.elementAtOrNull(0)?.let {
                 viewModel.sp.storeResetCycleStartDateTime(it.date, it.time)
             }
 
@@ -181,7 +181,7 @@ class EventsCalculationFragment :
      */
     private fun checkCycleReset() {
         var resetCycleIndex = 0
-        EventManager.eventList.forEachIndexed { index, event ->
+        EventManager.calculationEvents.forEachIndexed { index, event ->
             if (event.eventType == EventInsertType.CYCLE_RESET.type) {
                 resetCycleIndex = index
 
@@ -191,8 +191,8 @@ class EventsCalculationFragment :
         }
 
         // Filter list only for duty status change
-        EventManager.eventList =
-            EventManager.eventList.subList(resetCycleIndex, EventManager.eventList.size)
+        EventManager.calculationEvents =
+            EventManager.calculationEvents.subList(resetCycleIndex, EventManager.calculationEvents.size)
     }
 
     override fun onStop() {

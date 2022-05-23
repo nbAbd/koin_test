@@ -149,7 +149,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
 
 
     fun calculate(then: () -> Unit) {
-        val eventList = EventManager.eventList
+        val eventList = EventManager.calculationEvents
 
         eventList.forEachIndexed { index, currentEvent ->
             currentEvent.setEndDateTime()

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
 import androidx.core.content.ContextCompat
@@ -56,7 +55,7 @@ object Dialogs {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
         val dateSdf = sdf.parse(LocalDateTime.now(zoneId).toString()) ?: Date()
 
-        val startDate = eventList.lastItemStartDate?.addMinutes(1) ?: dateSdf
+        val startDate = uiEvents.lastItemStartDate?.addMinutes(1) ?: dateSdf
 
         SingleDateAndTimePickerDialog.Builder(context)
             .customLocale(Locale.US)

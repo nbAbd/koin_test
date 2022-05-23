@@ -41,7 +41,9 @@ class InsertEventFragment(
         setStyle(STYLE_NO_FRAME, R.style.ThemeDialog)
         LocationUtil.startGettingLocation(requireActivity(), requireContext()) {
             eventModel.coordinates = Location(it.latitude.toFloat(), it.longitude.toFloat())
-            if (viewModel.isUserWaitingToSave()) binding.save.performClick()
+            if (isFragmentVisible() && viewModel.isUserWaitingToSave()) {
+                binding.save.performClick()
+            }
         }
     }
 

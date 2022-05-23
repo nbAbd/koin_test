@@ -7,7 +7,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object EventManager {
-    var eventList: List<Event> = emptyList()
+    var calculationEvents: List<Event> = emptyList()
+    val uiEvents: List<Event>
+        get() = calculationEvents.filterNot { it.eventCode == EventCode.CYCLE_RESET.code }
+
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
     var isNetworkEnable: Boolean = true
@@ -36,4 +39,4 @@ val List<Event>.lastItemStartDate: Date?
         return null
     }
 
-val eventList = EventManager.eventList
+val uiEvents = EventManager.uiEvents
