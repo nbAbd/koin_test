@@ -72,7 +72,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     override fun setupView() {
         eventViewModel.sendLoginEvent()
-        getDriversInfo()
+        profileViewModel.getDriversInfo()
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
         }
@@ -97,17 +97,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         binding.bottomNavigation.root.isSingleSelection = true
         binding.bottomNavigation.root.check(R.id.offFragment)
         setupNavController()
-    }
-
-    private fun getDriversInfo() {
-        profileViewModel.getProfile()
-        if (isCooDriverExist()) {
-            profileViewModel.getProfile(true)
-        }
-    }
-
-    private fun isCooDriverExist(): Boolean {
-        return sharedPrefs.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
     }
 
     private fun setupNavController() {

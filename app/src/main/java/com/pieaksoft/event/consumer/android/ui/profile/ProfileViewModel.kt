@@ -26,7 +26,7 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
     }
 
     fun getProfile(isAdditional: Boolean = false, fromLocal: Boolean = false) {
-        launch(Dispatchers.IO){
+        launch(Dispatchers.IO) {
             val token = if (isAdditional) sp.getString(
                 SHARED_PREFERENCES_ADDITIONAL_USER_ID,
                 ""
@@ -92,8 +92,8 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
             val currentToken = sp.getString(SHARED_PREFERENCES_CURRENT_USER_ID, "")
             val additionalToken = sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "")
 
-            sp.edit().putString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, currentToken).apply()
-            sp.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken).apply()
+            sp.put(SHARED_PREFERENCES_ADDITIONAL_USER_ID, currentToken)
+            sp.put(SHARED_PREFERENCES_CURRENT_USER_ID, additionalToken)
 
             profileRepository.getAdditionalProfile()?.let {
                 it.isAdditional = false
