@@ -246,9 +246,9 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         PermissionDialog().apply { show(supportFragmentManager, PermissionDialog::class.java.name) }
     }
 
-    //  Пока бул нени кайтарышын билбейм, карап кором бирок
     private val driverSwapReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            eventViewModel.removeCurrentDutyStatus()
             eventViewModel.getEventList()
         }
     }

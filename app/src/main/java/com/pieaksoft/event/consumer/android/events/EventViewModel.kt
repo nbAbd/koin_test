@@ -204,10 +204,14 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        EventManager.calculationEvents =
+        val filteredEvents =
             events.filter {
                 it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type
             }
+
+        EventManager.calculationEvents = filteredEvents
+        EventManager.uiEvents =
+            filteredEvents.filterNot { it.eventType == EventInsertType.CYCLE_RESET.type }
 
         calculateEvents().also {
             EventManager.eventListGroupByDate = it
@@ -312,24 +316,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             .toMutableMap()
 
         return map.toSortedMap()
-    }
-
-    fun setEventsMock() {
-        val currentDay = LocalDate.now()
-        EventManager.uiEvents.groupBy { it.date ?: "" }
-        EventManager.eventListMock.add(
-            currentDay.format(
-                DateTimeFormatter.ofPattern(
-                    DATE_FORMAT_yyyy_MM_dd
-                )
-            )
-        )
-        for (i in 1..7) {
-            val date =
-                currentDay.minusDays(i.toLong())
-                    .format(DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
-            EventManager.eventListMock.add(date)
-        }
     }
 
     private fun calculateEndTime() {

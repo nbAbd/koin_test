@@ -1,209 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:fillViewport="true"
+    android:background="@color/bg_root"
     android:fitsSystemWindows="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_content_rounded_top_corners">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/driving_limit_title"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:text="@string/driving_limit"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginVertical="32dp"
+            android:text="@string/connect_to_truck"
             android:textColor="@color/white"
             android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/close_btn"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:icon="@drawable/ic_close"
+            app:iconSize="@dimen/_30dp"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:rippleColor="@color/separator_alpha" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_content_secondary_rounded_top_corners"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:text="@string/nearby_trucks"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:fontFamily="sans-serif-medium" />
+
+            <LinearLayout
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nearby_trucks_not_found"
+                    android:textColor="@color/separator"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/content_secondary_outline" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:id="@+id/wrapper"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@id/contentLayout"
+            app:layout_constraintEnd_toEndOf="@id/contentLayout"
+            app:layout_constraintStart_toStartOf="@id/contentLayout"
+            app:layout_constraintTop_toTopOf="@id/contentLayout" />
+
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/driving_limit"
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/loading_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:minHeight="70dp"
-            android:textColor="@color/white"
-            android:textSize="48sp"
-            app:layout_constraintBottom_toTopOf="@+id/break_progress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driving_limit_title" />
-
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/break_progress"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="16dp"
-            android:rotation="90"
-            app:cpb_background_progressbar_color="#b6bbd8"
-            app:cpb_background_progressbar_width="5dp"
-            app:cpb_progress="100"
-            app:cpb_progress_direction="to_right"
-            app:cpb_progress_max="100"
-            app:cpb_progressbar_color="@color/blue"
-            app:cpb_progressbar_width="10dp"
-            app:cpb_round_border="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/break_in_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/eight_hours"
-            android:textColor="@color/white"
-            android:textSize="37sp"
-            app:layout_constraintBottom_toTopOf="@+id/separator"
-            app:layout_constraintEnd_toEndOf="@+id/break_progress"
-            app:layout_constraintStart_toStartOf="@+id/break_progress"
-            app:layout_constraintTop_toTopOf="@+id/break_progress" />
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="36dp"
-            android:background="@drawable/gradient_separator2"
-            app:layout_constraintBottom_toBottomOf="@+id/break_progress"
-            app:layout_constraintEnd_toEndOf="@+id/break_progress"
-            app:layout_constraintStart_toStartOf="@+id/break_progress"
-            app:layout_constraintTop_toTopOf="@+id/break_progress" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/break_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
-            android:text="@string/break_in"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/break_progress"
-            app:layout_constraintEnd_toEndOf="@+id/break_progress"
-            app:layout_constraintStart_toStartOf="@+id/break_progress"
-            app:layout_constraintTop_toBottomOf="@+id/separator" />
-
-
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/on_duty_limit_day_progress"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:rotation="90"
-            app:cpb_background_progressbar_color="#b6bbd8"
-            app:cpb_background_progressbar_width="5dp"
-            app:cpb_progress="100"
-            app:cpb_progress_direction="to_right"
-            app:cpb_progress_max="100"
-            app:cpb_progressbar_color="@color/blue"
-            app:cpb_progressbar_width="10dp"
-            app:cpb_round_border="true"
-            app:layout_constraintBottom_toBottomOf="@+id/break_progress"
-            app:layout_constraintEnd_toStartOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintStart_toEndOf="@+id/break_progress" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/onValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/fourteen_hours"
-            android:textColor="@color/white"
-            android:textSize="37sp"
-            app:layout_constraintBottom_toTopOf="@+id/separator2"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_day_progress" />
-
-        <View
-            android:id="@+id/separator2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="36dp"
-            android:background="@drawable/gradient_separator2"
-            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_day_progress" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/h_window"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
-            android:text="@string/h_window"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintTop_toBottomOf="@+id/separator2" />
-
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/on_duty_limit_month_progress"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:rotation="90"
-            app:cpb_background_progressbar_color="#b6bbd8"
-            app:cpb_background_progressbar_width="5dp"
-            app:cpb_progress="100"
-            app:cpb_progress_direction="to_right"
-            app:cpb_progress_max="100"
-            app:cpb_progressbar_color="@color/blue"
-            app:cpb_progressbar_width="10dp"
-            app:cpb_round_border="true"
-            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_day_progress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/on_duty_limit_day_progress" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dutyCycle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/seventy_hours"
-            android:textColor="@color/white"
-            android:textSize="37sp"
-            app:layout_constraintBottom_toTopOf="@+id/separator3"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_month_progress" />
-
-        <View
-            android:id="@+id/separator3"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="36dp"
-            android:background="@drawable/gradient_separator2"
-            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintTop_toTopOf="@+id/on_duty_limit_month_progress" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/duty_cycle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
-            android:text="@string/duty_cycle"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintEnd_toEndOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintStart_toStartOf="@+id/on_duty_limit_month_progress"
-            app:layout_constraintTop_toBottomOf="@+id/separator3" />
+            android:visibility="gone"
+            app:constraint_referenced_ids="wrapper, progress" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

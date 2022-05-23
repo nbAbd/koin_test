@@ -124,6 +124,9 @@
     <string name="usa">Usa</string>
     <string name="canada">Canada</string>
     <string name="error_current_driver_can_not_be_additional">Current driver can not be additional</string>
+    <string name="connect_to_truck">Connect to Truck</string>
+    <string name="nearby_trucks">Nearby trucks</string>
+    <string name="nearby_trucks_not_found">Nearby trucks not found</string>
 
     <string-array name="countries">
         <item>Canada</item>
