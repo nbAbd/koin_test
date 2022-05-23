@@ -76,7 +76,7 @@ object Dialogs {
     fun showInsertEventDialogFragment(
         fragmentManager: FragmentManager,
         event: Event? = null,
-        onCancelled: (IsCancelled: Boolean) -> Unit = {}
+        onCancelled: (Boolean) -> Unit = {}
     ) {
         val dialog = InsertEventFragment(event, onCancelled)
         dialog.show(fragmentManager, InsertEventFragment::class.java.name)

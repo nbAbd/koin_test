@@ -20,6 +20,7 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
 import com.pieaksoft.event.consumer.android.utils.EventManager
 import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.getLastEightDays
 import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,7 +31,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.collections.set
 
 class EventViewModel(app: Application, private val repository: EventsRepository) :
     BaseViewModel(app) {
@@ -67,7 +67,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     private val _localEvent = MutableLiveData<Event?>(null)
     val localEvent: LiveData<Event?> = _localEvent
 
-    fun insertEvent(e: Event) {
+    fun insertEvent(e: Event, isObservable: Boolean = true) {
         showProgress()
         launch {
             if (isNetworkAvailable) {
@@ -76,7 +76,10 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 hideProgress()
 
                 when (result) {
-                    is Success -> result.data.let { _event.value = it }
+                    is Success -> {
+                        if (isObservable) result.data.let { _event.value = it }
+                        else Log.d(TAG, "insertEvent: Success")
+                    }
                     is Failure -> _error.value = result.error
                 }
             } else {
@@ -84,7 +87,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 withContext(Dispatchers.IO) { repository.insertEventToDB(event = e) }
 
                 hideProgress()
-                _localEvent.value = e
+                if (isObservable) _localEvent.value = e
+                else Log.d(TAG, "insertEvent: Local")
             }
         }
     }
@@ -201,7 +205,10 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
     private fun handleEvents(events: List<Event>) {
         EventManager.calculationEvents =
-            events.filter { it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type }
+            events.filter {
+                it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type
+            }
+
         calculateEvents().also {
             EventManager.eventListGroupByDate = it
             eventListByDate.value = it
@@ -298,12 +305,12 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 }
             }
         }
-        val map = calculatedEvents.groupBy { it.date ?: "" }.toMutableMap()
-        for (i in EventManager.eventListMock) {
-            if (!map.containsKey(i)) {
-                map[i] = emptyList()
-            }
-        }
+
+        val map = calculatedEvents
+            .getLastEightDays(getUserTimezone().value)
+            .groupBy { it.date ?: "" }
+            .toMutableMap()
+
         return map.toSortedMap()
     }
 
@@ -488,7 +495,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      */
     private fun sendRemainingLogs(event: Event) {
         val events = getRemainingIntermediateLogs(event)
-        events.forEach(::insertEvent)
+        events.forEach { insertEvent(it, false) }
     }
 
 
@@ -561,7 +568,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      *  Sends driver’s login activity to server
      */
     fun sendLoginEvent() {
-        insertEvent(newLoginEvent())
+        insertEvent(newLoginEvent(), false)
     }
 
     /**
@@ -570,7 +577,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     fun sendLogoutEvent() {
         val event = newLoginEvent()
         event.eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
-        insertEvent(event)
+        insertEvent(event, false)
     }
 
     /**

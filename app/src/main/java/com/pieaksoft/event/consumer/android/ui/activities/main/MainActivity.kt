@@ -140,9 +140,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                         eventViewModel.setEventInsertCode(code = it)
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
-                            if (isCanceled) navigateTo(
-                                status = uiEvents.lastItemEventCode
-                            )
+                            if (isCanceled) navigateTo(status = uiEvents.lastItemEventCode)
                             else navigateTo(status = eventDutyStatus)
                         }
                     } else navigateTo()

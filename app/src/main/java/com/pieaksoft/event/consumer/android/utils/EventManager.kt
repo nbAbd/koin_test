@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.model.event.Event
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object EventManager {
@@ -38,5 +41,11 @@ val List<Event>.lastItemStartDate: Date?
         }
         return null
     }
+
+fun List<Event>.getLastEightDays(zoneId: String): List<Event> {
+    val startDate = LocalDate.now(ZoneId.of(zoneId)).minusDays(8)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return filter { LocalDate.parse(it.date, formatter) > startDate }
+}
 
 val uiEvents = EventManager.uiEvents
