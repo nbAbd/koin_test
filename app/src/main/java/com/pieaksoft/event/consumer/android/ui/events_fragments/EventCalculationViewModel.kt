@@ -251,9 +251,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
             _onDutyExceedingTheLimitWarning.value = true
         }
 
-        if (isNeedBreak) {
-            _onDutyBreakInTheLimitWarning.value = true
-        }
+        _onDutyBreakInTheLimitWarning.value = isNeedBreak
 
         _maxOnDuty.postValue(maxOnDutyMillis)
         _onDuty.postValue(onDutyMillis)

@@ -32,7 +32,6 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
     }
 
     override val viewModel: ProfileViewModel by sharedViewModel()
-    private val eventViewModel: EventViewModel by sharedViewModel()
 
     private lateinit var navController: NavController
 

@@ -2,7 +2,6 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
@@ -44,26 +43,26 @@ class EventsCalculationFragment :
     override fun observe() {
         viewModel.onDutyBreakIn.observe(this) {
             if (it < 0) {
-                binding.breakProgressBar.progressBarColor =
+                binding.breakProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
             } else {
-                binding.breakProgressBar.progressBarColor =
+                binding.breakProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
             }
             binding.breakInValue.text = hmsTimeFormatter(it)
-            binding.breakProgressBar.progress =
+            binding.breakProgress.progress =
                 ((it.toFloat() / 60000 / ON_DUTY_BREAK_IN_MINUTES) * 100)
         }
 
         viewModel.onDuty.observe(this) {
             if (it < 0) {
-                binding.onDutyLimitDayPr.progressBarColor =
+                binding.onDutyLimitDayProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.onDutyLimitDayPr.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitDayProgress.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.onDutyLimitDayPr.progressBarColor =
+                binding.onDutyLimitDayProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
-                binding.onDutyLimitDayPr.progress =
+                binding.onDutyLimitDayProgress.progress =
                     ((it.toFloat() / 60000 / ON_DUTY_WINDOW_MINUTES) * 100)
             }
 
@@ -72,14 +71,14 @@ class EventsCalculationFragment :
 
         viewModel.maxOnDuty.observe(this) {
             if (it < 0) {
-                binding.onDutyLimitMonthPr.progressBarColor =
+                binding.onDutyLimitMonthProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.onDutyLimitMonthPr.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitMonthProgress.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.onDutyLimitMonthPr.progressBarColor =
+                binding.onDutyLimitMonthProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
 
-                binding.onDutyLimitMonthPr.progress =
+                binding.onDutyLimitMonthProgress.progress =
                     ((it.toFloat() / 1000 / 60 / 60) * 100)
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
@@ -90,27 +89,15 @@ class EventsCalculationFragment :
         }
 
         viewModel.onDutyExceedingTheLimitWarning.observeOnce(this) {
-            Toast.makeText(
-                requireContext(),
-                "Warning!\n You continuously on duty more 14 hour",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (it) toast("Warning!\n You continuously on duty more 14 hour")
         }
 
         viewModel.maxOnDutyExceedingTheLimitWarning.observeOnce(this) {
-            Toast.makeText(
-                requireContext(),
-                "Warning!\n You are on duty more 70 hours",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (it) toast("Warning!\n You are on duty more 70 hours")
         }
 
         viewModel.onDutyBreakInTheLimitWarning.observeOnce(this) {
-            Toast.makeText(
-                requireContext(),
-                "Warning!\n You are driving more than 8 hours, you must take a break",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (it) toast("Warning!\n You are driving more than 8 hours, you must take a break")
         }
 
         // Called only once when RESET_CYCLE request called
@@ -192,7 +179,10 @@ class EventsCalculationFragment :
 
         // Filter list only for duty status change
         EventManager.calculationEvents =
-            EventManager.calculationEvents.subList(resetCycleIndex, EventManager.calculationEvents.size)
+            EventManager.calculationEvents.subList(
+                resetCycleIndex,
+                EventManager.calculationEvents.size
+            )
     }
 
     override fun onStop() {
