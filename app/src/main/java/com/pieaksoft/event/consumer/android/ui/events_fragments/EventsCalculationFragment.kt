@@ -2,15 +2,12 @@ package com.pieaksoft.event.consumer.android.ui.events_fragments
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
-import com.pieaksoft.event.consumer.android.model.event.Event
-import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
@@ -46,45 +43,42 @@ class EventsCalculationFragment :
     override fun observe() {
         viewModel.onDutyBreakIn.observe(this) {
             if (it < 0) {
-                binding.breakProgressBar.progressBarColor =
+                binding.breakProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
             } else {
-                binding.breakProgressBar.progressBarColor =
+                binding.breakProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
             }
             binding.breakInValue.text = hmsTimeFormatter(it)
-            binding.breakProgressBar.progress =
+            binding.breakProgress.progress =
                 ((it.toFloat() / 60000 / ON_DUTY_BREAK_IN_MINUTES) * 100)
         }
 
         viewModel.onDuty.observe(this) {
             if (it < 0) {
-                binding.progressBar2.progressBarColor =
+                binding.onDutyLimitDayProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.progressBar2.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitDayProgress.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.progressBar2.progressBarColor =
+                binding.onDutyLimitDayProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
-                binding.progressBar2.progress =
+                binding.onDutyLimitDayProgress.progress =
                     ((it.toFloat() / 60000 / ON_DUTY_WINDOW_MINUTES) * 100)
             }
-
 
             binding.onValue.text = hmsTimeFormatter(it)
         }
 
         viewModel.maxOnDuty.observe(this) {
             if (it < 0) {
-                binding.progressBar3.progressBarColor =
-                    ContextCompat.getColor(requireContext(), R.color.blue)
-                binding.progressBar3.progressBarColor =
+                binding.onDutyLimitMonthProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.red)
-                binding.progressBar3.setProgressWithAnimation(100f, 1000)
+                binding.onDutyLimitMonthProgress.setProgressWithAnimation(100f, 1000)
             } else {
-                binding.progressBar3.progressBarColor =
+                binding.onDutyLimitMonthProgress.progressBarColor =
                     ContextCompat.getColor(requireContext(), R.color.blue)
 
-                binding.progressBar3.progress =
+                binding.onDutyLimitMonthProgress.progress =
                     ((it.toFloat() / 1000 / 60 / 60) * 100)
             }
             binding.dutyCycle.text = hmsTimeFormatter(it)
@@ -94,30 +88,36 @@ class EventsCalculationFragment :
             binding.drivingLimit.text = hmsTimeFormatter2(it)
         }
 
-        viewModel.onDutyExceedingTheLimitWarning.observe(this) {
-            Toast.makeText(
-                requireContext(),
-                "Warning!\n You continuously on duty more 14 hour",
-                Toast.LENGTH_SHORT
-            ).show()
+        viewModel.onDutyExceedingTheLimitWarning.observeOnce(this) {
+            if (it) toast("Warning!\n You continuously on duty more 14 hour")
         }
 
+        viewModel.maxOnDutyExceedingTheLimitWarning.observeOnce(this) {
+            if (it) toast("Warning!\n You are on duty more 70 hours")
+        }
+
+        viewModel.onDutyBreakInTheLimitWarning.observeOnce(this) {
+            if (it) toast("Warning!\n You are driving more than 8 hours, you must take a break")
+        }
 
         // Called only once when RESET_CYCLE request called
-        eventViewModel.event.observeOnce(viewLifecycleOwner) {
-            eventViewModel.getEventList()
+        eventViewModel.event.observe(viewLifecycleOwner) {
+            it?.let {
+                eventViewModel.getEventList()
+            }
         }
 
-        eventViewModel.localEvent.observeOnce(viewLifecycleOwner) {
-            eventViewModel.getEventList()
+        eventViewModel.localEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                eventViewModel.getEventList()
+            }
         }
     }
 
-
     private fun initialize() {
-        eventViewModel.eventList.observe(viewLifecycleOwner) { events ->
+        eventViewModel.eventList.observe(viewLifecycleOwner) {
             // Check last selected status
-            if (eventStatusCode != EventManager.eventList.lastItemEventCode) {
+            if (eventStatusCode != EventManager.uiEvents.lastItemEventCode) {
                 performStatusChange()
                 return@observe
             }
@@ -126,12 +126,12 @@ class EventsCalculationFragment :
             viewModel.resetMillis()
 
             // Store first event date
-            EventManager.eventList.elementAtOrNull(0)?.let {
-                viewModel.sp.storeResetCycleStartDate(it.date)
+            EventManager.uiEvents.elementAtOrNull(0)?.let {
+                viewModel.sp.storeResetCycleStartDateTime(it.date, it.time)
             }
 
             // Checking for CYCLE_RESET event
-            checkCycleReset(events = events)
+            checkCycleReset()
 
             calculate()
         }
@@ -165,27 +165,24 @@ class EventsCalculationFragment :
 
     /**
      * Checks reset cycle event, then splits list from that index
-     *
-     * @param [events] List of events from API/DB
      */
-    private fun checkCycleReset(events: List<Event>) {
+    private fun checkCycleReset() {
         var resetCycleIndex = 0
-        events.forEachIndexed { index, event ->
+        EventManager.calculationEvents.forEachIndexed { index, event ->
             if (event.eventType == EventInsertType.CYCLE_RESET.type) {
                 resetCycleIndex = index
 
                 // Store CYCLE_RESET event date
-                viewModel.sp.storeResetCycleStartDate(event.date)
+                viewModel.sp.storeResetCycleStartDateTime(event.date, event.time)
             }
         }
 
-
-        // Split list from resetCycleIndex.
-        // List contains all events without filter
-        val eventsAfterResetCycle = events.subList(resetCycleIndex, events.size)
-
         // Filter list only for duty status change
-        EventManager.eventList = eventsAfterResetCycle.filter { it.isDutyStatusChanged() }
+        EventManager.calculationEvents =
+            EventManager.calculationEvents.subList(
+                resetCycleIndex,
+                EventManager.calculationEvents.size
+            )
     }
 
     override fun onStop() {
@@ -205,6 +202,4 @@ class EventsCalculationFragment :
             cancelBreakInCounter()
         }
     }
-
-
 }

@@ -7,11 +7,8 @@ import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.pieaksoft.event.consumer.android.R
-import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
-import com.pieaksoft.event.consumer.android.enums.Timezone
+import com.pieaksoft.event.consumer.android.enums.*
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Certification
@@ -19,12 +16,11 @@ import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.containsDate
 import com.pieaksoft.event.consumer.android.model.event.isDutyStatusChanged
 import com.pieaksoft.event.consumer.android.model.report.Report
-import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.ui.events.IntermediateLogHandler
-import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
 import com.pieaksoft.event.consumer.android.utils.EventManager
-import com.pieaksoft.event.consumer.android.utils.lastItemEventCode
+import com.pieaksoft.event.consumer.android.utils.USER_TIMEZONE
+import com.pieaksoft.event.consumer.android.utils.getLastEightDays
 import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +31,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.collections.set
 
 class EventViewModel(app: Application, private val repository: EventsRepository) :
     BaseViewModel(app) {
@@ -72,7 +67,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     private val _localEvent = MutableLiveData<Event?>(null)
     val localEvent: LiveData<Event?> = _localEvent
 
-    fun insertEvent(e: Event) {
+    fun insertEvent(e: Event, isObservable: Boolean = true) {
         showProgress()
         launch {
             if (isNetworkAvailable) {
@@ -81,7 +76,10 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 hideProgress()
 
                 when (result) {
-                    is Success -> result.data.let { _event.value = it }
+                    is Success -> {
+                        if (isObservable) result.data.let { _event.value = it }
+                        else Log.d(TAG, "insertEvent: Success")
+                    }
                     is Failure -> _error.value = result.error
                 }
             } else {
@@ -89,7 +87,8 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 withContext(Dispatchers.IO) { repository.insertEventToDB(event = e) }
 
                 hideProgress()
-                _localEvent.value = e
+                if (isObservable) _localEvent.value = e
+                else Log.d(TAG, "insertEvent: Local")
             }
         }
     }
@@ -169,7 +168,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                         handleEvents(events = result.data)
                         withContext(Dispatchers.IO) {
                             repository.deleteAllEvents()
-                            repository.saveEventListToDB(eventList = EventManager.eventList)
+                            repository.saveEventListToDB(eventList = EventManager.calculationEvents)
                         }
                     }
                     is Failure -> _error.value = result.error
@@ -205,7 +204,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        EventManager.eventList = events.filter { it.isDutyStatusChanged() }
+        EventManager.calculationEvents =
+            events.filter {
+                it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type
+            }
+
         calculateEvents().also {
             EventManager.eventListGroupByDate = it
             eventListByDate.value = it
@@ -232,11 +235,14 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
         val calculatedEvents = mutableListOf<Event>()
 
-        EventManager.eventList.forEachIndexed { index, event ->
+        EventManager.uiEvents.forEachIndexed { index, event ->
             val startDate =
                 LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             val endDate =
-                LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
+                LocalDate.parse(
+                    event.endDate,
+                    DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd)
+                )
 
             val numberOfDaysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate).toInt()
 
@@ -275,11 +281,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     if (day == numberOfDaysBetweenDates) {
                         // If current index is not last index,
                         // then end date/time of current event should be next event's start date/time
-                        if (index < EventManager.eventList.lastIndex) {
+                        if (index < EventManager.uiEvents.lastIndex) {
                             nextGraphEvent.endDate =
-                                EventManager.eventList.elementAt(index + 1).date
+                                EventManager.uiEvents.elementAt(index + 1).date
                             nextGraphEvent.endTime =
-                                EventManager.eventList.elementAt(index + 1).time
+                                EventManager.uiEvents.elementAt(index + 1).time
                         } else { // If current index is last index, then end date/time is current date/time
                             val timezone =
                                 Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
@@ -299,18 +305,18 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 }
             }
         }
-        val map = calculatedEvents.groupBy { it.date ?: "" }.toMutableMap()
-        for (i in EventManager.eventListMock) {
-            if (!map.containsKey(i)) {
-                map[i] = emptyList()
-            }
-        }
+
+        val map = calculatedEvents
+            .getLastEightDays(getUserTimezone().value)
+            .groupBy { it.date ?: "" }
+            .toMutableMap()
+
         return map.toSortedMap()
     }
 
     fun setEventsMock() {
         val currentDay = LocalDate.now()
-        EventManager.eventList.groupBy { it.date ?: "" }
+        EventManager.uiEvents.groupBy { it.date ?: "" }
         EventManager.eventListMock.add(
             currentDay.format(
                 DateTimeFormatter.ofPattern(
@@ -327,10 +333,10 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun calculateEndTime() {
-        EventManager.eventList.forEachIndexed { index, event ->
-            if (index < EventManager.eventList.size - 1) {
-                event.endDate = EventManager.eventList[index + 1].date
-                event.endTime = EventManager.eventList[index + 1].time
+        EventManager.uiEvents.forEachIndexed { index, event ->
+            if (index < EventManager.uiEvents.size - 1) {
+                event.endDate = EventManager.uiEvents[index + 1].date
+                event.endTime = EventManager.uiEvents[index + 1].time
             } else {
                 val timezone =
                     Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
@@ -453,12 +459,17 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      * Returns last event if it's eventCode of Driving or Intermediate log, otherwise null
      */
     fun getLastDrivingLogEvent(events: List<Event>): Event? {
-        val event = events.last {
-            it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type
-                    || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
-                    || it.eventType == EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+        var event: Event? = null
+        try {
+            event = events.last {
+                it.eventType == EventInsertType.DUTY_STATUS_CHANGE.type
+                        || it.eventType == EventInsertType.INTERMEDIATE_LOG.type
+                        || it.eventType == EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
+            }
+        } catch (e: NoSuchElementException) {
+            Log.e("status", "No status has been selected yet")
         }
-        return when (event.eventCode) {
+        return when (event?.eventCode) {
             EventCode.INTERMEDIATE_LOG_WITH_CONVENTIONAL_LOCATION_PRECISION.code,
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING.code -> event
             else -> null
@@ -484,7 +495,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      */
     private fun sendRemainingLogs(event: Event) {
         val events = getRemainingIntermediateLogs(event)
-        events.forEach(::insertEvent)
+        events.forEach { insertEvent(it, false) }
     }
 
 
@@ -550,6 +561,40 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         return LocalDateTime.parse(
             "${event.date} ${event.time}",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        )
+    }
+
+    /**
+     *  Sends driver’s login activity to server
+     */
+    fun sendLoginEvent() {
+        insertEvent(newLoginEvent(), false)
+    }
+
+    /**
+     *  Sends driver’s logout activity to server
+     */
+    fun sendLogoutEvent() {
+        val event = newLoginEvent()
+        event.eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
+        insertEvent(event, false)
+    }
+
+    /**
+     * Returns new instance of Event with login request fields
+     */
+    private fun newLoginEvent(): Event {
+        return Event(
+            eventType = EventInsertType.DRIVERS_LOGIN_LOGOUT_ACTIVITY.type,
+            eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGIN_ACTIVITY.code,
+            date = getFormattedUserDate(),
+            time = getFormattedUserTime(),
+            totalEngineMiles = 0,
+            totalEngineHours = 0,
+            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
+            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
+            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
+            eventRecordStatus = EventRecordStatusType.ACTIVE.type
         )
     }
 }

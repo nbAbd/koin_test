@@ -4,10 +4,16 @@ import android.annotation.SuppressLint
 import com.pieaksoft.event.consumer.android.enums.EventCode
 import com.pieaksoft.event.consumer.android.model.event.Event
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object EventManager {
-    var eventList: List<Event> = emptyList()
+    var calculationEvents: List<Event> = emptyList()
+    val uiEvents: List<Event>
+        get() = calculationEvents.filterNot { it.eventCode == EventCode.CYCLE_RESET.code }
+
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
     var eventListMock: MutableList<String> = mutableListOf()
     var isNetworkEnable: Boolean = true
@@ -36,4 +42,10 @@ val List<Event>.lastItemStartDate: Date?
         return null
     }
 
-val eventList = EventManager.eventList
+fun List<Event>.getLastEightDays(zoneId: String): List<Event> {
+    val startDate = LocalDate.now(ZoneId.of(zoneId)).minusDays(8)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return filter { LocalDate.parse(it.date, formatter) > startDate }
+}
+
+val uiEvents = EventManager.uiEvents

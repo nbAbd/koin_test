@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.pieaksoft.event.consumer.android.enums.Timezone
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import java.text.SimpleDateFormat
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -76,14 +76,15 @@ fun daysBetweenDates(
     end: String? = null,
     zoneId: ZoneId
 ): Int {
-    val formatter = DateTimeFormatter.ofPattern(EventViewModel.DATE_FORMAT_yyyy_MM_dd)
-    val startDate = LocalDate.parse(start, formatter)
+    val formatter =
+        DateTimeFormatter.ofPattern("${EventViewModel.DATE_FORMAT_yyyy_MM_dd} ${EventViewModel.TIME_FORMAT_HH_mm}")
+    val startDate = LocalDateTime.parse(start, formatter)
 
     // If end date is null, we assume that we should get current date
     val endDate = if (end == null) {
-        LocalDate.now(zoneId)
+        LocalDateTime.now(zoneId)
     } else {
-        LocalDate.parse(end, formatter)
+        LocalDateTime.parse(end, formatter)
     }
     return ChronoUnit.DAYS.between(startDate, endDate).toInt()
 }

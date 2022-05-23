@@ -19,7 +19,7 @@ import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class InsertEventFragment(
     private val event: Event?,
-    private val onCancelled: (IsCancelled: Boolean) -> Unit
+    private val onCancelled: (Boolean) -> Unit
 ) : DialogFragment() {
     private var _binding: FragmentInsertEventBinding? = null
     private val binding get() = _binding!!
@@ -41,7 +41,9 @@ class InsertEventFragment(
         setStyle(STYLE_NO_FRAME, R.style.ThemeDialog)
         LocationUtil.startGettingLocation(requireActivity(), requireContext()) {
             eventModel.coordinates = Location(it.latitude.toFloat(), it.longitude.toFloat())
-            if (viewModel.isUserWaitingToSave()) binding.save.performClick()
+            if (isFragmentVisible() && viewModel.isUserWaitingToSave()) {
+                binding.save.performClick()
+            }
         }
     }
 

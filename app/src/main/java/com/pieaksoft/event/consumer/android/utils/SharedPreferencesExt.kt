@@ -7,7 +7,7 @@ import android.content.SharedPreferences
  * Preference keys
  */
 enum class PrefKeys {
-    RESET_CYCLE_START_DATE {
+    RESET_CYCLE_START_DATE_TIME {
         override val key: String = "reset_cycle_date"
     };
 
@@ -15,13 +15,13 @@ enum class PrefKeys {
 }
 
 // Store reset cycle date
-fun SharedPreferences.storeResetCycleStartDate(date: String?) {
-    put(PrefKeys.RESET_CYCLE_START_DATE, date)
+fun SharedPreferences.storeResetCycleStartDateTime(date: String?, time: String?) {
+    put(PrefKeys.RESET_CYCLE_START_DATE_TIME, "$date $time")
 }
 
 // Get reset cycle date
-fun SharedPreferences.getResetCycleStartDate(): String? {
-    return getString(PrefKeys.RESET_CYCLE_START_DATE.key, null)
+fun SharedPreferences.getResetCycleStartDateTime(): String? {
+    return getString(PrefKeys.RESET_CYCLE_START_DATE_TIME.key, null)
 }
 
 
