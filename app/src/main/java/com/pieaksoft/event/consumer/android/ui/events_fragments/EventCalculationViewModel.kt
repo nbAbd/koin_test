@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pieaksoft.event.consumer.android.enums.*
-import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.utils.*
@@ -16,8 +15,7 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
 
-class EventCalculationViewModel(val app: Application, private val eventViewModel: EventViewModel) :
-    BaseViewModel(app) {
+class EventCalculationViewModel(val app: Application) : BaseViewModel(app) {
     companion object {
         // Minute in millis
         private val MINUTE = TimeUnit.MINUTES.toMillis(1)
@@ -78,7 +76,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
      *
      * [needResetMaxOnDutyMillis] - is 34 hours in millis
      */
-    var needResetMaxOnDutyMillis: Long = 34L.toMillis()
+    private var needResetMaxOnDutyMillis: Long = 34L.toMillis()
 
 
     /**
@@ -100,7 +98,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
     /**
      * Indicator whether driver should take break
      */
-    var isNeedBreak: Boolean = false
+    private var isNeedBreak: Boolean = false
 
 
     /**
@@ -149,7 +147,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
 
 
     fun calculate(then: () -> Unit) {
-        val eventList = EventManager.calculationEvents
+        val eventList = EventManager.events
 
         eventList.forEachIndexed { index, currentEvent ->
             currentEvent.setEndDateTime()
@@ -165,11 +163,6 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
                         if (needResetMaxOnDutyMillis <= 0) {
                             // 34h
                             resetMaxOffDutyHours()
-
-                            // 70h 14h 11h 8h
-                            sendResetCycleRequest()
-                            // break loop
-                            return@forEachIndexed
                         }
 
 
@@ -236,7 +229,7 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
                     }
 
                     EventCode.CYCLE_RESET -> {
-                        resetMillis()
+                        resetAll()
                     }
                     else -> Unit
                 }
@@ -261,40 +254,33 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
         then()
     }
 
-
-    fun checkResetCycleDate() {
-        sp.getResetCycleStartDateTime()?.let { startDateTime ->
-            val zoneId = ZoneId.of(getUserTimezone().value)
-
-            val numberOfDays = daysBetweenDates(start = startDateTime, zoneId = zoneId).toLong()
-
-            if (numberOfDays == needResetCycleDays) {
-                sendResetCycleRequest()
-            } else if (numberOfDays > needResetCycleDays) {
-                val formatter =
-                    DateTimeFormatter.ofPattern("${EventViewModel.DATE_FORMAT_yyyy_MM_dd} ${EventViewModel.TIME_FORMAT_HH_mm}")
-                var startDate = LocalDateTime.parse(startDateTime, formatter)
-                startDate = startDate.plusDays(7)
-                sendResetCycleRequest(startDate)
-            }
-        }
-    }
-
+    /**
+     * Returns <code>true</code> if event is not in OFF_DUTY status, otherwise <code>false</code>
+     */
     private val Event.isNotOffDuty: Boolean
         get() = EventCode.findByCode(code = eventCode ?: "") !in OFF_DUTY_CODES
 
 
+    /**
+     * Reset 30 min, 8h
+     */
     private fun resetNonstopCycleHours() {
         thirtyMinutesInMillis = (30 * 60 * 1000).toLong()
         onDutyBreakInMillis = 8L.toMillis()
     }
 
 
+    /**
+     * Reset 11h
+     */
     private fun resetDrivingLimitCycleHours() {
         onDutyDrivingLimitMillis = 11L.toMillis()
     }
 
 
+    /**
+     * Reset 14h, 11h, 8h
+     */
     private fun resetOnDutyCycleHours() {
         // Reset 10 h too
         needResetOnDutyMillis = 10L.toMillis()
@@ -310,43 +296,32 @@ class EventCalculationViewModel(val app: Application, private val eventViewModel
     }
 
 
+    /**
+     * Reset 70h
+     */
     private fun resetTotalOnDutyCycleHours() {
         maxOnDutyMillis = 70L.toMillis()
     }
 
 
+    /**
+     * Reset 34h, 10h
+     */
     private fun resetMaxOffDutyHours() {
         needResetMaxOnDutyMillis = 34L.toMillis()
         needResetOnDutyMillis = 10L.toMillis()
     }
 
 
-    fun resetMillis() {
+    /**
+     * Reset 70h, 14h, 11h, 8h
+     */
+    fun resetAll() {
         resetTotalOnDutyCycleHours()
         resetOnDutyCycleHours()
     }
 
-    private fun sendResetCycleRequest(startDateTime: LocalDateTime? = null) {
-        val event = Event(
-            eventType = EventInsertType.CYCLE_RESET.type,
-            eventCode = EventCode.CYCLE_RESET.code,
-            date = getFormattedUserDate(true),
-            time = getFormattedUserTime(true),
-            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
-            eventRecordStatus = EventRecordStatusType.ACTIVE.type,
-            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
-            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
-        )
 
-        startDateTime?.let {
-            event.date = it.format(DateTimeFormatter.ISO_LOCAL_DATE)
-            event.time = it.format(DateTimeFormatter.ofPattern(EventViewModel.TIME_FORMAT_HH_mm))
-        }
-
-        eventViewModel.insertEvent(e = event)
-    }
-
-    //here
     /**
      * Converts given minutes to millis
      * @return [Long] - Minutes in millis

@@ -10,12 +10,8 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 object EventManager {
-    var calculationEvents: List<Event> = emptyList()
-    var uiEvents: List<Event> = emptyList()
-    // get() = calculationEvents.filterNot { it.eventCode == EventCode.CYCLE_RESET.code }
-
+    var events: List<Event> = emptyList()
     var eventListGroupByDate: Map<String, List<Event>> = mapOf()
-    var eventListMock: MutableList<String> = mutableListOf()
     var isNetworkEnable: Boolean = true
 }
 
@@ -47,5 +43,3 @@ fun List<Event>.getLastEightDays(zoneId: String): List<Event> {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     return filter { LocalDate.parse(it.date, formatter) > startDate }
 }
-
-val uiEvents = EventManager.uiEvents

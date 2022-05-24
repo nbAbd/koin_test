@@ -23,7 +23,6 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseActivityNew
 import com.pieaksoft.event.consumer.android.ui.dialog.PermissionDialog
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
-import com.pieaksoft.event.consumer.android.utils.EventManager.uiEvents
 import com.pieaksoft.event.consumer.android.utils.EventManager.isNetworkEnable
 import com.pieaksoft.event.consumer.android.utils.receivers.PhoneRebootReceiver
 import com.pieaksoft.event.consumer.android.views.Dialogs
@@ -103,7 +102,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
         if (::navController.isInitialized) {
             checkLastDutyStatus()
 
-            binding.bottomNavigation.root.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            binding.bottomNavigation.root.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (!isChecked) return@addOnButtonCheckedListener
 
                 var eventDutyStatus: EventCode? = null
@@ -138,11 +137,11 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 }
 
                 eventDutyStatus?.let {
-                    if (checkedId != uiEvents.lastItemEventCode.itemId) {
+                    if (checkedId != EventManager.events.lastItemEventCode.itemId) {
                         eventViewModel.setEventInsertCode(code = it)
 
                         Dialogs.showInsertEventDialogFragment(supportFragmentManager) { isCanceled ->
-                            if (isCanceled) navigateTo(status = uiEvents.lastItemEventCode)
+                            if (isCanceled) navigateTo(status = EventManager.events.lastItemEventCode)
                             else navigateTo(status = eventDutyStatus)
                         }
                     } else navigateTo()
@@ -224,10 +223,7 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
                 eventViewModel.apply {
                     sp.put(PhoneRebootReceiver.IS_PHONE_REBOOTED, false)
                     getLastDrivingLogEvent(it)?.let { it1 ->
-                        syncRemainingIntermediateLogs(
-                            it1,
-                            this@MainActivity
-                        )
+                        syncRemainingIntermediateLogs(it1, this@MainActivity)
                     }
                 }
             }
@@ -248,7 +244,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
 
     private val driverSwapReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            eventViewModel.removeCurrentDutyStatus()
             eventViewModel.getEventList()
         }
     }

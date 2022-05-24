@@ -78,7 +78,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                 when (result) {
                     is Success -> {
                         if (isObservable) result.data.let { _event.value = it }
-                        else Log.d(TAG, "insertEvent: Success")
                     }
                     is Failure -> _error.value = result.error
                 }
@@ -88,7 +87,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
 
                 hideProgress()
                 if (isObservable) _localEvent.value = e
-                else Log.d(TAG, "insertEvent: Local")
             }
         }
     }
@@ -168,7 +166,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                         handleEvents(events = result.data)
                         withContext(Dispatchers.IO) {
                             repository.deleteAllEvents()
-                            repository.saveEventListToDB(eventList = EventManager.calculationEvents)
+                            repository.saveEventListToDB(eventList = EventManager.events)
                         }
                     }
                     is Failure -> _error.value = result.error
@@ -204,16 +202,9 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
     }
 
     private fun handleEvents(events: List<Event>) {
-        val filteredEvents =
-            events.filter {
-                it.isDutyStatusChanged() || it.eventType == EventInsertType.CYCLE_RESET.type
-            }
+        val dutyStatusEvents = events.filter { it.isDutyStatusChanged() }
 
-        EventManager.calculationEvents = filteredEvents
-        EventManager.uiEvents =
-            filteredEvents.filterNot { it.eventType == EventInsertType.CYCLE_RESET.type }
-
-        calculateEvents().also {
+        calculateEvents(dutyStatusEvents).also {
             EventManager.eventListGroupByDate = it
             eventListByDate.value = it
 
@@ -233,20 +224,17 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         return EventManager.eventListGroupByDate
     }
 
-    private fun calculateEvents(): Map<String, List<Event>> {
+    private fun calculateEvents(events: List<Event>): Map<String, List<Event>> {
         // set end times of events
-        calculateEndTime()
+        calculateEndTime(events)
 
         val calculatedEvents = mutableListOf<Event>()
 
-        EventManager.uiEvents.forEachIndexed { index, event ->
+        events.forEachIndexed { index, event ->
             val startDate =
                 LocalDate.parse(event.date, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
             val endDate =
-                LocalDate.parse(
-                    event.endDate,
-                    DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd)
-                )
+                LocalDate.parse(event.endDate, DateTimeFormatter.ofPattern(DATE_FORMAT_yyyy_MM_dd))
 
             val numberOfDaysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate).toInt()
 
@@ -285,16 +273,11 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
                     if (day == numberOfDaysBetweenDates) {
                         // If current index is not last index,
                         // then end date/time of current event should be next event's start date/time
-                        if (index < EventManager.uiEvents.lastIndex) {
-                            nextGraphEvent.endDate =
-                                EventManager.uiEvents.elementAt(index + 1).date
-                            nextGraphEvent.endTime =
-                                EventManager.uiEvents.elementAt(index + 1).time
+                        if (index < events.lastIndex) {
+                            nextGraphEvent.endDate = events.elementAt(index + 1).date
+                            nextGraphEvent.endTime = events.elementAt(index + 1).time
                         } else { // If current index is last index, then end date/time is current date/time
-                            val timezone =
-                                Timezone.findByName(sp.getString(USER_TIMEZONE, null) ?: "")
-
-                            val zoneId = ZoneId.of(timezone.value)
+                            val zoneId = ZoneId.of(getUserTimezone().value)
 
                             nextGraphEvent.endDate =
                                 LocalDateTime.now(zoneId)
@@ -310,19 +293,18 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
             }
         }
 
-        val map = calculatedEvents
-            .getLastEightDays(getUserTimezone().value)
-            .groupBy { it.date ?: "" }
-            .toMutableMap()
+        // Cut last 8 days events
+        EventManager.events = calculatedEvents.getLastEightDays(getUserTimezone().value)
 
+        val map = EventManager.events.groupBy { it.date ?: "" }.toMutableMap()
         return map.toSortedMap()
     }
 
-    private fun calculateEndTime() {
-        EventManager.uiEvents.forEachIndexed { index, event ->
-            if (index < EventManager.uiEvents.size - 1) {
-                event.endDate = EventManager.uiEvents[index + 1].date
-                event.endTime = EventManager.uiEvents[index + 1].time
+    private fun calculateEndTime(events: List<Event>) {
+        events.forEachIndexed { index, event ->
+            if (index < events.lastIndex) {
+                event.endDate = events[index + 1].date
+                event.endTime = events[index + 1].time
             } else {
                 val timezone =
                     Timezone.findByName(timezone = sp.getString(USER_TIMEZONE, null) ?: "")
@@ -526,7 +508,7 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
      *
      * @return [Long] Difference in minutes
      */
-    fun differenceOf(
+    private fun differenceOf(
         from: LocalDateTime,
         to: LocalDateTime? = null,
         zoneId: String? = null

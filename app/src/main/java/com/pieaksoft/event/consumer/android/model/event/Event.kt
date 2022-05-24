@@ -9,7 +9,7 @@ import com.pieaksoft.event.consumer.android.db.converters.CertificationListConve
 import com.pieaksoft.event.consumer.android.enums.dutyStatuses
 import com.pieaksoft.event.consumer.android.enums.toInsertType
 import com.pieaksoft.event.consumer.android.model.profile.Vehicle
-import com.pieaksoft.event.consumer.android.utils.uiEvents
+import com.pieaksoft.event.consumer.android.utils.EventManager
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -89,7 +89,7 @@ fun Event.isLocationSet() = coordinates.latitude != null && coordinates.longitud
 fun Event.isDutyStatusChanged() = eventType?.toInsertType() in dutyStatuses
 
 fun Event.getStartTime(): Event {
-    return uiEvents.first { it.id == this.id }
+    return EventManager.events.first { it.id == this.id }
 }
 
 fun List<Certification>?.containsDate(date: String): Boolean {
