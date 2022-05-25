@@ -70,7 +70,6 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
     }
 
     override fun setupView() {
-        eventViewModel.sendLoginEvent()
         profileViewModel.getDriversInfo()
         LocalBroadcastManager.getInstance(this).apply {
             registerReceiver(driverSwapReceiver, IntentFilter(BROADCAST_SWAP_DRIVERS))
@@ -330,9 +329,4 @@ class MainActivity : BaseActivityNew<ActivityMainBinding>(ActivityMainBinding::i
             EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_DRIVING -> R.id.drivingFragment
             else -> null
         }
-
-    override fun onDestroy() {
-        eventViewModel.sendLogoutEvent()
-        super.onDestroy()
-    }
 }

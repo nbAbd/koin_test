@@ -13,6 +13,7 @@ import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -114,7 +115,11 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
                     binding.additionalDriver.setEmpty(false)
                     binding.additionalDriver.setOnClickListener {
                         Dialogs.showSwapDriversDialog(requireActivity()) {
-                            viewModel.swapDrivers()
+
+                            // Sends logout event for current driver before swapping drivers
+                            loginViewModel.sendLogoutEvent {
+                                viewModel.swapDrivers()
+                            }
                         }
                     }
                 }
@@ -123,6 +128,10 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
 
         viewModel.needUpdateObservable.observe(this) {
             viewModel.getDriversInfo()
+
+            // Sends login event for current driver(which was co-driver before swapping) after swapping drivers
+            loginViewModel.sendLoginEvent()
+
             LocalBroadcastManager
                 .getInstance(requireContext())
                 .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))
