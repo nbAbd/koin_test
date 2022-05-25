@@ -37,5 +37,19 @@ data class User(
     var exempt: Boolean? = null,
 
     @SerializedName("fileStorageLocation")
-    var fileStorageLocation: String? = null
+    var fileStorageLocation: String? = null,
+
+    @SerializedName("coDriverId")
+    @ColumnInfo(name = "co_driver_id")
+    var coDriverId: String? = null,
+
+
+    @SerializedName("allowedPc")
+    @ColumnInfo(name = "allowed_pc")
+    val allowedPc: Boolean? = null,
+
+    @SerializedName("allowedYm")
+    @ColumnInfo(name = "allowed_ym")
+    val allowedYm: Boolean? = null
+
 ) : Parcelable

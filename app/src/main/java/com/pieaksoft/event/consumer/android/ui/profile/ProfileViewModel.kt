@@ -12,6 +12,7 @@ import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
 import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ProfileViewModel(val app: Application, private val profileRepository: ProfileRepository) :
     BaseViewModel(app) {
@@ -48,6 +49,10 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
 
                                 // change profile status to additional profile
                                 val additionalProfile = it.copy(isAdditional = true)
+
+                                profileRepository.getPrimaryProfile()?.let { primaryProfile ->
+                                    additionalProfile.user.coDriverId = primaryProfile.id
+                                }
                                 token?.let { token -> additionalProfile.token = token }
 
                                 additionalDriver.postValue(additionalProfile)
@@ -118,5 +123,13 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
 
     private fun isCooDriverExist(): Boolean {
         return sp.getString(SHARED_PREFERENCES_ADDITIONAL_USER_ID, "") != ""
+    }
+
+    fun getCoDriverId(): String? {
+        val id = runBlocking {
+            val coDriver = profileRepository.getAdditionalProfile()
+            return@runBlocking coDriver?.id
+        }
+        return id
     }
 }

@@ -9,6 +9,7 @@ import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepository
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_ADDITIONAL_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
@@ -21,7 +22,7 @@ class LoginViewModel(
     val app: Application,
     private val loginRepo: LoginRepo,
     private val eventsRepository: EventsRepository,
-    private val profileViewModel: ProfileViewModel
+    private val profileRepository: ProfileRepository
 ) : BaseViewModel(app) {
     companion object {
         const val DRIVER = "DRIVER"
@@ -44,7 +45,9 @@ class LoginViewModel(
                                     response.data.jwtToken
                                 )
                                 .apply()
-                            profileViewModel.getProfile(true)
+
+                            _isSuccessLogin.value =
+                                isCoDriverCompatible(response.data.jwtToken, email)
                         } else {
                             sp.edit()
                                 .putString(
@@ -52,10 +55,10 @@ class LoginViewModel(
                                     response.data.jwtToken
                                 )
                                 .apply()
-                            profileViewModel.getProfile()
+
                             sendLoginEvent()
+                            _isSuccessLogin.value = Pair(true, null)
                         }
-                        _isSuccessLogin.value = Pair(true, null)
 
                     } else {
                         _isSuccessLogin.value = Pair(false, R.string.only_drivers_can_login)
@@ -66,6 +69,33 @@ class LoginViewModel(
                     hideProgress()
                     _error.value = response.error
                 }
+            }
+        }
+    }
+
+    private suspend fun isCoDriverCompatible(
+        jwtToken: String,
+        email: String
+    ): Pair<Boolean, Int?>? {
+
+        return when (val coDriver = profileRepository.getProfile(token = jwtToken)) {
+            is Success -> {
+                profileRepository.getPrimaryProfile()?.let {
+                    if (it.user.email?.equals(email.trim()) == true) {
+                        Pair(
+                            false,
+                            R.string.error_current_driver_can_not_be_additional
+                        )
+                    }
+
+                    if (it.user.coDriverId?.equals(coDriver.data.user.coDriverId) != true) {
+                        Pair(false, R.string.no_expected_driver)
+                    }
+                    Pair(true, null)
+                }
+            }
+            is Failure -> {
+                return Pair(false, R.string.network_error)
             }
         }
     }

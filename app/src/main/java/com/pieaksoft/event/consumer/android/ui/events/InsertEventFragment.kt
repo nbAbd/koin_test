@@ -14,6 +14,7 @@ import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
+import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -35,6 +36,7 @@ class InsertEventFragment(
         )
 
     private val viewModel: EventViewModel by sharedViewModel()
+    private val profileViewModel: ProfileViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,6 +206,9 @@ class InsertEventFragment(
 
     private fun insertEvent() {
         updateEventModel()
+        profileViewModel.getCoDriverId()?.let {
+            eventModel.coDriverId = it
+        }
         viewModel.insertEvent(eventModel)
     }
 
