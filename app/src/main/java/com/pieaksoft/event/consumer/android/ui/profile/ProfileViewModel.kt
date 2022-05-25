@@ -1,14 +1,15 @@
 package com.pieaksoft.event.consumer.android.ui.profile
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import com.pieaksoft.event.consumer.android.model.Failure
 import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.profile.Profile
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
-import com.pieaksoft.event.consumer.android.utils.*
+import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_ADDITIONAL_USER_ID
+import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
+import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -104,8 +105,6 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
                 it.isAdditional = true
                 profileRepository.saveProfile(it)
             }
-
-            getDriversInfo()
             needUpdateObservable.postValue(true)
         }
     }

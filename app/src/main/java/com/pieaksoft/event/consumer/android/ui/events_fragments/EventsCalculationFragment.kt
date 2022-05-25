@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentEventCalculationBinding
 import com.pieaksoft.event.consumer.android.enums.EventCode
-import com.pieaksoft.event.consumer.android.enums.EventInsertType
 import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.utils.*
@@ -37,7 +36,7 @@ class EventsCalculationFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.checkResetCycleDate()
+        eventViewModel.getEventList()
     }
 
     override fun observe() {
@@ -99,40 +98,20 @@ class EventsCalculationFragment :
         viewModel.onDutyBreakInTheLimitWarning.observeOnce(this) {
             if (it) toast("Warning!\n You are driving more than 8 hours, you must take a break")
         }
-
-        // Called only once when RESET_CYCLE request called
-        eventViewModel.event.observe(viewLifecycleOwner) {
-            it?.let {
-                eventViewModel.getEventList()
-            }
-        }
-
-        eventViewModel.localEvent.observe(viewLifecycleOwner) {
-            it?.let {
-                eventViewModel.getEventList()
-            }
-        }
     }
 
     private fun initialize() {
         eventViewModel.eventList.observe(viewLifecycleOwner) {
             // Check last selected status
-            if (eventStatusCode != EventManager.uiEvents.lastItemEventCode) {
+            if (eventStatusCode != EventManager.events.lastItemEventCode) {
                 performStatusChange()
                 return@observe
             }
 
             // Reset timer
-            viewModel.resetMillis()
+            viewModel.resetAll()
 
-            // Store first event date
-            EventManager.uiEvents.elementAtOrNull(0)?.let {
-                viewModel.sp.storeResetCycleStartDateTime(it.date, it.time)
-            }
-
-            // Checking for CYCLE_RESET event
-            checkCycleReset()
-
+            // Start calculation
             calculate()
         }
     }
@@ -161,28 +140,6 @@ class EventsCalculationFragment :
                 else -> Unit
             }
         }
-    }
-
-    /**
-     * Checks reset cycle event, then splits list from that index
-     */
-    private fun checkCycleReset() {
-        var resetCycleIndex = 0
-        EventManager.calculationEvents.forEachIndexed { index, event ->
-            if (event.eventType == EventInsertType.CYCLE_RESET.type) {
-                resetCycleIndex = index
-
-                // Store CYCLE_RESET event date
-                viewModel.sp.storeResetCycleStartDateTime(event.date, event.time)
-            }
-        }
-
-        // Filter list only for duty status change
-        EventManager.calculationEvents =
-            EventManager.calculationEvents.subList(
-                resetCycleIndex,
-                EventManager.calculationEvents.size
-            )
     }
 
     override fun onStop() {
