@@ -2,8 +2,8 @@ package com.pieaksoft.event.consumer.android.ui.codriver
 
 import android.content.Intent
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
@@ -13,7 +13,6 @@ import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
 import com.pieaksoft.event.consumer.android.views.Dialogs
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -112,11 +111,11 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
                     binding.additionalDriver.setDriverInfo(it, false)
                     binding.additionalDriver.setEmpty(false)
                     binding.additionalDriver.setOnClickListener {
-                        Dialogs.showSwapDriversDialog(requireActivity()) {
-
-                            // Sends logout event for current driver before swapping drivers
-                            loginViewModel.sendLogoutEvent {
+                        Dialogs.showSwapDriversDialog(requireActivity()) { close ->
+                            lifecycleScope.launch {
+                                loginViewModel.sendLogoutEvent()
                                 viewModel.swapDrivers()
+                                close()
                             }
                         }
                     }
@@ -124,12 +123,14 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
             }
         }
 
+
         viewModel.needUpdateObservable.observe(this) {
             viewModel.getDriversInfo()
 
-            // Sends login event for current driver(which was co-driver before swapping) after swapping drivers
-            loginViewModel.sendLoginEvent()
-
+            launch {
+                // Sends login event for current driver(which was co-driver before swapping) after swapping drivers
+                loginViewModel.sendLoginEvent()
+            }
             LocalBroadcastManager
                 .getInstance(requireContext())
                 .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentInsertEventBinding
 import com.pieaksoft.event.consumer.android.enums.*
@@ -16,6 +17,7 @@ import com.pieaksoft.event.consumer.android.model.event.Location
 import com.pieaksoft.event.consumer.android.model.event.isLocationSet
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.*
+import kotlinx.coroutines.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class InsertEventFragment(
@@ -25,6 +27,9 @@ class InsertEventFragment(
     private var _binding: FragmentInsertEventBinding? = null
     private val binding get() = _binding!!
     private var isChecked = true
+    private var isAllowedPc = false
+    private var isAllowedYm = false
+
 
     private var eventModel =
         Event(
@@ -77,6 +82,7 @@ class InsertEventFragment(
 
     private fun setupView() = with(binding) {
         observe()
+        checkForPCYM()
 
         // if user editing existing event
         event?.let {
@@ -102,23 +108,31 @@ class InsertEventFragment(
         }
 
         personalUserOrYardMvBtn.setOnClickListener {
-            personalUserOrYardMvBtn.switchSelectStopIcon(isChecked)
             if (isChecked) {
                 eventModel.eventType =
                     EventInsertType.CHANGE_IN_DRIVERS_INDICATION_OF_AUTHORIZED_PERSONNEL_USE_OF_CMV_OR_YARD_MOVES.type
 
                 when (EventCode.findByCode(eventModel.eventCode ?: "")) {
                     EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
+                        if (!isAllowedPc) {
+                            toast(getString(R.string.pc_unavailable))
+                            return@setOnClickListener
+                        }
                         eventModel.eventCode =
                             EventCode.DRIVER_INDICATES_AUTHORIZED_PERSONAL_USE_OF_CMV.code
                     }
                     EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
+                        if (!isAllowedYm) {
+                            toast(getString(R.string.ym_unavailable))
+                            return@setOnClickListener
+                        }
                         eventModel.eventCode = EventCode.DRIVER_INDICATES_YARD_MOVES.code
                     }
                     else -> Unit
                 }
             }
             isChecked = !isChecked
+            personalUserOrYardMvBtn.switchSelectStopIcon(isChecked)
         }
     }
 
@@ -135,14 +149,14 @@ class InsertEventFragment(
             }
         }
 
-        viewModel.eventInsertDate.observe(viewLifecycleOwner) {
-            if (event != null) return@observe
+        viewModel.eventInsertDate.observe(viewLifecycleOwner) breaking@{
+            if (event != null) return@breaking
 
             // If date is not null, then set date/time
             it?.let {
                 eventModel.date = it.formatToServerDateDefaults()
                 eventModel.time = it.formatToServerTimeDefaults()
-                return@observe
+                return@breaking
             }
 
             // If date is null set current date/time
@@ -153,14 +167,14 @@ class InsertEventFragment(
         viewModel.eventInsertCode.observe(viewLifecycleOwner) { eventCode ->
             eventCode?.let {
                 when (eventCode) {
-                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.personal_use)
+                    EventCode.DRIVER_DUTY_STATUS_CHANGED_TO_OFF_DUTY -> with(binding) {
+                        personalUserOrYardMvBtn.show()
+                        personalUseOrYardMv.text = getString(R.string.personal_use)
                     }
 
-                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> {
-                        binding.personalUserOrYardMvBtn.show()
-                        binding.personalUseOrYardMv.text = getString(R.string.yard_mv)
+                    EventCode.DRIVER_DUTY_STATUS_ON_DUTY_NOT_DRIVING -> with(binding) {
+                        personalUserOrYardMvBtn.show()
+                        personalUseOrYardMv.text = getString(R.string.yard_mv)
                     }
                     else -> Unit
                 }
@@ -206,10 +220,10 @@ class InsertEventFragment(
 
     private fun insertEvent() {
         updateEventModel()
-        profileViewModel.getCoDriverId()?.let {
-            eventModel.coDriverId = it
+        lifecycleScope.launch {
+            eventModel.coDriverId = profileViewModel.getCoDriverId()
+            viewModel.insertEvent(eventModel)
         }
-        viewModel.insertEvent(eventModel)
     }
 
     private fun updateEvent() {
@@ -235,5 +249,12 @@ class InsertEventFragment(
         super.onDestroyView()
         viewModel.resetInserting()
         _binding = null
+    }
+
+    private fun checkForPCYM() {
+        lifecycleScope.launch {
+            isAllowedPc = profileViewModel.isPCAllowed() == true
+            isAllowedYm = profileViewModel.isYMAllowed() == true
+        }
     }
 }

@@ -54,7 +54,7 @@ data class Event(
     var trailer: String? = "",
     var comment: String? = "",
     var isSyncWithServer: Boolean? = true,
-    var coDriverId: String? = null
+    var coDriverId: Int? = null
 ) : Serializable {
 
     fun calculateDuration() {

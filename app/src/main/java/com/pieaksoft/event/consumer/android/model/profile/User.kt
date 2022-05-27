@@ -41,15 +41,15 @@ data class User(
 
     @SerializedName("coDriverId")
     @ColumnInfo(name = "co_driver_id")
-    var coDriverId: String? = null,
+    var coDriverId: Int? = null,
 
 
     @SerializedName("allowedPc")
-    @ColumnInfo(name = "allowed_pc")
-    val allowedPc: Boolean? = null,
+    @ColumnInfo(name = "allowed_pc", defaultValue = "0")
+    val allowedPc: Boolean?,
 
     @SerializedName("allowedYm")
-    @ColumnInfo(name = "allowed_ym")
-    val allowedYm: Boolean? = null
+    @ColumnInfo(name = "allowed_ym", defaultValue = "0")
+    val allowedYm: Boolean?
 
 ) : Parcelable

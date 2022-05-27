@@ -23,7 +23,7 @@ import java.time.ZoneId
 import java.util.*
 
 object Dialogs {
-    fun showSwapDriversDialog(activity: Activity, swapCallback: () -> Unit) {
+    fun showSwapDriversDialog(activity: Activity, swapCallback: (then:()->Unit) -> Unit) {
         val dialogSwapDriversBinding =
             DialogSwapDriversBinding.inflate(LayoutInflater.from(activity))
         val dialog = Dialog(activity).apply {
@@ -35,8 +35,9 @@ object Dialogs {
 
         dialogSwapDriversBinding.apply {
             swapConfirmBtn.setOnClickListener {
-                swapCallback()
-                dialog.dismiss()
+                swapCallback{
+                    dialog.dismiss()
+                }
             }
 
             swapCancelBtn.setOnClickListener {

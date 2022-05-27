@@ -10,7 +10,6 @@ import com.pieaksoft.event.consumer.android.model.Success
 import com.pieaksoft.event.consumer.android.model.event.Event
 import com.pieaksoft.event.consumer.android.ui.base.BaseViewModel
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileRepository
-import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_ADDITIONAL_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.SingleLiveEvent
@@ -47,7 +46,7 @@ class LoginViewModel(
                                 .apply()
 
                             _isSuccessLogin.value =
-                                isCoDriverCompatible(response.data.jwtToken, email)
+                                isCoDriverCompatible(response.data.jwtToken, email.trim())
                         } else {
                             sp.edit()
                                 .putString(
@@ -73,29 +72,37 @@ class LoginViewModel(
         }
     }
 
+    /**
+     *Checks logged in co-driver for compatibility, like,
+     * is this the co-driver which was assigned to a primary driver or is it not a primary driver
+     */
     private suspend fun isCoDriverCompatible(
         jwtToken: String,
         email: String
-    ): Pair<Boolean, Int?>? {
+    ): Pair<Boolean, Int?> {
 
-        return when (val coDriver = profileRepository.getProfile(token = jwtToken)) {
-            is Success -> {
-                profileRepository.getPrimaryProfile()?.let {
-                    if (it.user.email?.equals(email.trim()) == true) {
-                        Pair(
-                            false,
-                            R.string.error_current_driver_can_not_be_additional
-                        )
-                    }
+        return withContext(Dispatchers.IO) {
+            return@withContext when (val coDriver =
+                profileRepository.getProfile(token = jwtToken)) {
+                is Success -> {
+                    val profile = profileRepository.getPrimaryProfile()
 
-                    if (it.user.coDriverId?.equals(coDriver.data.user.coDriverId) != true) {
-                        Pair(false, R.string.no_expected_driver)
+                    profile?.let {
+                        if (it.user.email == email) {
+                            return@withContext Pair(
+                                false,
+                                R.string.error_current_driver_can_not_be_additional
+                            )
+                        }
+                        if (it.user.coDriverId != coDriver.data.id.toInt()) {
+                            return@withContext Pair(false, R.string.no_expected_driver)
+                        } else return@let
                     }
-                    Pair(true, null)
+                    return@withContext Pair(true, null)
                 }
-            }
-            is Failure -> {
-                return Pair(false, R.string.network_error)
+                is Failure -> {
+                    Pair(false, R.string.network_error)
+                }
             }
         }
     }
@@ -103,8 +110,8 @@ class LoginViewModel(
     /**
      *  Sends driver’s login activity to server
      */
-    fun sendLoginEvent() {
-        launch(Dispatchers.IO) {
+    suspend fun sendLoginEvent() {
+        withContext(Dispatchers.IO) {
             eventsRepository.insertEvent(newLoginEvent())
         }
     }
@@ -112,16 +119,11 @@ class LoginViewModel(
     /**
      *  Sends driver’s logout activity to server
      */
-    fun sendLogoutEvent(then: () -> Unit) {
-        launch {
-            val event = newLoginEvent().copy(
-                eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
-            )
-            withContext(Dispatchers.IO) {
-                eventsRepository.insertEvent(event)
-                then()
-            }
-        }
+    suspend fun sendLogoutEvent() {
+        val event = newLoginEvent().copy(
+            eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
+        )
+        withContext(Dispatchers.IO) { eventsRepository.insertEvent(event) }
     }
 
     /**
