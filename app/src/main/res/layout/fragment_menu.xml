@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/settings"
-                        app:icon="@drawable/setting_icon"
+                        app:icon="@drawable/ic_setting_icon"
                         app:shapeAppearance="@style/MenuMaterialButton.ShapeAppearance.Bottom" />
 
                     <com.google.android.material.button.MaterialButton

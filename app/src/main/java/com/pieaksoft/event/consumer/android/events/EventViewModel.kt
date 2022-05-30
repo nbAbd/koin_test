@@ -521,7 +521,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         }
     }
 
-
     /**
      * Returns date and time of event as formatted to type of LocalDateTime
      */
@@ -529,40 +528,6 @@ class EventViewModel(app: Application, private val repository: EventsRepository)
         return LocalDateTime.parse(
             "${event.date} ${event.time}",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        )
-    }
-
-    /**
-     *  Sends driver’s login activity to server
-     */
-    fun sendLoginEvent() {
-        insertEvent(newLoginEvent(), false)
-    }
-
-    /**
-     *  Sends driver’s logout activity to server
-     */
-    fun sendLogoutEvent() {
-        val event = newLoginEvent()
-        event.eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGOUT_ACTIVITY.code
-        insertEvent(event, false)
-    }
-
-    /**
-     * Returns new instance of Event with login request fields
-     */
-    private fun newLoginEvent(): Event {
-        return Event(
-            eventType = EventInsertType.DRIVERS_LOGIN_LOGOUT_ACTIVITY.type,
-            eventCode = EventCode.AUTHENTICATED_DRIVER_ELD_LOGIN_ACTIVITY.code,
-            date = getFormattedUserDate(),
-            time = getFormattedUserTime(),
-            totalEngineMiles = 0,
-            totalEngineHours = 0,
-            dataDiagnosticEventIndicatorStatus = DataDiagnosticEventIndicatorStatusType.NO_ACTIVE_DATA_DIAGNOSTIC_EVENTS_FOR_DRIVER.type,
-            malfunctionIndicatorStatus = MalfunctionIndicatorStatusType.NO_ACTIVE_MALFUNCTION.type,
-            eventRecordOrigin = EventRecordOriginType.AUTOMATICALLY_RECORDED_BY_ELD.type,
-            eventRecordStatus = EventRecordStatusType.ACTIVE.type
         )
     }
 }

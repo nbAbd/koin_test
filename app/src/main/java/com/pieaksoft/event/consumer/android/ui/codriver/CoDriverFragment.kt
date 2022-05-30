@@ -2,8 +2,8 @@ package com.pieaksoft.event.consumer.android.ui.codriver
 
 import android.content.Intent
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentCoDriverBinding
 import com.pieaksoft.event.consumer.android.network.ErrorHandler
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
@@ -54,9 +54,7 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
             }
 
             loginBtn.setOnClickListener {
-                if (primaryDriver.binding.loginValue.text.trim() == loginValue?.trim()) {
-                    toast(getString(R.string.error_current_driver_can_not_be_additional))
-                } else loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
+                loginViewModel.login(loginValue ?: "", passwordValue ?: "", true)
             }
 
             cancelBtn.setOnClickListener {
@@ -113,16 +111,26 @@ class CoDriverFragment : BaseMVVMFragment<FragmentCoDriverBinding, ProfileViewMo
                     binding.additionalDriver.setDriverInfo(it, false)
                     binding.additionalDriver.setEmpty(false)
                     binding.additionalDriver.setOnClickListener {
-                        Dialogs.showSwapDriversDialog(requireActivity()) {
-                            viewModel.swapDrivers()
+                        Dialogs.showSwapDriversDialog(requireActivity()) { close ->
+                            lifecycleScope.launch {
+                                loginViewModel.sendLogoutEvent()
+                                viewModel.swapDrivers()
+                                close()
+                            }
                         }
                     }
                 }
             }
         }
 
+
         viewModel.needUpdateObservable.observe(this) {
             viewModel.getDriversInfo()
+
+            launch {
+                // Sends login event for current driver(which was co-driver before swapping) after swapping drivers
+                loginViewModel.sendLoginEvent()
+            }
             LocalBroadcastManager
                 .getInstance(requireContext())
                 .sendBroadcast(Intent().setAction(BROADCAST_SWAP_DRIVERS))

@@ -13,13 +13,15 @@ import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.pieaksoft.event.consumer.android.R
 import com.pieaksoft.event.consumer.android.databinding.FragmentMenuBinding
-import com.pieaksoft.event.consumer.android.events.EventViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.login.LoginActivity
+import com.pieaksoft.event.consumer.android.ui.activities.login.LoginViewModel
 import com.pieaksoft.event.consumer.android.ui.activities.main.MainActivity
 import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.hide
+import com.pieaksoft.event.consumer.android.utils.put
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
@@ -32,6 +34,10 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
     }
 
     override val viewModel: ProfileViewModel by sharedViewModel()
+
+    private val loginViewModel: LoginViewModel by sharedViewModel()
+
+    private val profileViewModel: ProfileViewModel by sharedViewModel()
 
     private lateinit var navController: NavController
 
@@ -82,9 +88,13 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
     }
 
     private fun logout() {
-        sharedPrefs.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, "").apply()
-        startActivity(LoginActivity.newInstance(requireContext()))
-        requireActivity().finish()
+        launch {
+            loginViewModel.sendLogoutEvent()
+            profileViewModel.deleteCoDriver()
+            sharedPrefs.put(SHARED_PREFERENCES_CURRENT_USER_ID, "")
+            startActivity(LoginActivity.newInstance(requireContext()))
+            requireActivity().finish()
+        }
     }
 
     private fun showLogoutDialog() {

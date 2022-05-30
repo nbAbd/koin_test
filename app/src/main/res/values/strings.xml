@@ -16,6 +16,7 @@
     <string name="company2">Company:</string>
     <string name="confirm">Confirm</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="no_expected_driver">You are not expected driver</string>
     <string name="country">Country</string>
     <string name="dot_inspect">DOT Inspect</string>
     <string name="driver_licence_hint">Driver licence here</string>
@@ -127,6 +128,8 @@
     <string name="connect_to_truck">Connect to Truck</string>
     <string name="nearby_trucks">Nearby trucks</string>
     <string name="nearby_trucks_not_found">Nearby trucks not found</string>
+    <string name="pc_unavailable">Personal use is unavailable</string>
+    <string name="ym_unavailable">Yard move is unavailable</string>
 
     <string-array name="countries">
         <item>Canada</item>
