@@ -82,7 +82,7 @@ class InsertEventFragment(
 
     private fun setupView() = with(binding) {
         observe()
-        checkForPCYM()
+        checkPersonalUseAndYardMove()
 
         // if user editing existing event
         event?.let {
@@ -251,10 +251,10 @@ class InsertEventFragment(
         _binding = null
     }
 
-    private fun checkForPCYM() {
+    private fun checkPersonalUseAndYardMove() {
         lifecycleScope.launch {
-            isAllowedPc = profileViewModel.isPCAllowed() == true
-            isAllowedYm = profileViewModel.isYMAllowed() == true
+            isAllowedPc = profileViewModel.isPersonalUseAllowed() == true
+            isAllowedYm = profileViewModel.isYardMoveAllowed() == true
         }
     }
 }

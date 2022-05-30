@@ -20,6 +20,7 @@ import com.pieaksoft.event.consumer.android.ui.base.BaseMVVMFragment
 import com.pieaksoft.event.consumer.android.ui.profile.ProfileViewModel
 import com.pieaksoft.event.consumer.android.utils.SHARED_PREFERENCES_CURRENT_USER_ID
 import com.pieaksoft.event.consumer.android.utils.hide
+import com.pieaksoft.event.consumer.android.utils.put
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -90,7 +91,7 @@ class MenuFragment : BaseMVVMFragment<FragmentMenuBinding, ProfileViewModel>() {
         launch {
             loginViewModel.sendLogoutEvent()
             profileViewModel.deleteCoDriver()
-            sharedPrefs.edit().putString(SHARED_PREFERENCES_CURRENT_USER_ID, "").apply()
+            sharedPrefs.put(SHARED_PREFERENCES_CURRENT_USER_ID, "")
             startActivity(LoginActivity.newInstance(requireContext()))
             requireActivity().finish()
         }

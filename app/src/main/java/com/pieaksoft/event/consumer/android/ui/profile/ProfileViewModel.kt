@@ -144,11 +144,11 @@ class ProfileViewModel(val app: Application, private val profileRepository: Prof
         return withContext(Dispatchers.IO) { profileRepository.getAdditionalProfile()?.user?.coDriverId }
     }
 
-    suspend fun isPCAllowed(): Boolean? {
+    suspend fun isPersonalUseAllowed(): Boolean? {
         return withContext(Dispatchers.IO) { profileRepository.getPrimaryProfile()?.user?.allowedPc }
     }
 
-    suspend fun isYMAllowed(): Boolean? {
+    suspend fun isYardMoveAllowed(): Boolean? {
         return withContext(Dispatchers.IO) { profileRepository.getPrimaryProfile()?.user?.allowedYm }
     }
 
