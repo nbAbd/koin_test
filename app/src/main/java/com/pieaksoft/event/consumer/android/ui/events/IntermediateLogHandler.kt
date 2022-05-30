@@ -107,7 +107,7 @@ object IntermediateLogHandler {
     }
 
     /**
-     * fills up given event as a Intermediate log
+     * fills up the given event as a Intermediate log
      */
     fun fillUpIntermediateEvent(event: Event) {
         event.apply {

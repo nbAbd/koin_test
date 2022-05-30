@@ -24,7 +24,7 @@
             android:layout_width="@dimen/_50dp"
             android:layout_height="@dimen/_50dp"
             android:scaleType="center"
-            android:src="@drawable/exit_icon" />
+            android:src="@drawable/ic_exit_icon" />
     </androidx.cardview.widget.CardView>
 
     <com.github.gcacace.signaturepad.views.SignaturePad
